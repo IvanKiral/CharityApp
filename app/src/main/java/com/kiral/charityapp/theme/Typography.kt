@@ -9,8 +9,8 @@ import androidx.compose.ui.unit.sp
 import com.kiral.charityapp.R
 
 private val Helvetica = fontFamily(
-    font(R.font.HelveticaNeue),
-    font(R.font.HelveticaNeue_Bold, FontWeight.W500),
+    font(R.font.helvetica_neue),
+    font(R.font.helvetica_neue_bold, FontWeight.W500),
 )
 
 val CharityTypography = Typography(
