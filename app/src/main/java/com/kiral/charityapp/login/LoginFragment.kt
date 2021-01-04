@@ -26,6 +26,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.ui.tooling.preview.Preview
 import com.kiral.charityapp.R
 import com.kiral.charityapp.theme.CharityTheme
@@ -45,67 +46,76 @@ class LoginFragment : Fragment() {
             }
         }
     }
-}
 
-@Composable
-fun LoginScreen() {
-    CharityTheme {
-        val (loginText, setLoginText) = remember { mutableStateOf("") }
-        val (passwordText, setPasswordText) = remember { mutableStateOf("") }
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                "Login",
-                style = MaterialTheme.typography.h5,
-                modifier = Modifier//.align(Alignment.CenterHorizontally)
-                    .padding(top = 96.dp, bottom = 64.dp)
-            )
-            LoginTextField(
-                text = loginText,
-                onChange = setLoginText,
-                label = "Email"
-            )
-            LoginTextField(
-                text = passwordText,
-                onChange = setPasswordText,
-                label = "Password",
-                password = true
-            )
-            Button(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 32.dp, vertical = 8.dp)
-                    .preferredHeight(64.dp),
-                onClick = { /*TODO*/ }
+    @Composable
+    fun LoginScreen() {
+        CharityTheme {
+            val (loginText, setLoginText) = remember { mutableStateOf("") }
+            val (passwordText, setPasswordText) = remember { mutableStateOf("") }
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("Login", style = MaterialTheme.typography.button)
+                Text(
+                    "Login",
+                    style = MaterialTheme.typography.h5,
+                    modifier = Modifier//.align(Alignment.CenterHorizontally)
+                        .padding(top = 96.dp, bottom = 64.dp)
+                )
+                LoginTextField(
+                    text = loginText,
+                    onChange = setLoginText,
+                    label = "Email"
+                )
+                LoginTextField(
+                    text = passwordText,
+                    onChange = setPasswordText,
+                    label = "Password",
+                    password = true
+                )
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 32.dp, vertical = 8.dp)
+                        .preferredHeight(64.dp),
+                    onClick = { findNavController().navigate(R.id.action_loginFragment_to_editPersonalInformationFragment) }
+                ) {
+                    Text("Login", style = MaterialTheme.typography.button)
+                }
+
+                Text(
+                    text = "Or login with",
+                    style = MaterialTheme.typography.body1,
+                    modifier = Modifier
+                        .padding(top = 32.dp, bottom = 16.dp)
+                )
+
+                IconRow()
+                Text(
+                    text = "Don't have an account?",
+                    style = MaterialTheme.typography.body1,
+                    modifier = Modifier
+                        .padding(top = 32.dp, bottom = 16.dp)
+                )
+                ClickableText(
+                    text = AnnotatedString("Register"),
+                    //modifier = Modifier.padding(top = 8.dp),
+                    onClick = { /*TODO*/ }
+                )
+
             }
+        }
+    }
 
-            Text(
-                text = "Or login with",
-                style = MaterialTheme.typography.body1,
-                modifier = Modifier
-                    .padding(top = 32.dp, bottom = 16.dp)
-            )
-
-            IconRow()
-            Text(
-                text = "Don't have an account?",
-                style = MaterialTheme.typography.body1,
-                modifier = Modifier
-                    .padding(top = 32.dp, bottom = 16.dp)
-            )
-            ClickableText(
-                text = AnnotatedString("Register"),
-                //modifier = Modifier.padding(top = 8.dp),
-                onClick = { /*TODO*/ }
-            )
-
+    @Preview("LoginScreenPreview")
+    @Composable
+    fun LoginScreenPreview() {
+        Scaffold {
+            LoginScreen()
         }
     }
 }
+
 
 
 @Composable
@@ -131,6 +141,7 @@ fun LoginTextField(
             textStyle = labelTextStyle,
             backgroundColor = Color.Transparent,
             value = text,
+            inactiveColor = Color.Transparent,
             onValueChange = onChange,
             visualTransformation = if (password) PasswordVisualTransformation() else VisualTransformation.None,
             /*label = {
@@ -192,10 +203,3 @@ fun IconRow() {
 }
 
 
-@Preview("LoginScreenPreview")
-@Composable
-fun LoginScreenPreview() {
-    Scaffold {
-        LoginScreen()
-    }
-}

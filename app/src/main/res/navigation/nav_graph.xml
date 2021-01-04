@@ -7,5 +7,29 @@
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.kiral.charityapp.login.LoginFragment"
-        android:label="LoginFragment" />
+        android:label="LoginFragment" >
+        <action
+            android:id="@+id/action_loginFragment_to_editPersonalInformationFragment"
+            app:destination="@id/editPersonalInformationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editPersonalInformationFragment"
+        android:name="com.kiral.charityapp.OnBoarding.EditPersonalInformationFragment"
+        android:label="EditPersonalInformationFragment" >
+        <action
+            android:id="@+id/action_editPersonalInformationFragment_to_selectCharitiesTypesFragment"
+            app:destination="@id/selectCharitiesTypesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/selectCharitiesTypesFragment"
+        android:name="com.kiral.charityapp.OnBoarding.SelectCharitiesTypesFragment"
+        android:label="SelectCharitiesTypesFragment" >
+        <action
+            android:id="@+id/action_selectCharitiesTypesFragment_to_setupRegularPaymentsFragment"
+            app:destination="@id/setupRegularPaymentsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/setupRegularPaymentsFragment"
+        android:name="com.kiral.charityapp.OnBoarding.SetupRegularPaymentsFragment"
+        android:label="SetupRegularPaymentsFragment" />
 </navigation>
