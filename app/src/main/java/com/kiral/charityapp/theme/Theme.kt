@@ -27,10 +27,8 @@ fun CharityTheme(
     MaterialTheme(
         colors = LightThemeColors,
         typography = CharityTypography,
-        shapes = CharitShapes,
-    ) {
-        content()
-    }
+        content = content
+    )
 }
 
 
