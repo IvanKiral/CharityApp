@@ -1,4 +1,4 @@
-package com.kiral.charityapp.OnBoarding
+package com.kiral.charityapp.onboarding
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,7 +19,7 @@ import androidx.navigation.fragment.findNavController
 import com.kiral.charityapp.R
 import com.kiral.charityapp.theme.CharityTheme
 
-class EditPersonalInformationFragment: Fragment(){
+class SetupRegularPaymentsFragment: Fragment(){
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -28,13 +27,13 @@ class EditPersonalInformationFragment: Fragment(){
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                EditInfoScreen()
+                SetupPaymentsScreen()
             }
         }
     }
 
     @Composable
-    fun EditInfoScreen(){
+    fun SetupPaymentsScreen(){
         CharityTheme() {
             Column(
                 verticalArrangement = Arrangement.Center,
@@ -42,7 +41,7 @@ class EditPersonalInformationFragment: Fragment(){
             ) {
 
                 Text(
-                    text = "Edit Personal Information",
+                    text = "Setup regular Payments",
                     style = MaterialTheme.typography.h5,
                     textAlign = TextAlign.Center,
                 )
@@ -52,11 +51,14 @@ class EditPersonalInformationFragment: Fragment(){
                         .fillMaxWidth()
                         .padding(horizontal = 32.dp, vertical = 8.dp)
                         .preferredHeight(64.dp),
-                    onClick = { findNavController().navigate(R.id.action_editPersonalInformationFragment_to_selectCharitiesTypesFragment) }
+                    onClick = { findNavController().navigate(R.id.action_setupRegularPaymentsFragment_to_charitiesFragment) }
                 ) {
                     Text("Continue", style = MaterialTheme.typography.button)
                 }
             }
         }
     }
+
 }
+
+

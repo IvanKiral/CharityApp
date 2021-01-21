@@ -1,4 +1,4 @@
-package com.kiral.charityapp.OnBoarding
+package com.kiral.charityapp.onboarding
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -18,9 +18,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.kiral.charityapp.R
 import com.kiral.charityapp.theme.CharityTheme
-import com.kiral.charityapp.theme.labelTextStyle
 
-class SetupRegularPaymentsFragment: Fragment(){
+class EditPersonalInformationFragment: Fragment(){
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -28,13 +27,13 @@ class SetupRegularPaymentsFragment: Fragment(){
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                SetupPaymentsScreen()
+                EditInfoScreen()
             }
         }
     }
 
     @Composable
-    fun SetupPaymentsScreen(){
+    fun EditInfoScreen(){
         CharityTheme() {
             Column(
                 verticalArrangement = Arrangement.Center,
@@ -42,7 +41,7 @@ class SetupRegularPaymentsFragment: Fragment(){
             ) {
 
                 Text(
-                    text = "Setup regular Payments",
+                    text = "Edit Personal Information",
                     style = MaterialTheme.typography.h5,
                     textAlign = TextAlign.Center,
                 )
@@ -52,14 +51,11 @@ class SetupRegularPaymentsFragment: Fragment(){
                         .fillMaxWidth()
                         .padding(horizontal = 32.dp, vertical = 8.dp)
                         .preferredHeight(64.dp),
-                    onClick = { findNavController().navigate(R.id.action_loginFragment_to_editPersonalInformationFragment) }
+                    onClick = { findNavController().navigate(R.id.action_editPersonalInformationFragment_to_selectCharitiesTypesFragment) }
                 ) {
                     Text("Continue", style = MaterialTheme.typography.button)
                 }
             }
         }
     }
-
 }
-
-

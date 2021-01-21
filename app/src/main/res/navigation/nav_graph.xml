@@ -11,10 +11,13 @@
         <action
             android:id="@+id/action_loginFragment_to_editPersonalInformationFragment"
             app:destination="@id/editPersonalInformationFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_charitiesFragment"
+            app:destination="@id/charitiesFragment" />
     </fragment>
     <fragment
         android:id="@+id/editPersonalInformationFragment"
-        android:name="com.kiral.charityapp.OnBoarding.EditPersonalInformationFragment"
+        android:name="com.kiral.charityapp.onboarding.EditPersonalInformationFragment"
         android:label="EditPersonalInformationFragment" >
         <action
             android:id="@+id/action_editPersonalInformationFragment_to_selectCharitiesTypesFragment"
@@ -22,7 +25,7 @@
     </fragment>
     <fragment
         android:id="@+id/selectCharitiesTypesFragment"
-        android:name="com.kiral.charityapp.OnBoarding.SelectCharitiesTypesFragment"
+        android:name="com.kiral.charityapp.onboarding.SelectCharitiesTypesFragment"
         android:label="SelectCharitiesTypesFragment" >
         <action
             android:id="@+id/action_selectCharitiesTypesFragment_to_setupRegularPaymentsFragment"
@@ -30,6 +33,14 @@
     </fragment>
     <fragment
         android:id="@+id/setupRegularPaymentsFragment"
-        android:name="com.kiral.charityapp.OnBoarding.SetupRegularPaymentsFragment"
-        android:label="SetupRegularPaymentsFragment" />
+        android:name="com.kiral.charityapp.onboarding.SetupRegularPaymentsFragment"
+        android:label="SetupRegularPaymentsFragment" >
+        <action
+            android:id="@+id/action_setupRegularPaymentsFragment_to_charitiesFragment"
+            app:destination="@id/charitiesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/charitiesFragment"
+        android:name="com.kiral.charityapp.home.CharitiesFragment"
+        android:label="CharitiesFragment" />
 </navigation>

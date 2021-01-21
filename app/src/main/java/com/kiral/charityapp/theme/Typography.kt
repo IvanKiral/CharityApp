@@ -23,6 +23,13 @@ val labelTextStyle = TextStyle(
     fontSize = 18.sp
 )
 
+val cardTextStyle = TextStyle(
+    color = Color.Black,
+    fontFamily = Helvetica,
+    fontWeight = FontWeight.Bold,
+    fontSize = 14.sp
+)
+
 val CharityTypography = Typography(
     h4 = TextStyle(
         fontFamily = Helvetica,
