@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.os.ConfigurationCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.ui.tooling.preview.Preview
 import com.kiral.charityapp.R
 import com.kiral.charityapp.theme.CharityTheme
@@ -83,7 +84,7 @@ class CharitiesFragment : Fragment() {
                     onTabSelected = { tabSelected = it }
                 )
 
-                when(tabSelected) {
+                when (tabSelected) {
                     CharitiesScreen.Charities -> GridCharity(
                         lst = data,
                         modifier = Modifier
@@ -102,8 +103,54 @@ class CharitiesFragment : Fragment() {
 //                    }
             }
         }
+    }
+
+    @ExperimentalFoundationApi
+    @Composable
+    fun GridCharity(
+        lst: List<CharityGridItem>,
+        modifier: Modifier = Modifier
+    ) {
+        LazyVerticalGrid(
+            GridCells.Fixed(2),
+            modifier = modifier
+        ) {
+            items(lst) {
+                CharityItem(charity = it)
+            }
+
+        }
+    }
+
+    @Composable
+    fun CharityItem(
+        charity: CharityGridItem,
+        modifier: Modifier = Modifier
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 6.dp, vertical = 4.dp)
+                .clickable(onClick = {findNavController().navigate(R.id.action_charitiesFragment_to_charityDetailFragment)})
+        ) {
+            Image(
+                bitmap = imageResource(id = charity.imageUrl),
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .preferredHeight(107.dp)
+                    .clip(RoundedCornerShape(5.dp))
+            )
+            Text(
+                charity.text,
+                style = cardTextStyle,
+                maxLines = 2,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+        }
 
     }
+
 }
 
 @Composable
@@ -127,15 +174,17 @@ fun CharityAppBar(
             tabSelected = tabSelected,
             onTabSelected = onTabSelected
         )
-        Box(modifier = Modifier
-            .fillMaxWidth().weight(0.3f)
-            ){
-        IconRoundCorner(modifier = Modifier
-            .align(alignment = Alignment.CenterEnd)
-            .padding(end = 20.dp),
-            imageVector = vectorResource(id = R.drawable.ic_profile),
-            onClick = { /*TODO*/ }
-        )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(0.3f)
+        ) {
+            IconRoundCorner(modifier = Modifier
+                .align(alignment = Alignment.CenterEnd)
+                .padding(end = 20.dp),
+                imageVector = vectorResource(id = R.drawable.ic_profile),
+                onClick = { /*TODO*/ }
+            )
         }
     }
 }
@@ -216,22 +265,6 @@ fun Tabs(
 //    }
 //}
 
-@ExperimentalFoundationApi
-@Composable
-fun GridCharity(
-    lst: List<CharityGridItem>,
-    modifier: Modifier = Modifier
-) {
-    LazyVerticalGrid(
-        GridCells.Fixed(2),
-        modifier = modifier
-    ) {
-        items(lst) {
-            CharityItem(charity = it)
-        }
-
-    }
-}
 
 //@Composable
 //fun CharityRow(
@@ -248,35 +281,6 @@ fun GridCharity(
 //        }
 //    }
 //}
-
-
-@Composable
-fun CharityItem(
-    charity: CharityGridItem,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 6.dp, vertical = 4.dp)
-    ) {
-        Image(
-            bitmap = imageResource(id = charity.imageUrl),
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .fillMaxWidth()
-                .preferredHeight(107.dp)
-                .clip(RoundedCornerShape(5.dp))
-        )
-        Text(
-            charity.text,
-            style = cardTextStyle,
-            maxLines = 2,
-            modifier = Modifier.padding(top = 8.dp)
-        )
-    }
-
-}
 
 
 @Composable

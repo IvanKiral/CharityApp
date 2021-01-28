@@ -42,5 +42,13 @@
     <fragment
         android:id="@+id/charitiesFragment"
         android:name="com.kiral.charityapp.home.CharitiesFragment"
-        android:label="CharitiesFragment" />
+        android:label="CharitiesFragment" >
+        <action
+            android:id="@+id/action_charitiesFragment_to_charityDetailFragment"
+            app:destination="@id/charityDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/charityDetailFragment"
+        android:name="com.kiral.charityapp.detail.CharityDetailFragment"
+        android:label="CharityDetailFragment" />
 </navigation>

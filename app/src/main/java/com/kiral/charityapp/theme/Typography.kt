@@ -12,8 +12,8 @@ import androidx.compose.ui.unit.sp
 import com.kiral.charityapp.R
 
 val Helvetica = fontFamily(
-    font(R.font.helvetica_neue),
-    font(R.font.helvetica_neue_bold, FontWeight.W500),
+    font(R.font.opensans),
+    font(R.font.opensans_bold, FontWeight.W500),
 )
 
 val labelTextStyle = TextStyle(
