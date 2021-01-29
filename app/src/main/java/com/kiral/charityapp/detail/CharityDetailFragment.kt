@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.kiral.charityapp.R
+import com.kiral.charityapp.components.ExpandableText
 import com.kiral.charityapp.theme.*
 
 class CharityDetailFragment : Fragment() {
@@ -51,114 +52,114 @@ class CharityDetailFragment : Fragment() {
     @Composable
     fun CharityDetailScreen() {
         CharityTheme() {
-            BackdropScaffold(
-                scaffoldState = rememberBackdropScaffoldState(BackdropValue.Revealed),
-                //gesturesEnabled = false,
-                backLayerBackgroundColor = Color.Transparent,
-                frontLayerScrimColor = Color.Transparent,
-                frontLayerShape = BottomSheetShape,
-                peekHeight = 128.dp,
-                appBar = {},
-                //peekHeight = 200.dp,
-                backLayerContent = {
-                    Box() {
-                        Image(
-                            bitmap = imageResource(id = R.drawable.children),
-                            contentScale = ContentScale.FillWidth,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .preferredHeight(230.dp)
-                        )
-                        Row(modifier = Modifier.padding(top = 24.dp, start = 24.dp, end = 16.dp)) {
-                            DonationBox(
-                                text = "You donated 1.5€",
-                                backgroundColor = Color.Black.copy(alpha = 0.5f),
-                            )
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                            ) {
-                                Image(
-                                    imageVector = vectorResource(id = R.drawable.ic_close),
-                                    modifier = Modifier
-                                        .preferredSize(24.dp)
-                                        .align(Alignment.CenterEnd)
-                                        .clickable(onClick = { requireActivity().onBackPressed() })
-                                )
-                            }
-                        }
-                    }
-                },
-                frontLayerContent = {
-                    Surface(
-                        modifier = Modifier
-                            .fillMaxSize(),
-                        color = Color.White,
-                    ) {
-                        ScrollableColumn(
-                            modifier = Modifier.padding(
-                                top = 24.dp,
-                                bottom = 32.dp,
-                                start = 24.dp,
-                                end = 24.dp
-                            )
-                        ) {
-                            Text(
-                                text = "Domov Mladeze Lovosicka",
-                                style = MaterialTheme.typography.h5
-                            )
+            Column {
+                CharityDetailHeader()
+                CharityDetailBody(modifier = Modifier.offset(y = -20.dp))
+            }
+        }
+    }
 
-                            Text(
-                                modifier = Modifier.padding(top = 4.dp),
-                                text = "Domov Mladeze Krasna Horka",
-                                style = MaterialTheme.typography.body1,
-                                color = Color.Black.copy(0.5f)
-                            )
-
-                            Text(
-                                modifier = Modifier.padding(top = 4.dp),
-                                text = "Domov Mladeze Lovosicka",
-                                style = MaterialTheme.typography.body1
-                            )
-
-                            ExpnandableText(
-                                text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Facilisi morbi tempus iaculis urna id. Ultrices sagittis orci a scelerisque purus semper eget duis. Justo nec ultrices dui sapien eget mi. Elit duis tristique sollicitudin nibh. Adipiscing elit ut aliquam purus sit amet luctus. Ut sem nulla pharetra diam sit. Ligula ullamcorper malesuada proin libero nunc consequat. Pellentesque habitant morbi tristique senectus et netus. Facilisis gravida neque convallis a cras. Enim nulla aliquet porttitor lacus. Non enim praesent elementum facilisis leo vel fringilla.\n" +
-                                    "\n" +
-                                    "Venenatis a condimentum vitae sapien pellentesque. Massa sed elementum tempus egestas. Molestie at elementum eu facilisis. Eu non diam phasellus vestibulum lorem sed risus ultricies tristique. Ultrices",
-                            modifier = Modifier.padding(top = 16.dp)
-                            )
-
-
-                            Divider(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(top = 24.dp)
-                            )
-
-                            donationRow(
-                                price = "1240.50€",
-                                modifier = Modifier.padding(top = 24.dp)
-                            )
-
-                            InformationBox(
-                                text = "187 people and you have donated this project.",
-                                backgroundColor = ButtonInfoBlue,
-                                borderColor = ButtonInfoBorder,
-                                modifier = Modifier
-                                    .padding(top = 24.dp)
-                                    .fillMaxWidth()
-                            )
-
-                        }
-                    }
-                }
+    @Composable
+    fun CharityDetailHeader(){
+        Box() {
+            Image(
+                bitmap = imageResource(id = R.drawable.children),
+                contentScale = ContentScale.FillWidth,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .preferredHeight(230.dp)
             )
+            Row(modifier = Modifier.padding(top = 24.dp, start = 24.dp, end = 16.dp)) {
+                DonationBox(
+                    text = "You donated 1.5€",
+                    backgroundColor = Color.Black.copy(alpha = 0.5f),
+                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    Image(
+                        imageVector = vectorResource(id = R.drawable.ic_close),
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                            .clickable(onClick = { requireActivity().onBackPressed() })
+                    )
+                }
+            }
+        }
+    }
+
+    @Composable
+    fun CharityDetailBody(
+        modifier: Modifier = Modifier
+    ){
+        Surface(
+            modifier = modifier
+                .fillMaxSize()
+                .clip(BottomSheetShape),
+            color = Color.White,
+        ) {
+            ScrollableColumn(
+                modifier = Modifier.padding(
+                    top = 24.dp,
+                    bottom = 32.dp,
+                    start = 24.dp,
+                    end = 24.dp
+                )
+            ) {
+                Text(
+                    text = "Domov Mladeze Lovosicka",
+                    style = MaterialTheme.typography.h5
+                )
+
+                Text(
+                    modifier = Modifier.padding(top = 4.dp),
+                    text = "Domov Mladeze Krasna Horka",
+                    style = MaterialTheme.typography.body1,
+                    color = Color.Black.copy(0.5f)
+                )
+
+                Text(
+                    modifier = Modifier.padding(top = 4.dp),
+                    text = "Domov Mladeze Lovosicka",
+                    style = MaterialTheme.typography.body1
+                )
+
+                ExpandableText(
+                    text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Facilisi morbi tempus iaculis urna id. Ultrices sagittis orci a scelerisque purus semper eget duis. Justo nec ultrices dui sapien eget mi. Elit duis tristique sollicitudin nibh. Adipiscing elit ut aliquam purus sit amet luctus. Ut sem nulla pharetra diam sit. Ligula ullamcorper malesuada proin libero nunc consequat. Pellentesque habitant morbi tristique senectus et netus. Facilisis gravida neque convallis a cras. Enim nulla aliquet porttitor lacus. Non enim praesent elementum facilisis leo vel fringilla.\n" +
+                            "\n" +
+                            "Venenatis a condimentum vitae sapien pellentesque. Massa sed elementum tempus egestas. Molestie at elementum eu facilisis. Eu non diam phasellus vestibulum lorem sed risus ultricies tristique. Ultrices",
+                    modifier = Modifier.padding(top = 16.dp)
+                )
+
+                Divider(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 24.dp)
+                )
+
+                DonationRow(
+                    price = "1240.50€",
+                    modifier = Modifier.padding(top = 24.dp)
+                )
+
+                InformationBox(
+                    text = "187 people and you have donated this project.",
+                    backgroundColor = ButtonInfoBlue,
+                    borderColor = ButtonInfoBorder,
+                    modifier = Modifier
+                        .padding(top = 24.dp)
+                        .fillMaxWidth()
+                )
+            }
         }
     }
 }
 
+
+
 @Composable
-fun donationRow(
+fun DonationRow(
     price: String,
     modifier: Modifier = Modifier
 ) {
@@ -193,46 +194,7 @@ fun donationRow(
     }
 }
 
-enum class TextState{
-    Expanded, Collapsed
-}
 
-@Composable
-fun ExpnandableText(
-    text: String,
-    modifier: Modifier = Modifier
-){
-    val state = remember { mutableStateOf(TextState.Collapsed)}
-    var lines = remember { mutableStateOf(1)}
-    var maxLines = remember { mutableStateOf(false)}
-
-    Column(modifier = modifier) {
-        Text(
-            text = text,
-            maxLines = if (state.value == TextState.Collapsed) 5 else Int.MAX_VALUE,
-            style = MaterialTheme.typography.body1,
-            overflow = TextOverflow.Ellipsis,
-            onTextLayout = {
-                maxLines.value = it.didOverflowHeight || it.lineCount > 5
-            }
-        )
-
-        if(maxLines.value) {
-            ClickableText(
-                text = if (state.value == TextState.Collapsed) AnnotatedString("Read more") else AnnotatedString(
-                    "Less"
-                ),
-                modifier = Modifier.padding(top = 8.dp),
-                style = MaterialTheme.typography.h6.copy(color = ButtonBlue, fontWeight = FontWeight.Bold),
-                onClick = {
-                    state.value =
-                        if (state.value == TextState.Collapsed) TextState.Expanded else TextState.Collapsed
-                }
-            )
-        }
-    }
-
-}
 
 
 @Composable
