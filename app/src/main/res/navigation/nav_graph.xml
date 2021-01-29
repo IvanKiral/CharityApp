@@ -46,9 +46,20 @@
         <action
             android:id="@+id/action_charitiesFragment_to_charityDetailFragment"
             app:destination="@id/charityDetailFragment" />
+        <action
+            android:id="@+id/action_charitiesFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
     </fragment>
     <fragment
         android:id="@+id/charityDetailFragment"
         android:name="com.kiral.charityapp.detail.CharityDetailFragment"
         android:label="CharityDetailFragment" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.kiral.charityapp.profile.ProfileFragment"
+        android:label="ProfileFragment" >
+        <action
+            android:id="@+id/action_profileFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
 </navigation>

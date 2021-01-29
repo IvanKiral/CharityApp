@@ -81,6 +81,9 @@ class CharitiesFragment : Fragment() {
                 CharityAppBar(
                     tabSelected = tabSelected,
                     modifier = Modifier.fillMaxWidth(),
+                    onProfileClick = {
+                        findNavController().navigate(R.id.action_charitiesFragment_to_profileFragment)
+                    },
                     onTabSelected = { tabSelected = it }
                 )
 
@@ -118,7 +121,6 @@ class CharitiesFragment : Fragment() {
             items(lst) {
                 CharityItem(charity = it)
             }
-
         }
     }
 
@@ -128,7 +130,7 @@ class CharitiesFragment : Fragment() {
         modifier: Modifier = Modifier
     ) {
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .padding(horizontal = 6.dp, vertical = 4.dp)
                 .clickable(onClick = {findNavController().navigate(R.id.action_charitiesFragment_to_charityDetailFragment)})
@@ -162,6 +164,7 @@ fun RankingScreen() {
 fun CharityAppBar(
     tabSelected: CharitiesScreen,
     modifier: Modifier = Modifier,
+    onProfileClick: () -> Unit,
     onTabSelected: (CharitiesScreen) -> Unit
 ) {
     Row(
@@ -183,7 +186,7 @@ fun CharityAppBar(
                 .align(alignment = Alignment.CenterEnd)
                 .padding(end = 20.dp),
                 imageVector = vectorResource(id = R.drawable.ic_profile),
-                onClick = { /*TODO*/ }
+                onClick = onProfileClick
             )
         }
     }
