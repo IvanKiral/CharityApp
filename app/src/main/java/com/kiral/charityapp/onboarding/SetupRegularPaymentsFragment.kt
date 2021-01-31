@@ -51,7 +51,10 @@ class SetupRegularPaymentsFragment: Fragment(){
                         .fillMaxWidth()
                         .padding(horizontal = 32.dp, vertical = 8.dp)
                         .preferredHeight(64.dp),
-                    onClick = { findNavController().navigate(R.id.action_setupRegularPaymentsFragment_to_charitiesFragment) }
+                    onClick = {
+                        findNavController()
+                            .navigate(R.id.action_setupRegularPaymentsFragment_to_charitiesFragment)
+                    }
                 ) {
                     Text("Continue", style = MaterialTheme.typography.button)
                 }
