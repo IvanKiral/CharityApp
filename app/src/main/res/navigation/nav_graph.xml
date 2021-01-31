@@ -11,8 +11,10 @@
         <action
             android:id="@+id/action_loginFragment_to_editPersonalInformationFragment"
             app:destination="@id/editPersonalInformationFragment"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit"
             app:popUpTo="@id/loginFragment"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_loginFragment_to_charitiesFragment"
             app:destination="@id/charitiesFragment" />
@@ -23,7 +25,9 @@
         android:label="EditPersonalInformationFragment" >
         <action
             android:id="@+id/action_editPersonalInformationFragment_to_selectCharitiesTypesFragment"
-            app:destination="@id/selectCharitiesTypesFragment" />
+            app:destination="@id/selectCharitiesTypesFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
     </fragment>
     <fragment
         android:id="@+id/selectCharitiesTypesFragment"
@@ -31,7 +35,9 @@
         android:label="SelectCharitiesTypesFragment" >
         <action
             android:id="@+id/action_selectCharitiesTypesFragment_to_setupRegularPaymentsFragment"
-            app:destination="@id/setupRegularPaymentsFragment" />
+            app:destination="@id/setupRegularPaymentsFragment"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit" />
     </fragment>
     <fragment
         android:id="@+id/setupRegularPaymentsFragment"
@@ -40,6 +46,8 @@
         <action
             android:id="@+id/action_setupRegularPaymentsFragment_to_charitiesFragment"
             app:destination="@id/charitiesFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
             app:popUpTo="@+id/editPersonalInformationFragment"
             app:popUpToInclusive="true" />
     </fragment>
@@ -49,10 +57,16 @@
         android:label="CharitiesFragment" >
         <action
             android:id="@+id/action_charitiesFragment_to_charityDetailFragment"
-            app:destination="@id/charityDetailFragment" />
+            app:destination="@id/charityDetailFragment"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popEnterAnim="@anim/fragment_fade_enter"
+            app:popExitAnim="@anim/fragment_fade_exit" />
         <action
             android:id="@+id/action_charitiesFragment_to_profileFragment"
-            app:destination="@id/profileFragment" />
+            app:destination="@id/profileFragment"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit" />
     </fragment>
     <fragment
         android:id="@+id/charityDetailFragment"

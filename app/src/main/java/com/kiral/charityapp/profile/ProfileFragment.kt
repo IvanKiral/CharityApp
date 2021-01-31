@@ -300,6 +300,7 @@ fun ProfileImageWithBorder(
     ) {
         Image(
             bitmap = imageBitmap,
+            contentDescription = "",
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .size(imageSize)
@@ -356,6 +357,7 @@ fun Badge(
     ) {
         Image(
             imageVector = icon,
+            contentDescription = "",
             contentScale = ContentScale.Crop,
             modifier = Modifier.size(iconSize)
         )

@@ -64,6 +64,7 @@ class CharityDetailFragment : Fragment() {
         Box() {
             Image(
                 bitmap = imageResource(id = R.drawable.children),
+                contentDescription = "",
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -80,6 +81,7 @@ class CharityDetailFragment : Fragment() {
                 ) {
                     Image(
                         imageVector = vectorResource(id = R.drawable.ic_close),
+                        contentDescription = "",
                         modifier = Modifier
                             .align(Alignment.CenterEnd)
                             .clickable(onClick = { requireActivity().onBackPressed() })

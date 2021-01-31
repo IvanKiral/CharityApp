@@ -174,6 +174,7 @@ fun ClickableLogo(
 ) {
     Image(
         imageVector = icon,
+        contentDescription = "",
         contentScale = ContentScale.Crop,
         modifier = modifier.clickable(onClick = onIconClicked)
     )

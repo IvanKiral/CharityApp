@@ -137,6 +137,7 @@ class CharitiesFragment : Fragment() {
         ) {
             Image(
                 bitmap = imageResource(id = charity.imageUrl),
+                contentDescription = "",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -210,6 +211,7 @@ fun IconRoundCorner(
         ) {
             Image(
                 imageVector = imageVector,
+                contentDescription = "",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.align(Alignment.Center)
             )

@@ -100,7 +100,7 @@ class SelectCharitiesTypesFragment : Fragment() {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(end = 32.dp)
-                .clickable(onClick = onRowClick, indication = null)
+                .clickable(onClick = onRowClick)
                 .padding(bottom = 24.dp)
         ) {
             Text(
@@ -113,6 +113,7 @@ class SelectCharitiesTypesFragment : Fragment() {
             if (selected) {
                 Image(
                     imageVector = vectorResource(id = R.drawable.ic_selected),
+                    contentDescription = "",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.align(Alignment.CenterVertically)
                 )
