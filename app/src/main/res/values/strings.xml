@@ -1,3 +1,27 @@
 <resources>
     <string name="app_name">CharityApp</string>
+    <string name="ExpandableText_ReadMore">Read more</string>
+    <string name="ExpandableText_Less">Less</string>
+    <string name="CharityDetailFragment_InformationBox">187 people and you have donated this project.</string>
+    <string name="CharityDetailFragment_Raised">Raised last week</string>
+    <string name="CharityDetailFragment_ButtonDonation">Extra Donation</string>
+    <string name="CharitiesFragment_Charities">Charities</string>
+    <string name="CharitiesFragment_Rankings">Rankings</string>
+    <string name="LoginFragment_Title">Login</string>
+    <string name="LoginFragment_Email">Email</string>
+    <string name="LoginFragment_Password">Password</string>
+    <string name="LoginFragment_ButtonLogin">Login</string>
+    <string name="LoginFragment_OrLoginWith">Or login with</string>
+    <string name="LoginFragment_DontHaveAnAccount">Don\'t have an account?</string>
+    <string name="LoginFragment_Register">Register</string>
+    <string name="EditPersonalInformationFragment_Title">Edit Personal Information</string>
+    <string name="SelectCharitiesTypesFragment_Title">Select charities types</string>
+    <string name="SetupRegularPaymentsFragment_Title">Setup regular Payments</string>
+    <string name="ProfileFragment_YourBadges">Your Badges</string>
+    <string name="ProfileFragment_ShowBadges">Show badges</string>
+    <string name="ProfileFragment_BoxDonations">Donations</string>
+    <string name="ProfileFragment_BoxCredit">Credit</string>
+    <string name="ProfileFragment_RegularDonations">Regular donations</string>
+    <string name="ProfileFragment_Logout">Logout</string>
+    <string name="ProfileFragment_LogoutDescription">Logout from the system</string>
 </resources>

@@ -11,11 +11,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.kiral.charityapp.R
 import com.kiral.charityapp.theme.ButtonBlue
 
 private enum class TextState{
@@ -45,8 +47,8 @@ fun ExpandableText(
         )
         if(showExpander.value) {
             ClickableText(
-                text = if (state.value == TextState.Collapsed) AnnotatedString("Read more")
-                        else AnnotatedString("Less"),
+                text = if (state.value == TextState.Collapsed) AnnotatedString(stringResource(R.string.ExpandableText_ReadMore))
+                        else AnnotatedString(stringResource(R.string.ExpandableText_Less)),
                 modifier = Modifier.padding(top = 8.dp),
                 style = MaterialTheme.typography.h6.copy(
                     color = ButtonBlue,

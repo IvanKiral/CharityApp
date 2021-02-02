@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -47,7 +48,7 @@ class SelectCharitiesTypesFragment : Fragment() {
             ) {
 
                 Text(
-                    text = "Select charities types",
+                    text = stringResource(R.string.SelectCharitiesTypesFragment_Title),
                     style = MaterialTheme.typography.h5,
                     textAlign = TextAlign.Center,
                 )

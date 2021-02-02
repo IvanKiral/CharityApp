@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
@@ -41,7 +42,7 @@ class SetupRegularPaymentsFragment: Fragment(){
             ) {
 
                 Text(
-                    text = "Setup regular Payments",
+                    text = stringResource(R.string.SetupRegularPaymentsFragment_Title),
                     style = MaterialTheme.typography.h5,
                     textAlign = TextAlign.Center,
                 )

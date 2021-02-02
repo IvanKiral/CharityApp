@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.AmbientContext
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -57,7 +58,7 @@ class LoginFragment : Fragment() {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    "Login",
+                    stringResource(R.string.LoginFragment_Title),
                     style = MaterialTheme.typography.h5,
                     modifier = Modifier//.align(Alignment.CenterHorizontally)
                         .padding(top = 96.dp, bottom = 64.dp)
@@ -65,12 +66,12 @@ class LoginFragment : Fragment() {
                 LoginTextField(
                     text = loginText,
                     onChange = setLoginText,
-                    label = "Email"
+                    label = stringResource(R.string.LoginFragment_Email)
                 )
                 LoginTextField(
                     text = passwordText,
                     onChange = setPasswordText,
-                    label = "Password",
+                    label = stringResource(R.string.LoginFragment_Password),
                     password = true
                 )
                 Button(
@@ -80,11 +81,11 @@ class LoginFragment : Fragment() {
                         .preferredHeight(64.dp),
                     onClick = { findNavController().navigate(R.id.action_loginFragment_to_editPersonalInformationFragment) }
                 ) {
-                    Text("Login", style = MaterialTheme.typography.button)
+                    Text(stringResource(R.string.LoginFragment_ButtonLogin), style = MaterialTheme.typography.button)
                 }
 
                 Text(
-                    text = "Or login with",
+                    text = stringResource(R.string.LoginFragment_OrLoginWith),
                     style = MaterialTheme.typography.body1,
                     modifier = Modifier
                         .padding(top = 32.dp, bottom = 16.dp)
@@ -92,13 +93,13 @@ class LoginFragment : Fragment() {
 
                 IconRow()
                 Text(
-                    text = "Don't have an account?",
+                    text = stringResource(R.string.LoginFragment_DontHaveAnAccount),
                     style = MaterialTheme.typography.body1,
                     modifier = Modifier
                         .padding(top = 32.dp, bottom = 16.dp)
                 )
                 ClickableText(
-                    text = AnnotatedString("Register"),
+                    text = AnnotatedString(stringResource(R.string.LoginFragment_Register)),
                     //modifier = Modifier.padding(top = 8.dp),
                     onClick = { /*TODO*/ }
                 )
@@ -144,16 +145,6 @@ fun LoginTextField(
             inactiveColor = Color.Transparent,
             onValueChange = onChange,
             visualTransformation = if (password) PasswordVisualTransformation() else VisualTransformation.None,
-            /*label = {
-                Text(
-                    text = label,
-                    style = androidx.compose.material.AmbientTextStyle.current.copy(
-                        //fontFamily = Helvetica,
-                        fontSize = 18.sp,
-                        //fontWeight = FontWeight.Normal
-                    )
-                )
-            },*/
             placeholder = {
                 Text(
                     text = label,

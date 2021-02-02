@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -146,7 +147,7 @@ class CharityDetailFragment : Fragment() {
                 )
 
                 InformationBox(
-                    text = "187 people and you have donated this project.",
+                    text = stringResource(R.string.CharityDetailFragment_InformationBox),
                     backgroundColor = ButtonInfoBlue,
                     borderColor = ButtonInfoBorder,
                     modifier = Modifier
@@ -157,8 +158,6 @@ class CharityDetailFragment : Fragment() {
         }
     }
 }
-
-
 
 @Composable
 fun DonationRow(
@@ -173,7 +172,7 @@ fun DonationRow(
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Raised last week",
+                text = stringResource(R.string.CharityDetailFragment_Raised),
                 style = MaterialTheme.typography.body1.copy(fontSize = 13.sp),
                 color = donationTextGray
             )
@@ -189,7 +188,7 @@ fun DonationRow(
             onClick = { /*TODO*/ }
         ) {
             Text(
-                text = "Extra Donation",
+                text = stringResource(R.string.CharityDetailFragment_ButtonDonation),
                 style = MaterialTheme.typography.button
             )
         }

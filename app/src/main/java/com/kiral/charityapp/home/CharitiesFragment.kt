@@ -26,6 +26,7 @@ import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.AmbientConfiguration
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
@@ -97,13 +98,6 @@ class CharitiesFragment : Fragment() {
                     )
                     CharitiesScreen.Ranking -> RankingScreen()
                 }
-//                StaggeredVerticalGrid(maxColumnWidth = 220.dp) {
-//                    for(item in data){
-//                        CharityItem(
-//                            imageBitmap = imageResource(id = item.imageUrl),
-//                            text = item.text
-//                        )
-//                    }
             }
         }
     }
@@ -133,7 +127,7 @@ class CharitiesFragment : Fragment() {
             modifier = modifier
                 .fillMaxWidth()
                 .padding(horizontal = 6.dp, vertical = 4.dp)
-                .clickable(onClick = {findNavController().navigate(R.id.action_charitiesFragment_to_charityDetailFragment)})
+                .clickable(onClick = { findNavController().navigate(R.id.action_charitiesFragment_to_charityDetailFragment) })
         ) {
             Image(
                 bitmap = imageResource(id = charity.imageUrl),
@@ -174,7 +168,10 @@ fun CharityAppBar(
     ) {
         Tabs(
             modifier = Modifier.weight(0.7f),
-            titles = CharitiesScreen.values().map { it.name },
+            titles = listOf(
+                stringResource(R.string.CharitiesFragment_Charities),
+                stringResource(R.string.CharitiesFragment_Rankings)
+            ),
             tabSelected = tabSelected,
             onTabSelected = onTabSelected
         )
@@ -250,7 +247,6 @@ fun Tabs(
                             color = Color.Black.copy(alpha = 0.3f)
                         ),
                         text = title,
-                        //textAlign = TextAlign.Center
                     )
                 }
 
@@ -258,34 +254,6 @@ fun Tabs(
         }
     }
 }
-
-
-//@Composable
-//fun CharityGrid(items: List<CharityGridItem>){
-//    Lazy(content){
-//        val x = items.chunked(2)
-//        for(item in x) {
-//            CharityRow(items = item)
-//        }
-//    }
-//}
-
-
-//@Composable
-//fun CharityRow(
-//    items: List<CharityGridItem>
-//){
-//    Row(Modifier.padding(top = 20.dp)){
-//        for(i in 0 until items.size) {
-//            CharityItem(
-//                imageBitmap = imageResource(id =  items[i].imageUrl),
-//                text = items[i].text,
-//                modifier = if(i == 0) Modifier.padding(end = 6.dp).weight(1f)
-//                else Modifier.weight(1f)
-//            )
-//        }
-//    }
-//}
 
 
 @Composable

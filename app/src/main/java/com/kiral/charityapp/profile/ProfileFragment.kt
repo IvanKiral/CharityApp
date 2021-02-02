@@ -27,6 +27,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.AmbientDensity
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -171,7 +172,7 @@ class ProfileFragment : Fragment() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Your Badges",
+                text = stringResource(R.string.ProfileFragment_YourBadges),
                 style = MaterialTheme.typography.h6.copy(color = Color(0xFF94A0AF))
             )
 
@@ -182,7 +183,7 @@ class ProfileFragment : Fragment() {
                     .padding(top = 16.dp)
             )
             ClickableText(
-                text = AnnotatedString("Show badges"),
+                text = AnnotatedString(stringResource(R.string.ProfileFragment_ShowBadges)),
                 style = MaterialTheme.typography.body1.copy(color = Color(0xFFB7C1CC)),
                 modifier = Modifier.padding(top = 24.dp),
                 onClick = { /*TODO*/ }
@@ -214,7 +215,7 @@ class ProfileFragment : Fragment() {
                         )
                     )
                     Text(
-                        text = "Donations",
+                        text = stringResource(R.string.ProfileFragment_BoxDonations),
                         style = MaterialTheme.typography.button.copy(
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Normal,
@@ -240,7 +241,7 @@ class ProfileFragment : Fragment() {
                         style = MaterialTheme.typography.button.copy(fontSize = 24.sp)
                     )
                     Text(
-                        text = "Credit",
+                        text = stringResource(R.string.ProfileFragment_BoxCredit),
                         style = MaterialTheme.typography.button.copy(
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Normal,
@@ -260,14 +261,14 @@ class ProfileFragment : Fragment() {
             modifier = modifier
         ) {
             Option(
-                title = "Regular donations",
+                title = stringResource(R.string.ProfileFragment_RegularDonations),
                 description = "1€/day",
                 hasSwitch = true,
                 modifier = Modifier.fillMaxWidth()
             )
             Option(
-                title = "Logout",
-                description = "Logout from the system",
+                title = stringResource(R.string.ProfileFragment_Logout),
+                description = stringResource(R.string.ProfileFragment_LogoutDescription),
                 hasSwitch = false,
                 modifier = Modifier.fillMaxWidth()
             )
