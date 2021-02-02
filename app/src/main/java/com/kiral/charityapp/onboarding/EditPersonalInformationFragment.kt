@@ -37,10 +37,10 @@ class EditPersonalInformationFragment: Fragment(){
     fun EditInfoScreen(){
         CharityTheme() {
             Column(
+                modifier = Modifier.padding(horizontal = 32.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-
                 Text(
                     text = stringResource(R.string.EditPersonalInformationFragment_Title),
                     style = MaterialTheme.typography.h5,
@@ -50,7 +50,7 @@ class EditPersonalInformationFragment: Fragment(){
                 Button(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 32.dp, vertical = 8.dp)
+                        .padding(vertical = 8.dp)
                         .preferredHeight(64.dp),
                     onClick = { findNavController().navigate(R.id.action_editPersonalInformationFragment_to_selectCharitiesTypesFragment) }
                 ) {

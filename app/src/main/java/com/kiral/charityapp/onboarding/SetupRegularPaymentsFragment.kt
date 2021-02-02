@@ -37,6 +37,7 @@ class SetupRegularPaymentsFragment: Fragment(){
     fun SetupPaymentsScreen(){
         CharityTheme() {
             Column(
+                modifier = Modifier.padding(horizontal = 32.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -50,7 +51,7 @@ class SetupRegularPaymentsFragment: Fragment(){
                 Button(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 32.dp, vertical = 8.dp)
+                        .padding(vertical = 8.dp)
                         .preferredHeight(64.dp),
                     onClick = {
                         findNavController()

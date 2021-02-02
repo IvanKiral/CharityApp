@@ -30,6 +30,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.ui.tooling.preview.Preview
 import com.kiral.charityapp.R
+import com.kiral.charityapp.components.ClickableIcon
 import com.kiral.charityapp.theme.CharityTheme
 import com.kiral.charityapp.theme.TextFieldBorder
 import com.kiral.charityapp.theme.labelTextStyle
@@ -54,84 +55,105 @@ class LoginFragment : Fragment() {
             val (loginText, setLoginText) = remember { mutableStateOf("") }
             val (passwordText, setPasswordText) = remember { mutableStateOf("") }
             Column(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 32.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
                     stringResource(R.string.LoginFragment_Title),
                     style = MaterialTheme.typography.h5,
-                    modifier = Modifier//.align(Alignment.CenterHorizontally)
+                    modifier = Modifier
                         .padding(top = 96.dp, bottom = 64.dp)
                 )
+
                 LoginTextField(
                     text = loginText,
                     onChange = setLoginText,
                     label = stringResource(R.string.LoginFragment_Email)
                 )
+
                 LoginTextField(
                     text = passwordText,
                     onChange = setPasswordText,
                     label = stringResource(R.string.LoginFragment_Password),
-                    password = true
+                    password = true,
+                    modifier = Modifier.padding(top = 16.dp)
                 )
+
                 Button(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 32.dp, vertical = 8.dp)
+                        .padding(top = 16.dp)
                         .preferredHeight(64.dp),
                     onClick = { findNavController().navigate(R.id.action_loginFragment_to_editPersonalInformationFragment) }
                 ) {
-                    Text(stringResource(R.string.LoginFragment_ButtonLogin), style = MaterialTheme.typography.button)
+                    Text(
+                        stringResource(R.string.LoginFragment_ButtonLogin),
+                        style = MaterialTheme.typography.button
+                    )
                 }
 
                 Text(
                     text = stringResource(R.string.LoginFragment_OrLoginWith),
                     style = MaterialTheme.typography.body1,
                     modifier = Modifier
-                        .padding(top = 32.dp, bottom = 16.dp)
+                        .padding(top = 36.dp, bottom = 20.dp)
                 )
 
                 IconRow()
+
                 Text(
                     text = stringResource(R.string.LoginFragment_DontHaveAnAccount),
                     style = MaterialTheme.typography.body1,
                     modifier = Modifier
                         .padding(top = 32.dp, bottom = 16.dp)
                 )
+
                 ClickableText(
                     text = AnnotatedString(stringResource(R.string.LoginFragment_Register)),
-                    //modifier = Modifier.padding(top = 8.dp),
                     onClick = { /*TODO*/ }
                 )
-
             }
         }
     }
 
-    @Preview("LoginScreenPreview")
     @Composable
-    fun LoginScreenPreview() {
-        Scaffold {
-            LoginScreen()
+    fun IconRow(
+        modifier: Modifier = Modifier
+    ) {
+        val context = AmbientContext.current
+        Row(modifier) {
+            ClickableIcon(
+                icon = vectorResource(id = R.drawable.ic_google),
+                modifier = Modifier.padding(end = 8.dp),
+                onIconClicked = {
+                    Toast.makeText(context, "Google!", Toast.LENGTH_SHORT).show()
+                }
+            )
+            ClickableIcon(
+                icon = vectorResource(id = R.drawable.ic_logos_facebook),
+                modifier = Modifier.padding(start = 8.dp),
+                onIconClicked = {
+                    Toast.makeText(context, "Facebook!", Toast.LENGTH_SHORT).show()
+                }
+            )
         }
     }
 }
-
-
 
 @Composable
 fun LoginTextField(
     text: String,
     onChange: (String) -> Unit,
-    label: String, password:
-    Boolean = false
+    label: String,
+    modifier: Modifier = Modifier,
+    password: Boolean = false
 ) {
-    Surface(
-        color = Color.Transparent,
-        modifier = Modifier
-            //.preferredHeight(64.dp)
+    Box(
+        modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 32.dp, vertical = 8.dp)
+            .background(Color.Transparent)
             .border(
                 width = 1.dp,
                 color = TextFieldBorder,
@@ -151,47 +173,9 @@ fun LoginTextField(
                     style = labelTextStyle
                 )
             },
-            modifier = Modifier.padding(4.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
         )
     }
 }
-
-
-@Composable
-fun ClickableLogo(
-    icon: ImageVector,
-    onIconClicked: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Image(
-        imageVector = icon,
-        contentDescription = "",
-        contentScale = ContentScale.Crop,
-        modifier = modifier.clickable(onClick = onIconClicked)
-    )
-}
-
-@Composable
-fun IconRow() {
-    val context = AmbientContext.current
-    Row {
-        ClickableLogo(icon = vectorResource(
-            id = R.drawable.ic_google
-        ),
-            modifier = Modifier.padding(end = 8.dp),
-            onIconClicked = {
-                Toast.makeText(context, "Google!", Toast.LENGTH_SHORT).show()
-            }
-        )
-        ClickableLogo(icon = vectorResource(
-            id = R.drawable.ic_logos_facebook
-        ),
-            modifier = Modifier.padding(start = 8.dp),
-            onIconClicked = {
-                Toast.makeText(context, "Facebook!", Toast.LENGTH_SHORT).show()
-            }
-        )
-    }
-}
-
-

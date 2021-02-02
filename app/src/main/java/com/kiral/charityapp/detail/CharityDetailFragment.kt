@@ -4,33 +4,25 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.animation.core.transitionDefinition
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import com.kiral.charityapp.R
 import com.kiral.charityapp.components.ExpandableText
 import com.kiral.charityapp.theme.*
@@ -61,7 +53,7 @@ class CharityDetailFragment : Fragment() {
     }
 
     @Composable
-    fun CharityDetailHeader(){
+    fun CharityDetailHeader() {
         Box() {
             Image(
                 bitmap = imageResource(id = R.drawable.children),
@@ -71,23 +63,22 @@ class CharityDetailFragment : Fragment() {
                     .fillMaxWidth()
                     .preferredHeight(230.dp)
             )
-            Row(modifier = Modifier.padding(top = 24.dp, start = 24.dp, end = 16.dp)) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 20.dp, start = 24.dp, end = 16.dp)
+            ) {
                 DonationBox(
                     text = "You donated 1.5€",
                     backgroundColor = Color.Black.copy(alpha = 0.5f),
                 )
-                Box(
+                Image(
+                    imageVector = vectorResource(id = R.drawable.ic_close),
+                    contentDescription = "",
                     modifier = Modifier
-                        .fillMaxWidth()
-                ) {
-                    Image(
-                        imageVector = vectorResource(id = R.drawable.ic_close),
-                        contentDescription = "",
-                        modifier = Modifier
-                            .align(Alignment.CenterEnd)
-                            .clickable(onClick = { requireActivity().onBackPressed() })
-                    )
-                }
+                        .align(Alignment.CenterEnd)
+                        .clickable(onClick = { requireActivity().onBackPressed() })
+                )
             }
         }
     }
@@ -95,20 +86,19 @@ class CharityDetailFragment : Fragment() {
     @Composable
     fun CharityDetailBody(
         modifier: Modifier = Modifier
-    ){
+    ) {
         Surface(
             modifier = modifier
                 .fillMaxSize()
                 .clip(BottomSheetShape),
             color = Color.White,
         ) {
-            ScrollableColumn(
-                modifier = Modifier.padding(
-                    top = 24.dp,
-                    bottom = 32.dp,
-                    start = 24.dp,
-                    end = 24.dp
-                )
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clip(BottomSheetShape)
+                    .padding(24.dp)
+                    .verticalScroll(rememberScrollState())
             ) {
                 Text(
                     text = "Domov Mladeze Lovosicka",
@@ -148,8 +138,8 @@ class CharityDetailFragment : Fragment() {
 
                 InformationBox(
                     text = stringResource(R.string.CharityDetailFragment_InformationBox),
-                    backgroundColor = ButtonInfoBlue,
-                    borderColor = ButtonInfoBorder,
+                    backgroundColor = InformationBoxBlue,
+                    borderColor = InformationBoxBlueBorder,
                     modifier = Modifier
                         .padding(top = 24.dp)
                         .fillMaxWidth()
@@ -158,45 +148,6 @@ class CharityDetailFragment : Fragment() {
         }
     }
 }
-
-@Composable
-fun DonationRow(
-    price: String,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = modifier.preferredHeight(58.dp)
-    ) {
-        Column(
-            modifier = Modifier.fillMaxHeight(),
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = stringResource(R.string.CharityDetailFragment_Raised),
-                style = MaterialTheme.typography.body1.copy(fontSize = 13.sp),
-                color = donationTextGray
-            )
-            Text(
-                text = price,
-                style = MaterialTheme.typography.body2,
-            )
-        }
-        Button(
-            modifier = Modifier
-                .padding(start = 16.dp)
-                .fillMaxSize(),
-            onClick = { /*TODO*/ }
-        ) {
-            Text(
-                text = stringResource(R.string.CharityDetailFragment_ButtonDonation),
-                style = MaterialTheme.typography.button
-            )
-        }
-    }
-}
-
-
-
 
 @Composable
 fun DonationBox(
@@ -218,7 +169,43 @@ fun DonationBox(
             )
         }
     }
+}
 
+@Composable
+fun DonationRow(
+    price: String,
+    modifier: Modifier = Modifier,
+    onButtonClick: () -> Unit = {}
+) {
+    Row(
+        modifier = modifier.preferredHeight(58.dp)
+    ) {
+        Column(
+            modifier = Modifier.fillMaxHeight(),
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = stringResource(R.string.CharityDetailFragment_Raised),
+                style = MaterialTheme.typography.body1.copy(fontSize = 13.sp),
+                color = TextDonationGray
+            )
+            Text(
+                text = price,
+                style = MaterialTheme.typography.body2.copy(fontWeight = FontWeight.Bold),
+            )
+        }
+        Button(
+            modifier = Modifier
+                .padding(start = 16.dp)
+                .fillMaxSize(),
+            onClick = onButtonClick
+        ) {
+            Text(
+                text = stringResource(R.string.CharityDetailFragment_ButtonDonation),
+                style = MaterialTheme.typography.button
+            )
+        }
+    }
 }
 
 @Composable
