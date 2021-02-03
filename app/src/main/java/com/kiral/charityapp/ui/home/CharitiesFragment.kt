@@ -18,10 +18,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
@@ -29,9 +29,12 @@ import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.kiral.charityapp.R
+import com.kiral.charityapp.domain.charities
+import com.kiral.charityapp.domain.model.Charity
 import com.kiral.charityapp.ui.theme.CharityTheme
 import com.kiral.charityapp.ui.theme.cardTextStyle
 import com.kiral.charityapp.ui.theme.ProfileIconBorder
+import com.kiral.charityapp.utils.loadPicture
 
 enum class CharitiesScreen {
     Charities, Ranking
@@ -81,7 +84,7 @@ class CharitiesFragment : Fragment() {
 
                 when (tabSelected) {
                     CharitiesScreen.Charities -> GridCharity(
-                        lst = data,
+                        lst = charities,
                         modifier = Modifier
                             .padding(top = 20.dp)
                             .align(Alignment.CenterHorizontally)
@@ -93,12 +96,13 @@ class CharitiesFragment : Fragment() {
     }
 
     @Composable
-    fun RankingScreen() {}
+    fun RankingScreen() {
+    }
 
     @ExperimentalFoundationApi
     @Composable
     fun GridCharity(
-        lst: List<CharityGridItem>,
+        lst: List<Charity>,
         modifier: Modifier = Modifier
     ) {
         LazyVerticalGrid(
@@ -113,7 +117,7 @@ class CharitiesFragment : Fragment() {
 
     @Composable
     fun CharityItem(
-        charity: CharityGridItem,
+        charity: Charity,
         modifier: Modifier = Modifier
     ) {
         Column(
@@ -122,17 +126,24 @@ class CharitiesFragment : Fragment() {
                 .padding(horizontal = 6.dp, vertical = 4.dp)
                 .clickable(onClick = { findNavController().navigate(R.id.action_charitiesFragment_to_charityDetailFragment) })
         ) {
-            Image(
-                bitmap = imageResource(id = charity.imageUrl),
-                contentDescription = "",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .preferredHeight(110.dp)
-                    .clip(RoundedCornerShape(5.dp))
-            )
+            charity.imgSrc.let { url ->
+                val image = loadPicture(url = url, defaultImage = R.drawable.children).value
+                image?.let { img ->
+                    Image(
+                        bitmap = img.asImageBitmap(),
+                        contentDescription = "",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .preferredHeight(110.dp)
+                            .clip(RoundedCornerShape(5.dp))
+                    )
+                }
+
+            }
+
             Text(
-                text = charity.text,
+                text = charity.name,
                 style = cardTextStyle,
                 maxLines = 2,
                 modifier = Modifier.padding(top = 8.dp)
@@ -167,8 +178,9 @@ fun CharityAppBar(
                 .fillMaxWidth()
                 .weight(0.3f)
         ) {
-            IconRoundCorner(modifier = Modifier
-                .align(alignment = Alignment.CenterEnd),
+            IconRoundCorner(
+                modifier = Modifier
+                    .align(alignment = Alignment.CenterEnd),
                 imageVector = vectorResource(id = R.drawable.ic_profile),
                 onClick = onProfileClick
             )
