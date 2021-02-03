@@ -1,29 +1,30 @@
-package com.kiral.charityapp.OnBoarding
+package com.kiral.charityapp.ui.onboarding
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.InteractionState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.kiral.charityapp.R
-import com.kiral.charityapp.theme.CharityTheme
-import com.kiral.charityapp.theme.labelTextStyle
+import com.kiral.charityapp.ui.theme.CharityTheme
+import com.kiral.charityapp.ui.theme.labelTextStyle
 
 class SelectCharitiesTypesFragment : Fragment() {
 
@@ -43,12 +44,13 @@ class SelectCharitiesTypesFragment : Fragment() {
     fun SelectCharitiesScreen() {
         CharityTheme() {
             Column(
+                modifier = Modifier.padding(horizontal = 32.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
                 Text(
-                    text = "Select charities types",
+                    text = stringResource(R.string.SelectCharitiesTypesFragment_Title),
                     style = MaterialTheme.typography.h5,
                     textAlign = TextAlign.Center,
                 )
@@ -60,13 +62,13 @@ class SelectCharitiesTypesFragment : Fragment() {
                     ),
                     modifier = Modifier
                         .align(Alignment.Start)
-                        .padding(start = 32.dp, top = 64.dp)
+                        .padding(top = 64.dp)
                 )
 
                 Button(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 32.dp, vertical = 32.dp)
+                        .padding(vertical = 32.dp)
                         .preferredHeight(64.dp),
                     onClick = { findNavController().navigate(R.id.action_selectCharitiesTypesFragment_to_setupRegularPaymentsFragment) }
                 ) {
@@ -100,8 +102,11 @@ class SelectCharitiesTypesFragment : Fragment() {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(end = 32.dp)
-                .clickable(onClick = onRowClick, indication = null)
+                .clickable(
+                    indication = null,
+                    interactionState = InteractionState(),
+                    onClick = onRowClick
+                )
                 .padding(bottom = 24.dp)
         ) {
             Text(
@@ -114,6 +119,7 @@ class SelectCharitiesTypesFragment : Fragment() {
             if (selected) {
                 Image(
                     imageVector = vectorResource(id = R.drawable.ic_selected),
+                    contentDescription = "",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.align(Alignment.CenterVertically)
                 )

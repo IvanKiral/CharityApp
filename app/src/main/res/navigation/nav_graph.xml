@@ -6,30 +6,107 @@
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.kiral.charityapp.login.LoginFragment"
+        android:name="com.kiral.charityapp.ui.login.LoginFragment"
         android:label="LoginFragment" >
         <action
             android:id="@+id/action_loginFragment_to_editPersonalInformationFragment"
-            app:destination="@id/editPersonalInformationFragment" />
+            app:destination="@id/editPersonalInformationFragment"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_loginFragment_to_charitiesFragment"
+            app:destination="@id/charitiesFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_registrationFragment"
+            app:destination="@id/registrationFragment"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit" />
     </fragment>
     <fragment
         android:id="@+id/editPersonalInformationFragment"
-        android:name="com.kiral.charityapp.OnBoarding.EditPersonalInformationFragment"
+        android:name="com.kiral.charityapp.ui.onboarding.EditPersonalInformationFragment"
         android:label="EditPersonalInformationFragment" >
         <action
             android:id="@+id/action_editPersonalInformationFragment_to_selectCharitiesTypesFragment"
-            app:destination="@id/selectCharitiesTypesFragment" />
+            app:destination="@id/selectCharitiesTypesFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
     </fragment>
     <fragment
         android:id="@+id/selectCharitiesTypesFragment"
-        android:name="com.kiral.charityapp.OnBoarding.SelectCharitiesTypesFragment"
+        android:name="com.kiral.charityapp.ui.onboarding.SelectCharitiesTypesFragment"
         android:label="SelectCharitiesTypesFragment" >
         <action
             android:id="@+id/action_selectCharitiesTypesFragment_to_setupRegularPaymentsFragment"
-            app:destination="@id/setupRegularPaymentsFragment" />
+            app:destination="@id/setupRegularPaymentsFragment"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit" />
     </fragment>
     <fragment
         android:id="@+id/setupRegularPaymentsFragment"
-        android:name="com.kiral.charityapp.OnBoarding.SetupRegularPaymentsFragment"
-        android:label="SetupRegularPaymentsFragment" />
+        android:name="com.kiral.charityapp.ui.onboarding.SetupRegularPaymentsFragment"
+        android:label="SetupRegularPaymentsFragment" >
+        <action
+            android:id="@+id/action_setupRegularPaymentsFragment_to_charitiesFragment"
+            app:destination="@id/charitiesFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popUpTo="@+id/editPersonalInformationFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/charitiesFragment"
+        android:name="com.kiral.charityapp.ui.home.CharitiesFragment"
+        android:label="CharitiesFragment" >
+        <action
+            android:id="@+id/action_charitiesFragment_to_charityDetailFragment"
+            app:destination="@id/charityDetailFragment"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popEnterAnim="@anim/fragment_fade_enter"
+            app:popExitAnim="@anim/fragment_fade_exit" />
+        <action
+            android:id="@+id/action_charitiesFragment_to_profileFragment"
+            app:destination="@id/profileFragment"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit" />
+    </fragment>
+    <fragment
+        android:id="@+id/charityDetailFragment"
+        android:name="com.kiral.charityapp.ui.detail.CharityDetailFragment"
+        android:label="CharityDetailFragment" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.kiral.charityapp.ui.profile.ProfileFragment"
+        android:label="ProfileFragment" >
+        <action
+            android:id="@+id/action_profileFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_badgesFragment"
+            app:destination="@id/badgesFragment"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit" />
+    </fragment>
+    <fragment
+        android:id="@+id/registrationFragment"
+        android:name="com.kiral.charityapp.ui.login.RegistrationFragment"
+        android:label="RegistrationFragment" >
+        <action
+            android:id="@+id/action_registrationFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_registrationFragment_to_editPersonalInformationFragment"
+            app:destination="@id/editPersonalInformationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/badgesFragment"
+        android:name="com.kiral.charityapp.ui.badges.BadgesFragment"
+        android:label="BadgesFragment" />
 </navigation>
