@@ -1,4 +1,4 @@
-package com.kiral.charityapp.components
+package com.kiral.charityapp.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -22,8 +22,8 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.kiral.charityapp.profile.BadgeData
-import com.kiral.charityapp.theme.*
+import com.kiral.charityapp.ui.profile.BadgeData
+import com.kiral.charityapp.ui.theme.*
 
 @Composable
 fun ProfileImageWithBorder(

@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.kiral.charityapp.login.LoginFragment"
+        android:name="com.kiral.charityapp.ui.login.LoginFragment"
         android:label="LoginFragment" >
         <action
             android:id="@+id/action_loginFragment_to_editPersonalInformationFragment"
@@ -18,10 +18,15 @@
         <action
             android:id="@+id/action_loginFragment_to_charitiesFragment"
             app:destination="@id/charitiesFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_registrationFragment"
+            app:destination="@id/registrationFragment"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit" />
     </fragment>
     <fragment
         android:id="@+id/editPersonalInformationFragment"
-        android:name="com.kiral.charityapp.onboarding.EditPersonalInformationFragment"
+        android:name="com.kiral.charityapp.ui.onboarding.EditPersonalInformationFragment"
         android:label="EditPersonalInformationFragment" >
         <action
             android:id="@+id/action_editPersonalInformationFragment_to_selectCharitiesTypesFragment"
@@ -31,7 +36,7 @@
     </fragment>
     <fragment
         android:id="@+id/selectCharitiesTypesFragment"
-        android:name="com.kiral.charityapp.onboarding.SelectCharitiesTypesFragment"
+        android:name="com.kiral.charityapp.ui.onboarding.SelectCharitiesTypesFragment"
         android:label="SelectCharitiesTypesFragment" >
         <action
             android:id="@+id/action_selectCharitiesTypesFragment_to_setupRegularPaymentsFragment"
@@ -41,7 +46,7 @@
     </fragment>
     <fragment
         android:id="@+id/setupRegularPaymentsFragment"
-        android:name="com.kiral.charityapp.onboarding.SetupRegularPaymentsFragment"
+        android:name="com.kiral.charityapp.ui.onboarding.SetupRegularPaymentsFragment"
         android:label="SetupRegularPaymentsFragment" >
         <action
             android:id="@+id/action_setupRegularPaymentsFragment_to_charitiesFragment"
@@ -53,7 +58,7 @@
     </fragment>
     <fragment
         android:id="@+id/charitiesFragment"
-        android:name="com.kiral.charityapp.home.CharitiesFragment"
+        android:name="com.kiral.charityapp.ui.home.CharitiesFragment"
         android:label="CharitiesFragment" >
         <action
             android:id="@+id/action_charitiesFragment_to_charityDetailFragment"
@@ -70,14 +75,38 @@
     </fragment>
     <fragment
         android:id="@+id/charityDetailFragment"
-        android:name="com.kiral.charityapp.detail.CharityDetailFragment"
+        android:name="com.kiral.charityapp.ui.detail.CharityDetailFragment"
         android:label="CharityDetailFragment" />
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.kiral.charityapp.profile.ProfileFragment"
+        android:name="com.kiral.charityapp.ui.profile.ProfileFragment"
         android:label="ProfileFragment" >
         <action
             android:id="@+id/action_profileFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_badgesFragment"
+            app:destination="@id/badgesFragment"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit" />
     </fragment>
+    <fragment
+        android:id="@+id/registrationFragment"
+        android:name="com.kiral.charityapp.ui.login.RegistrationFragment"
+        android:label="RegistrationFragment" >
+        <action
+            android:id="@+id/action_registrationFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_registrationFragment_to_editPersonalInformationFragment"
+            app:destination="@id/editPersonalInformationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/badgesFragment"
+        android:name="com.kiral.charityapp.ui.badges.BadgesFragment"
+        android:label="BadgesFragment" />
 </navigation>

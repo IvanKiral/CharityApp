@@ -1,4 +1,4 @@
-package com.kiral.charityapp.home
+package com.kiral.charityapp.ui.home
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -20,20 +20,18 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.kiral.charityapp.R
-import com.kiral.charityapp.theme.CharityTheme
-import com.kiral.charityapp.theme.cardTextStyle
-import com.kiral.charityapp.theme.ProfileIconBorder
+import com.kiral.charityapp.ui.theme.CharityTheme
+import com.kiral.charityapp.ui.theme.cardTextStyle
+import com.kiral.charityapp.ui.theme.ProfileIconBorder
 
 enum class CharitiesScreen {
     Charities, Ranking

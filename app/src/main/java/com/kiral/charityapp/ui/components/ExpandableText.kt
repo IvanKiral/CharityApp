@@ -1,4 +1,4 @@
-package com.kiral.charityapp.components
+package com.kiral.charityapp.ui.components
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.spring
@@ -18,7 +18,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kiral.charityapp.R
-import com.kiral.charityapp.theme.ButtonBlue
+import com.kiral.charityapp.ui.theme.ButtonBlue
 
 private enum class TextState{
     Expanded, Collapsed

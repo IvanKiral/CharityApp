@@ -1,4 +1,4 @@
-package com.kiral.charityapp.onboarding
+package com.kiral.charityapp.ui.onboarding
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.kiral.charityapp.R
-import com.kiral.charityapp.theme.CharityTheme
+import com.kiral.charityapp.ui.theme.CharityTheme
 
 class SetupRegularPaymentsFragment: Fragment(){
     override fun onCreateView(

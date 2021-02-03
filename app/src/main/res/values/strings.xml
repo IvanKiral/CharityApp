@@ -24,4 +24,12 @@
     <string name="ProfileFragment_RegularDonations">Regular donations</string>
     <string name="ProfileFragment_Logout">Logout</string>
     <string name="ProfileFragment_LogoutDescription">Logout from the system</string>
+    <string name="RegistrationFragment_Email">Email</string>
+    <string name="RegistrationFragment_Password">Password</string>
+    <string name="RegistrationFragment_PasswordConfirmation">Password confirmation</string>
+    <string name="RegistrationFragment_CreateAccount">Create account</string>
+    <string name="RegistrationFragment_SignUpWith">Or sign up with</string>
+    <string name="RegistrationFragment_AlreadyRegistered">Already registered?</string>
+    <string name="RegistrationFragment_Login">Login</string>
+    <string name="RegistrationFragment_Title">Register</string>
 </resources>

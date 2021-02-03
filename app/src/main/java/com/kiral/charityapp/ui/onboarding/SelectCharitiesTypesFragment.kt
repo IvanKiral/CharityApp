@@ -1,4 +1,4 @@
-package com.kiral.charityapp.onboarding
+package com.kiral.charityapp.ui.onboarding
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -18,14 +18,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.kiral.charityapp.R
-import com.kiral.charityapp.theme.CharityTheme
-import com.kiral.charityapp.theme.labelTextStyle
+import com.kiral.charityapp.ui.theme.CharityTheme
+import com.kiral.charityapp.ui.theme.labelTextStyle
 
 class SelectCharitiesTypesFragment : Fragment() {
 

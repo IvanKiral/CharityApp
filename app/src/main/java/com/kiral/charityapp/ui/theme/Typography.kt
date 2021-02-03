@@ -1,4 +1,4 @@
-package com.kiral.charityapp.theme
+package com.kiral.charityapp.ui.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.graphics.Color

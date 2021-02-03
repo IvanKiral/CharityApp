@@ -1,4 +1,4 @@
-package com.kiral.charityapp.components
+package com.kiral.charityapp.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable

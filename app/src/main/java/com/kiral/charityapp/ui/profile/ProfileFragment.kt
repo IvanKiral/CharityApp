@@ -1,4 +1,4 @@
-package com.kiral.charityapp.profile
+package com.kiral.charityapp.ui.profile
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -23,9 +23,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.kiral.charityapp.R
-import com.kiral.charityapp.components.*
-import com.kiral.charityapp.theme.*
+import com.kiral.charityapp.ui.components.*
+import com.kiral.charityapp.ui.theme.*
 
 data class BadgeData(
     val icon: Int,
@@ -174,7 +175,7 @@ class ProfileFragment : Fragment() {
                 text = AnnotatedString(stringResource(R.string.ProfileFragment_ShowBadges)),
                 style = MaterialTheme.typography.body1.copy(color = TextShowBadges),
                 modifier = Modifier.padding(top = 24.dp),
-                onClick = { /*TODO*/ }
+                onClick = { findNavController().navigate(R.id.action_profileFragment_to_badgesFragment) }
             )
         }
     }

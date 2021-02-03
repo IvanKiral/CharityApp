@@ -1,4 +1,4 @@
-package com.kiral.charityapp.detail
+package com.kiral.charityapp.ui.detail
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -24,8 +24,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import com.kiral.charityapp.R
-import com.kiral.charityapp.components.ExpandableText
-import com.kiral.charityapp.theme.*
+import com.kiral.charityapp.ui.components.ExpandableText
+import com.kiral.charityapp.ui.theme.*
 
 class CharityDetailFragment : Fragment() {
     @ExperimentalMaterialApi

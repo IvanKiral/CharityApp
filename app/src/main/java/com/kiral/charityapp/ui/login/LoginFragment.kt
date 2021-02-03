@@ -1,4 +1,4 @@
-package com.kiral.charityapp.login
+package com.kiral.charityapp.ui.login
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -15,25 +14,20 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.AmbientContext
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.ui.tooling.preview.Preview
 import com.kiral.charityapp.R
-import com.kiral.charityapp.components.ClickableIcon
-import com.kiral.charityapp.theme.CharityTheme
-import com.kiral.charityapp.theme.TextFieldBorder
-import com.kiral.charityapp.theme.labelTextStyle
+import com.kiral.charityapp.ui.components.ClickableIcon
+import com.kiral.charityapp.ui.components.FormTextField
+import com.kiral.charityapp.ui.theme.CharityTheme
 
 class LoginFragment : Fragment() {
 
@@ -67,13 +61,13 @@ class LoginFragment : Fragment() {
                         .padding(top = 96.dp, bottom = 64.dp)
                 )
 
-                LoginTextField(
+                FormTextField(
                     text = loginText,
                     onChange = setLoginText,
                     label = stringResource(R.string.LoginFragment_Email)
                 )
 
-                LoginTextField(
+                FormTextField(
                     text = passwordText,
                     onChange = setPasswordText,
                     label = stringResource(R.string.LoginFragment_Password),
@@ -112,7 +106,8 @@ class LoginFragment : Fragment() {
 
                 ClickableText(
                     text = AnnotatedString(stringResource(R.string.LoginFragment_Register)),
-                    onClick = { /*TODO*/ }
+                    style = TextStyle(textDecoration = TextDecoration.Underline),
+                    onClick = { findNavController().navigate(R.id.action_loginFragment_to_registrationFragment )}
                 )
             }
         }
@@ -142,40 +137,3 @@ class LoginFragment : Fragment() {
     }
 }
 
-@Composable
-fun LoginTextField(
-    text: String,
-    onChange: (String) -> Unit,
-    label: String,
-    modifier: Modifier = Modifier,
-    password: Boolean = false
-) {
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(Color.Transparent)
-            .border(
-                width = 1.dp,
-                color = TextFieldBorder,
-                shape = RoundedCornerShape(6.dp)
-            )
-    ) {
-        TextField(
-            textStyle = labelTextStyle,
-            backgroundColor = Color.Transparent,
-            value = text,
-            inactiveColor = Color.Transparent,
-            onValueChange = onChange,
-            visualTransformation = if (password) PasswordVisualTransformation() else VisualTransformation.None,
-            placeholder = {
-                Text(
-                    text = label,
-                    style = labelTextStyle
-                )
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-        )
-    }
-}
