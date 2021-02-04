@@ -111,7 +111,15 @@ class CharitiesFragment : Fragment() {
             modifier = modifier
         ) {
             items(lst) {
-                CharityItem(charity = it)
+                CharityItem(
+                    charity = it,
+                    onClick = {
+                        val action = CharitiesFragmentDirections
+                            .actionCharitiesFragmentToCharityDetailFragment(it.id)
+                        findNavController()
+                            .navigate(action)
+                    }
+                )
             }
         }
     }
@@ -119,13 +127,14 @@ class CharitiesFragment : Fragment() {
     @Composable
     fun CharityItem(
         charity: Charity,
+        onClick: () -> Unit,
         modifier: Modifier = Modifier
     ) {
         Column(
             modifier = modifier
                 .fillMaxWidth()
                 .padding(horizontal = 6.dp, vertical = 4.dp)
-                .clickable(onClick = { findNavController().navigate(R.id.action_charitiesFragment_to_charityDetailFragment) })
+                .clickable(onClick = onClick)
         ) {
             charity.imgSrc.let { url ->
                 val image = loadPicture(url = url, defaultImage = R.drawable.children).value

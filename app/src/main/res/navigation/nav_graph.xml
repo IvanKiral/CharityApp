@@ -66,7 +66,8 @@
             app:enterAnim="@anim/fragment_fade_enter"
             app:exitAnim="@anim/fragment_fade_exit"
             app:popEnterAnim="@anim/fragment_fade_enter"
-            app:popExitAnim="@anim/fragment_fade_exit" />
+            app:popExitAnim="@anim/fragment_fade_exit">
+        </action>
         <action
             android:id="@+id/action_charitiesFragment_to_profileFragment"
             app:destination="@id/profileFragment"
@@ -76,7 +77,12 @@
     <fragment
         android:id="@+id/charityDetailFragment"
         android:name="com.kiral.charityapp.ui.detail.CharityDetailFragment"
-        android:label="CharityDetailFragment" />
+        android:label="CharityDetailFragment" >
+        <argument
+            android:name="charityId"
+            app:argType="integer"
+            android:defaultValue="-1" />
+    </fragment>
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.kiral.charityapp.ui.profile.ProfileFragment"
