@@ -27,6 +27,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.kiral.charityapp.R
 import com.kiral.charityapp.domain.charities
@@ -35,6 +36,8 @@ import com.kiral.charityapp.ui.theme.CharityTheme
 import com.kiral.charityapp.ui.theme.cardTextStyle
 import com.kiral.charityapp.ui.theme.ProfileIconBorder
 import com.kiral.charityapp.utils.loadPicture
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 enum class CharitiesScreen {
     Charities, Ranking
@@ -45,12 +48,10 @@ data class CharityGridItem(
     val text: String
 )
 
+@AndroidEntryPoint
 class CharitiesFragment : Fragment() {
-    val data = listOf(
-        CharityGridItem(imageUrl = R.drawable.children, text = "Domov mladeze krasna horka"),
-        CharityGridItem(imageUrl = R.drawable.children, text = "Domov mladeze krasna horka"),
-        CharityGridItem(imageUrl = R.drawable.children, text = "Domov mladeze krasna horka"),
-    )
+
+    private val viewModel: CharitiesViewModel by viewModels()
 
     @ExperimentalFoundationApi
     override fun onCreateView(
@@ -84,7 +85,7 @@ class CharitiesFragment : Fragment() {
 
                 when (tabSelected) {
                     CharitiesScreen.Charities -> GridCharity(
-                        lst = charities,
+                        lst = viewModel.charities,
                         modifier = Modifier
                             .padding(top = 20.dp)
                             .align(Alignment.CenterHorizontally)
