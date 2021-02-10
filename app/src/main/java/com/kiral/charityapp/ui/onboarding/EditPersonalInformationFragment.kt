@@ -16,16 +16,27 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.kiral.charityapp.R
+import com.kiral.charityapp.ui.detail.CharityDetailFragmentArgs
 import com.kiral.charityapp.ui.theme.CharityTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class EditPersonalInformationFragment: Fragment(){
+
+    val args: EditPersonalInformationFragmentArgs by navArgs()
+
+    private val viewModel: OnBoardingViewModel by activityViewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        viewModel.createNewProfile(args.email)
         return ComposeView(requireContext()).apply {
             setContent {
                 EditInfoScreen()
@@ -52,7 +63,10 @@ class EditPersonalInformationFragment: Fragment(){
                         .fillMaxWidth()
                         .padding(vertical = 8.dp)
                         .preferredHeight(64.dp),
-                    onClick = { findNavController().navigate(R.id.action_editPersonalInformationFragment_to_selectCharitiesTypesFragment) }
+                    onClick = {
+                        viewModel.addPersonalInformation("Test Test")
+                        findNavController().navigate(R.id.action_editPersonalInformationFragment_to_selectCharitiesTypesFragment)
+                    }
                 ) {
                     Text("Continue", style = MaterialTheme.typography.button)
                 }

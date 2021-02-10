@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.kiral.charityapp.R
 import com.kiral.charityapp.domain.charities
 import com.kiral.charityapp.domain.model.Charity
@@ -52,6 +53,7 @@ data class CharityGridItem(
 class CharitiesFragment : Fragment() {
 
     private val viewModel: CharitiesViewModel by viewModels()
+    private val args: CharitiesFragmentArgs by navArgs()
 
     @ExperimentalFoundationApi
     override fun onCreateView(
@@ -78,7 +80,8 @@ class CharitiesFragment : Fragment() {
                     tabSelected = tabSelected,
                     modifier = Modifier.fillMaxWidth(),
                     onProfileClick = {
-                        findNavController().navigate(R.id.action_charitiesFragment_to_profileFragment)
+                        val action = CharitiesFragmentDirections.actionCharitiesFragmentToProfileFragment(args.email)
+                        findNavController().navigate(action)
                     },
                     onTabSelected = { tabSelected = it }
                 )

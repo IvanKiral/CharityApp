@@ -27,6 +27,7 @@ import androidx.navigation.fragment.findNavController
 import com.kiral.charityapp.R
 import com.kiral.charityapp.ui.components.ClickableIcon
 import com.kiral.charityapp.ui.components.FormTextField
+import com.kiral.charityapp.ui.home.CharitiesFragmentDirections
 import com.kiral.charityapp.ui.theme.CharityTheme
 
 class RegistrationFragment : Fragment() {
@@ -88,7 +89,15 @@ class RegistrationFragment : Fragment() {
                         .fillMaxWidth()
                         .padding(top = 16.dp)
                         .preferredHeight(64.dp),
-                    onClick = { }
+                    onClick = {
+                        if(loginText != "") {
+                            val action = RegistrationFragmentDirections
+                                .actionRegistrationFragmentToEditPersonalInformationFragment(loginText)
+                            findNavController().navigate(action)
+                        } else{
+                            Toast.makeText(requireContext(), "Please fill up your credentials", Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 ) {
                     Text(
                         stringResource(R.string.RegistrationFragment_CreateAccount),

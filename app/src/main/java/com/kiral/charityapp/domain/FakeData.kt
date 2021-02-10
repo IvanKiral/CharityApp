@@ -37,19 +37,33 @@ val badges: List<Badge> = listOf(
         iconId = R.drawable.ic_dog
     ),
 )
+val profiles = mutableListOf(
+    Profile(
+        id = 0,
+        email = "email@email.com",
+        name = "Rachel Green",
+        donations = 87,
+        credit = 27.5f,
+        charities = "",
+        automaticDonations = true,
+        automaticDonationsValue = 1,
+        automaticDonationTimeFrequency = "day",
+        badges = badges
+    ),
 
-val profile = Profile(
-    id = 0,
-    email = "email@email.com",
-    name = "Rachel Green",
-    donations = 87,
-    credit = 27.5f,
-    automaticDonations = true,
-    automaticDonationsValue = 1,
-    automaticDonationTimeFrequency = "day",
-    badges = badges
+    Profile(
+        id = 1,
+        email = "test@email.com",
+        name = "Ross Geller",
+        donations = 10,
+        credit = 100f,
+        charities = "",
+        automaticDonations = true,
+        automaticDonationsValue = 5,
+        automaticDonationTimeFrequency = "day",
+        badges = badges
+    ),
 )
-
 val charities = listOf(
     Charity(
         imgSrc = "https://images.unsplash.com/photo-1611464765133-794150e205dd?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=600&ixlib=rb-1.2.1&q=80&w=800",

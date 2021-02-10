@@ -1,6 +1,7 @@
 package com.kiral.charityapp.ui.profile
 
 import androidx.lifecycle.ViewModel
+import com.kiral.charityapp.domain.model.Profile
 import com.kiral.charityapp.repositories.charities.ProfileRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -11,5 +12,9 @@ class ProfileViewModel
 constructor(
     private val profileRepository: ProfileRepository
 ): ViewModel() {
-    val profile = profileRepository.getProfile()
+    lateinit var profile: Profile
+
+    fun setProfile(email: String){
+        profile = profileRepository.getProfile(email)
+    }
 }

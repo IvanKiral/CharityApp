@@ -1,13 +1,14 @@
 package com.kiral.charityapp.domain.model
 
 data class Profile(
-    val id: Int,
+    var id: Int? = null,
     val email: String,
-    val name: String,
-    val donations: Int,
-    val credit: Float,
-    val automaticDonations: Boolean,
-    val automaticDonationsValue: Int,
-    val automaticDonationTimeFrequency: String,
+    var name: String,
+    var donations: Int,
+    var credit: Float,
+    var charities: String,
+    var automaticDonations: Boolean,
+    var automaticDonationsValue: Int,
+    var automaticDonationTimeFrequency: String ="day",
     val badges: List<Badge>
 )

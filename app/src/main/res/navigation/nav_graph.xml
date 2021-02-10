@@ -33,6 +33,10 @@
             app:destination="@id/selectCharitiesTypesFragment"
             app:enterAnim="@android:anim/fade_in"
             app:exitAnim="@android:anim/fade_out" />
+        <argument
+            android:name="email"
+            app:argType="string"
+            android:defaultValue='""' />
     </fragment>
     <fragment
         android:id="@+id/selectCharitiesTypesFragment"
@@ -73,6 +77,9 @@
             app:destination="@id/profileFragment"
             app:enterAnim="@anim/fragment_fade_enter"
             app:exitAnim="@anim/fragment_fade_exit" />
+        <argument
+            android:name="email"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/charityDetailFragment"
@@ -95,6 +102,10 @@
             app:destination="@id/badgesFragment"
             app:enterAnim="@anim/fragment_fade_enter"
             app:exitAnim="@anim/fragment_fade_exit" />
+        <argument
+            android:name="email"
+            app:argType="string"
+            android:defaultValue='""' />
     </fragment>
     <fragment
         android:id="@+id/registrationFragment"

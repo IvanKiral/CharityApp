@@ -23,13 +23,18 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.kiral.charityapp.R
 import com.kiral.charityapp.ui.components.ClickableIcon
 import com.kiral.charityapp.ui.components.FormTextField
 import com.kiral.charityapp.ui.theme.CharityTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class LoginFragment : Fragment() {
+
+    private val viewModel: LoginViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -80,7 +85,18 @@ class LoginFragment : Fragment() {
                         .fillMaxWidth()
                         .padding(top = 16.dp)
                         .preferredHeight(64.dp),
-                    onClick = { findNavController().navigate(R.id.action_loginFragment_to_editPersonalInformationFragment) }
+                    onClick = {
+                        if (loginText != "" && passwordText != "") {
+                            if(viewModel.profileExists(loginText)) {
+                                val action = LoginFragmentDirections.actionLoginFragmentToCharitiesFragment(loginText)
+                                findNavController().navigate(action)
+                            }else{
+                                Toast.makeText(requireContext(),"There is no user with such credentials", Toast.LENGTH_SHORT).show()
+                            }
+                        } else {
+                            Toast.makeText(requireContext(),"Please fill up login fields", Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 ) {
                     Text(
                         stringResource(R.string.LoginFragment_ButtonLogin),

@@ -12,6 +12,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -21,12 +22,23 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.AndroidViewModel
 import androidx.navigation.fragment.findNavController
 import com.kiral.charityapp.R
 import com.kiral.charityapp.ui.theme.CharityTheme
 import com.kiral.charityapp.ui.theme.labelTextStyle
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SelectCharitiesTypesFragment : Fragment() {
+
+    private val viewModel: OnBoardingViewModel by activityViewModels()
+
+    private val categories = listOf(
+        "Environment charity", "Animal charity",
+        "Health charity", "Education charity", "Art and culture charity"
+    )
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,6 +54,9 @@ class SelectCharitiesTypesFragment : Fragment() {
 
     @Composable
     fun SelectCharitiesScreen() {
+        val lst = MutableList(categories.size) { false }
+        val selected = remember { lst.toMutableStateList() }
+
         CharityTheme() {
             Column(
                 modifier = Modifier.padding(horizontal = 32.dp),
@@ -56,10 +71,8 @@ class SelectCharitiesTypesFragment : Fragment() {
                 )
 
                 CharitiesSelector(
-                    categories = listOf(
-                        "Environment charity", "Animal charity",
-                        "Health charity", "Education charity", "Art and culture charity"
-                    ),
+                    categories = categories,
+                    categoriesSelected = selected,
                     modifier = Modifier
                         .align(Alignment.Start)
                         .padding(top = 64.dp)
@@ -70,7 +83,17 @@ class SelectCharitiesTypesFragment : Fragment() {
                         .fillMaxWidth()
                         .padding(vertical = 32.dp)
                         .preferredHeight(64.dp),
-                    onClick = { findNavController().navigate(R.id.action_selectCharitiesTypesFragment_to_setupRegularPaymentsFragment) }
+                    onClick = {
+                        val charities = selected.foldIndexed(
+                            "",
+                            { index, result, sel ->
+                                if(sel) result + categories[index] + (if(index != selected.filter { it == true }.size - 1) ";" else "")
+                                else result + ""
+                            }
+                        )
+                        viewModel.addCharitiesTypes(charities)
+                        findNavController().navigate(R.id.action_selectCharitiesTypesFragment_to_setupRegularPaymentsFragment)
+                    }
                 ) {
                     Text("Continue", style = MaterialTheme.typography.button)
                 }
@@ -79,15 +102,18 @@ class SelectCharitiesTypesFragment : Fragment() {
     }
 
     @Composable
-    fun CharitiesSelector(categories: List<String>, modifier: Modifier = Modifier) {
-        val lst = MutableList(categories.size) { false }
-        val selected = remember { lst.toMutableStateList() }
+    fun CharitiesSelector(
+        categories: List<String>,
+        categoriesSelected: SnapshotStateList<Boolean>,
+        modifier: Modifier = Modifier,
+    ) {
+
         Column(modifier = modifier) {
             for (i in 0 until categories.size) {
                 RowSelector(
                     text = categories[i],
-                    selected = selected[i],
-                    onRowClick = { selected[i] = !selected[i] }
+                    selected = categoriesSelected[i],
+                    onRowClick = {categoriesSelected[i] = !categoriesSelected[i]}
                 )
             }
         }

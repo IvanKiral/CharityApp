@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.kiral.charityapp.R
 import com.kiral.charityapp.domain.model.Profile
 import com.kiral.charityapp.ui.components.*
@@ -48,8 +49,11 @@ class ProfileFragment : Fragment() {
     private val viewModel: ProfileViewModel by viewModels()
     private lateinit var profile: Profile
 
+    val args: ProfileFragmentArgs by navArgs()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel.setProfile(args.email)
         profile = viewModel.profile
     }
 
