@@ -23,15 +23,19 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.kiral.charityapp.R
+import com.kiral.charityapp.domain.model.Profile
 import com.kiral.charityapp.ui.components.*
 import com.kiral.charityapp.ui.theme.*
+import dagger.hilt.android.AndroidEntryPoint
 
 data class BadgeData(
     val icon: Int,
 )
 
+@AndroidEntryPoint
 class ProfileFragment : Fragment() {
     val data = listOf<BadgeData>(
         BadgeData(R.drawable.ic_dog),
@@ -40,6 +44,14 @@ class ProfileFragment : Fragment() {
         BadgeData(R.drawable.ic_dog),
         BadgeData(R.drawable.ic_dog)
     )
+
+    private val viewModel: ProfileViewModel by viewModels()
+    private lateinit var profile: Profile
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        profile = viewModel.profile
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -76,7 +88,7 @@ class ProfileFragment : Fragment() {
                             .offset(x = -16.dp)
                     )
                     ProfilePicture(
-                        name = "Rachel Green",
+                        name = profile.name,
                         imageBitmap = imageResource(id = R.drawable.rachel),
                         imageSize = 128.dp,
                         modifier = Modifier.constrainAs(profilePicture) {
@@ -104,8 +116,8 @@ class ProfileFragment : Fragment() {
                             }
                     )
                     BoxRow(
-                        credit = "27.5€",
-                        donations = "87",
+                        credit = "${profile.credit}€",
+                        donations = profile.donations.toString(),
                         modifier = Modifier
                             .fillMaxWidth()
                             .constrainAs(boxrow) {
@@ -251,7 +263,7 @@ class ProfileFragment : Fragment() {
         ) {
             Option(
                 title = stringResource(R.string.ProfileFragment_RegularDonations),
-                description = "1€/day",
+                description = "${profile.automaticDonationsValue}€/${profile.automaticDonationTimeFrequency}",
                 hasSwitch = true,
                 modifier = Modifier.fillMaxWidth()
             )
