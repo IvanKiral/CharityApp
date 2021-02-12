@@ -140,7 +140,7 @@ class CharitiesFragment : Fragment() {
                 .clickable(onClick = onClick)
         ) {
             charity.imgSrc.let { url ->
-                val image = loadPicture(url = url, defaultImage = R.drawable.children).value
+                val image = loadPicture(url = url, defaultImage = R.drawable.ic_loading_photo).value
                 image?.let { img ->
                     Image(
                         bitmap = img.asImageBitmap(),
