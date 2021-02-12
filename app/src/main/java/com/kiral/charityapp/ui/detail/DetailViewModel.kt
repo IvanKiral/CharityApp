@@ -13,7 +13,7 @@ constructor(
     private val chairtyRepository: CharityRepository
 ): ViewModel(){
 
-    fun getCharity(id: Int): Charity {
-        return chairtyRepository.get(id)
+    fun getCharity(id: Int, donorEmail:String): Charity {
+        return chairtyRepository.get(id, donorEmail)
     }
 }

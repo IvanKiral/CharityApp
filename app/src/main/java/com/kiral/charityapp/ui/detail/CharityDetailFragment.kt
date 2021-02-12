@@ -43,7 +43,7 @@ class CharityDetailFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        charity = viewModel.getCharity(args.charityId)
+        charity = viewModel.getCharity(args.charityId, args.donorEmail)
     }
 
     @ExperimentalMaterialApi

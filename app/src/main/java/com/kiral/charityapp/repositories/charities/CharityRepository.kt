@@ -5,5 +5,5 @@ import com.kiral.charityapp.domain.model.Charity
 interface CharityRepository {
     fun search(): List<Charity>
 
-    fun get(id: Int, /*donorId:Int*/): Charity
+    fun get(id: Int, donorEmail:String): Charity
 }

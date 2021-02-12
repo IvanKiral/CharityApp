@@ -89,6 +89,9 @@
             android:name="charityId"
             app:argType="integer"
             android:defaultValue="-1" />
+        <argument
+            android:name="donorEmail"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/profileFragment"

@@ -74,7 +74,8 @@ val charities = listOf(
                 "\n" +
                 "Venenatis a condimentum vitae sapien pellentesque. Massa sed elementum tempus egestas. Molestie at elementum eu facilisis. Eu non diam phasellus vestibulum lorem sed risus ultricies tristique. Ultrices",
         raised = 1250.0f,
-        peopleDonated = 187
+        peopleDonated = 187,
+        donorDonated = 1.5
     ),
     Charity(
         imgSrc = "https://source.unsplash.com/random/800x600",
@@ -85,7 +86,8 @@ val charities = listOf(
                 "\n" +
                 "Venenatis a condimentum vitae sapien pellentesque. Massa sed elementum tempus egestas. Molestie at elementum eu facilisis. Eu non diam phasellus vestibulum lorem sed risus ultricies tristique. Ultrices",
         raised = 1250.0f,
-        peopleDonated = 187
+        peopleDonated = 187,
+        donorDonated = 1.5
     ),
     Charity(
         imgSrc = "https://source.unsplash.com/random/800x600",
@@ -96,6 +98,7 @@ val charities = listOf(
                 "\n" +
                 "Venenatis a condimentum vitae sapien pellentesque. Massa sed elementum tempus egestas. Molestie at elementum eu facilisis. Eu non diam phasellus vestibulum lorem sed risus ultricies tristique. Ultrices",
         raised = 1250.0f,
-        peopleDonated = 187
+        peopleDonated = 187,
+        donorDonated = 1.5
     ),
 )

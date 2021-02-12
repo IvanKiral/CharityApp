@@ -7,5 +7,6 @@ data class Charity(
     val address: String,
     val description: String,
     val raised: Float,
-    val peopleDonated: Int
+    val peopleDonated: Int,
+    val donorDonated: Double,
 )

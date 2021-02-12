@@ -118,7 +118,7 @@ class CharitiesFragment : Fragment() {
                     charity = it,
                     onClick = {
                         val action = CharitiesFragmentDirections
-                            .actionCharitiesFragmentToCharityDetailFragment(it.id)
+                            .actionCharitiesFragmentToCharityDetailFragment(it.id, args.email)
                         findNavController()
                             .navigate(action)
                     }

@@ -15,6 +15,6 @@ constructor(
 ): ViewModel() {
 
     fun profileExists(email: String): Boolean{
-        return profiles.filter { p -> p.email == email }.size == 1
+        return profileRepository.login(email) != null
     }
 }
