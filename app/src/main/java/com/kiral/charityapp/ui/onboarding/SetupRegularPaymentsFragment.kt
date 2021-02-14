@@ -9,6 +9,8 @@ import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
@@ -19,6 +21,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.kiral.charityapp.R
+import com.kiral.charityapp.ui.components.SingleChoicePicker
 import com.kiral.charityapp.ui.theme.CharityTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -47,12 +50,40 @@ class SetupRegularPaymentsFragment: Fragment(){
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                val intervalItems = listOf("daily", "weekly", "monthly")
+                val (selectedInterval, setInterval) = remember { mutableStateOf(0)}
+
+                val amountItems = listOf(0, 0.5f, 1, 2, 5, 10, 20, 50, 100, 500, 1000)
+                val (selectedAmount, setAmount) = remember { mutableStateOf(0)}
 
                 Text(
                     text = stringResource(R.string.SetupRegularPaymentsFragment_Title),
                     style = MaterialTheme.typography.h5,
                     textAlign = TextAlign.Center,
                 )
+                Row(
+                    modifier = Modifier.padding(vertical = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    SingleChoicePicker(
+                        items = amountItems.map { i -> "$i €" },
+                        selectedItem = selectedAmount,
+                        setSelectedItem = setAmount,
+                        modifier = Modifier
+                            .fillMaxWidth(0.5f)
+                            .padding(horizontal = 8.dp),
+                        textAlignment = Alignment.End
+                    )
+                    SingleChoicePicker(
+                        items = intervalItems,
+                        selectedItem = selectedInterval,
+                        setSelectedItem = setInterval,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp),
+                        textAlignment = Alignment.Start
+                    )
+                }
 
                 Button(
                     modifier = Modifier
@@ -67,7 +98,10 @@ class SetupRegularPaymentsFragment: Fragment(){
                             .navigate(action)
                     }
                 ) {
-                    Text("Continue", style = MaterialTheme.typography.button)
+                    Text(
+                        text = if (selectedAmount != 0) "Continue" else "Skip",
+                        style = MaterialTheme.typography.button
+                    )
                 }
             }
         }
