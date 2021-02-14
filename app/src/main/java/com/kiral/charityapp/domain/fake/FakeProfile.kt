@@ -10,7 +10,7 @@ data class FakeProfile(
     //var Birthday
 )
 
-var fakeProfiles = listOf(
+var fakeProfiles = mutableListOf(
     FakeProfile(
         id = 0,
         name = "Alžbeta Pekná",

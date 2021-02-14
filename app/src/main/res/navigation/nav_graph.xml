@@ -17,7 +17,9 @@
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_loginFragment_to_charitiesFragment"
-            app:destination="@id/charitiesFragment" />
+            app:destination="@id/charitiesFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_loginFragment_to_registrationFragment"
             app:destination="@id/registrationFragment"
@@ -57,7 +59,7 @@
             app:destination="@id/charitiesFragment"
             app:enterAnim="@android:anim/fade_in"
             app:exitAnim="@android:anim/fade_out"
-            app:popUpTo="@+id/editPersonalInformationFragment"
+            app:popUpTo="@id/loginFragment"
             app:popUpToInclusive="true" />
     </fragment>
     <fragment
@@ -123,7 +125,9 @@
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_registrationFragment_to_editPersonalInformationFragment"
-            app:destination="@id/editPersonalInformationFragment" />
+            app:destination="@id/editPersonalInformationFragment"
+            app:popUpTo="@id/registrationFragment"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/badgesFragment"
