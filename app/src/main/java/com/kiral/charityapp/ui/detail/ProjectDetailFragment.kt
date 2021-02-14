@@ -8,7 +8,6 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,41 +16,42 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.kiral.charityapp.R
 import com.kiral.charityapp.domain.model.Charity
-import com.kiral.charityapp.ui.components.DonationBox
-import com.kiral.charityapp.ui.components.DonationRow
-import com.kiral.charityapp.ui.components.ExpandableText
-import com.kiral.charityapp.ui.components.InformationBox
+import com.kiral.charityapp.domain.model.Project
+import com.kiral.charityapp.domain.model.proj
+import com.kiral.charityapp.ui.components.*
 import com.kiral.charityapp.ui.theme.*
 import com.kiral.charityapp.utils.Convert
 import com.kiral.charityapp.utils.loadPicture
 import dagger.hilt.android.AndroidEntryPoint
+import java.text.DecimalFormat
+import java.text.NumberFormat
 
 @AndroidEntryPoint
-class CharityDetailFragment : Fragment() {
+class ProjectDetailFragment : Fragment() {
 
-    val args: CharityDetailFragmentArgs by navArgs()
+    //val args: CharityDetailFragmentArgs by navArgs()
 
-    val viewModel: DetailViewModel by viewModels()
-    lateinit var charity: Charity
+    lateinit var project: Project
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        charity = viewModel.getCharity(args.charityId, args.donorEmail)
+        project = proj
     }
 
     @ExperimentalMaterialApi
@@ -81,7 +81,7 @@ class CharityDetailFragment : Fragment() {
     @Composable
     fun CharityDetailHeader() {
         Box() {
-            charity.imgSrc.let { src ->
+            project.charityImage.let { src ->
                 val image = loadPicture(url = src , defaultImage = R.drawable.children)
                 image.value?.let { img ->
                     Image(
@@ -132,25 +132,25 @@ class CharityDetailFragment : Fragment() {
                     .verticalScroll(rememberScrollState())
             ) {
                 Text(
-                    text = charity.name,
+                    text = project.name,
                     style = MaterialTheme.typography.h5
                 )
 
                 Text(
                     modifier = Modifier.padding(top = 4.dp),
-                    text = "Domov Mladeze Krasna Horka",
+                    text = project.charityName,
                     style = MaterialTheme.typography.body1,
                     color = Color.Black.copy(0.5f)
                 )
 
                 Text(
                     modifier = Modifier.padding(top = 4.dp),
-                    text = charity.address,
+                    text = project.charityAdress,
                     style = MaterialTheme.typography.body1
                 )
 
                 ExpandableText(
-                    text = charity.description,
+                    text = project.description,
                     modifier = Modifier.padding(top = 16.dp)
                 )
 
@@ -159,15 +159,15 @@ class CharityDetailFragment : Fragment() {
                         .fillMaxWidth()
                         .padding(top = 24.dp)
                 )
-
-                DonationRow(
-                    price = "${charity.raised.toDouble().Convert()}€",
-                    modifier = Modifier.padding(top = 24.dp)
-                )
-
+                CharityRaisedColumn(modifier = Modifier.padding(top = 16.dp))
                 InformationBox(
                     text = buildAnnotatedString {
-                        append(stringResource(R.string.CharityDetailFragment_InformationBox, charity.peopleDonated))
+                         append(project.peopleDonated.toString() + " people")
+                        withStyle(SpanStyle(fontWeight = FontWeight.Bold)){
+                            append(" and you ")
+                        }
+                        append("have donated to this project")
+                        //append(stringResource(R.string.CharityDetailFragment_InformationBox, project.peopleDonated))
                     },
                     backgroundColor = InformationBoxBlue,
                     borderColor = InformationBoxBlueBorder,
@@ -175,37 +175,65 @@ class CharityDetailFragment : Fragment() {
                         .padding(top = 24.dp)
                         .fillMaxWidth()
                 )
-                ProjectsColumn(
-                    modifier = Modifier.padding(top = 16.dp)
-                )
             }
         }
     }
 
     @Composable
-    fun ProjectsColumn(
-        modifier: Modifier = Modifier
+    fun CharityRaisedColumn(
+        modifier: Modifier,
     ){
-        Column(modifier = modifier) {
+        Column(
+            modifier = modifier,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Text(
-                text = "Projects",
-                style = MaterialTheme.typography.body1
+                text = "Raised",
+                style = MaterialTheme.typography.h6.copy(
+                    color = TextDonationGray,
+                    fontSize = 13.sp
+                )
             )
-            charity.projects.forEach{ project ->
-                ClickableText(
-                    text = AnnotatedString(project),
-                    style = MaterialTheme.typography.h5,
-                    onClick = {
-                              findNavController().navigate(R.id.action_charityDetailFragment_to_projectDetailFragment)
-                    },
-                    modifier = Modifier.padding(top = 12.dp)
+            Row(
+                modifier = Modifier.padding(top = 4.dp),
+                verticalAlignment = Alignment.Bottom
+            ) {
+                Text(
+                    text = project.actualSum.Convert(),
+                    style = MaterialTheme.typography.body1.copy(
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                )
+                Text(
+                    text = " / " + project.goalSum.Convert() + "€",
+                    style = MaterialTheme.typography.body1
                 )
             }
 
-
+            ProgressBar(
+                value = project.actualSum,
+                maxValue = project.goalSum,
+                modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp)
+            )
+            Button(
+                modifier = Modifier
+                    .padding(top = 16.dp, start = 48.dp, end = 48.dp)
+                    .fillMaxWidth()
+                    .height(64.dp),
+                onClick = { }
+            ) {
+                Text(
+                    text = stringResource(R.string.CharityDetailFragment_ButtonDonation),
+                    style = MaterialTheme.typography.button
+                )
+            }
         }
     }
 }
+
+
+
 
 
 

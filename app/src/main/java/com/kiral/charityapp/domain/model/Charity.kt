@@ -9,4 +9,5 @@ data class Charity(
     val raised: Float,
     val peopleDonated: Int,
     val donorDonated: Double,
+    val projects: List<String> = listOf("project")
 )

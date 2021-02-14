@@ -8,6 +8,8 @@ import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
 
 fun Modifier.drawColoredShadow(
     color: Color,
@@ -39,4 +41,13 @@ fun Modifier.drawColoredShadow(
             paint
         )
     }
+}
+
+fun Double.Convert(): String{
+    val format = DecimalFormat("#,###.##")
+    val formatSymbols = DecimalFormatSymbols()
+    formatSymbols.decimalSeparator = '.'
+    formatSymbols.groupingSeparator = ' '
+    format.decimalFormatSymbols = formatSymbols
+    return format.format(this).toString()
 }
