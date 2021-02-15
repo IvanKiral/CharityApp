@@ -1,7 +1,5 @@
 package com.kiral.charityapp.domain.model
 
-import java.io.FileDescriptor
-
 data class Project(
     val id: Int,
     val charityId: Int,
@@ -12,10 +10,12 @@ data class Project(
     val charityName: String,
     val charityAdress: String,
     val charityImage: String,
-    var peopleDonated: Int
+    var peopleDonated: Int,
+    var donorDonated: Double
 )
 
-val proj = Project(
+//TODO: delete if not usefull
+/*val proj = Project(
     id = 0,
     charityId = 0,
     name= "Test",
@@ -26,4 +26,4 @@ val proj = Project(
     charityAdress = "dfasfdasdf",
     charityImage = "https://images.unsplash.com/photo-1457914109735-ce8aba3b7a79?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80",
     peopleDonated = 150
-)
+)*/

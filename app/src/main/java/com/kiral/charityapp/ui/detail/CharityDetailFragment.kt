@@ -187,7 +187,7 @@ class CharityDetailFragment : Fragment() {
                 )
                 if(showDialog) {
                     AlertDialogWithChoice(
-                        values = values.map { v -> v.Convert() },
+                        values = values.map { v -> v.Convert() + " €" },
                         selectedValue = selectedValue,
                         setValue = setSelectedValue,
                         setShowDialog = setDialog,
@@ -212,7 +212,9 @@ class CharityDetailFragment : Fragment() {
                     text = AnnotatedString(project.name),
                     style = MaterialTheme.typography.h5,
                     onClick = {
-                              findNavController().navigate(R.id.action_charityDetailFragment_to_projectDetailFragment)
+                        val action = CharityDetailFragmentDirections
+                            .actionCharityDetailFragmentToProjectDetailFragment(project.id, args.donorEmail)
+                        findNavController().navigate(action)
                     },
                     modifier = Modifier.padding(top = 12.dp)
                 )

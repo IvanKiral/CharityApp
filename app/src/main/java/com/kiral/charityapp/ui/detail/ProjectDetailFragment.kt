@@ -35,7 +35,6 @@ import androidx.navigation.fragment.navArgs
 import com.kiral.charityapp.R
 import com.kiral.charityapp.domain.model.Charity
 import com.kiral.charityapp.domain.model.Project
-import com.kiral.charityapp.domain.model.proj
 import com.kiral.charityapp.ui.components.*
 import com.kiral.charityapp.ui.theme.*
 import com.kiral.charityapp.utils.Convert
@@ -48,13 +47,13 @@ import java.text.NumberFormat
 @AndroidEntryPoint
 class ProjectDetailFragment : Fragment() {
 
-    //val args: CharityDetailFragmentArgs by navArgs()
-
+    val args: ProjectDetailFragmentArgs by navArgs()
+    val viewModel: ProjectDetailViewModel by viewModels()
     lateinit var project: Project
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        project = proj
+        project = viewModel.getProject(args.projectId, args.email)
     }
 
     @ExperimentalMaterialApi
@@ -187,7 +186,7 @@ class ProjectDetailFragment : Fragment() {
             }
             if(showDialog) {
                 AlertDialogWithChoice(
-                    values = values.map { v -> v.Convert() },
+                    values = values.map { v -> v.Convert() + " €"},
                     selectedValue = selectedValue,
                     setValue = setSelectedValue,
                     setShowDialog = setDialog,
