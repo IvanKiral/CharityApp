@@ -1,5 +1,10 @@
 package com.kiral.charityapp.domain.model
 
+data class CharityProject(
+    val id: Int,
+    val name: String
+)
+
 data class Charity(
     val imgSrc: String,
     val id: Int,
@@ -9,5 +14,5 @@ data class Charity(
     val raised: Float,
     val peopleDonated: Int,
     val donorDonated: Double,
-    val projects: List<String> = listOf("project")
+    val projects: List<CharityProject> = listOf()
 )

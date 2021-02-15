@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,6 +39,7 @@ import com.kiral.charityapp.domain.model.proj
 import com.kiral.charityapp.ui.components.*
 import com.kiral.charityapp.ui.theme.*
 import com.kiral.charityapp.utils.Convert
+import com.kiral.charityapp.utils.DonationValues
 import com.kiral.charityapp.utils.loadPicture
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.DecimalFormat
@@ -118,6 +121,9 @@ class ProjectDetailFragment : Fragment() {
     fun CharityDetailBody(
         modifier: Modifier = Modifier
     ) {
+        val values = DonationValues
+        val (selectedValue, setSelectedValue) = remember { mutableStateOf(0) }
+        val (showDialog, setDialog) = remember { mutableStateOf(false ) }
         Surface(
             modifier = modifier
                 .fillMaxSize()
@@ -159,7 +165,10 @@ class ProjectDetailFragment : Fragment() {
                         .fillMaxWidth()
                         .padding(top = 24.dp)
                 )
-                CharityRaisedColumn(modifier = Modifier.padding(top = 16.dp))
+                CharityRaisedColumn(
+                    onButtonClick = { setDialog(true) },
+                    modifier = Modifier.padding(top = 16.dp)
+                )
                 InformationBox(
                     text = buildAnnotatedString {
                          append(project.peopleDonated.toString() + " people")
@@ -176,12 +185,22 @@ class ProjectDetailFragment : Fragment() {
                         .fillMaxWidth()
                 )
             }
+            if(showDialog) {
+                AlertDialogWithChoice(
+                    values = values.map { v -> v.Convert() },
+                    selectedValue = selectedValue,
+                    setValue = setSelectedValue,
+                    setShowDialog = setDialog,
+                    title = "Select value to donate"
+                )
+            }
         }
     }
 
     @Composable
     fun CharityRaisedColumn(
         modifier: Modifier,
+        onButtonClick: () -> Unit
     ){
         Column(
             modifier = modifier,
@@ -221,7 +240,7 @@ class ProjectDetailFragment : Fragment() {
                     .padding(top = 16.dp, start = 48.dp, end = 48.dp)
                     .fillMaxWidth()
                     .height(64.dp),
-                onClick = { }
+                onClick = onButtonClick
             ) {
                 Text(
                     text = stringResource(R.string.CharityDetailFragment_ButtonDonation),

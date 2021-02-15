@@ -3,8 +3,10 @@ package com.kiral.charityapp.domain.fake
 import com.kiral.charityapp.domain.badges
 import com.kiral.charityapp.domain.fake.responses.FakeCharityResponse
 import com.kiral.charityapp.domain.fake.responses.FakeProfilePost
+import com.kiral.charityapp.domain.fake.responses.FakeProjectList
 import com.kiral.charityapp.domain.model.Profile
 import com.kiral.charityapp.domain.profiles
+import com.kiral.charityapp.utils.DonationValues
 import kotlin.random.Random
 
 class FakeDatabase {
@@ -12,6 +14,7 @@ class FakeDatabase {
     init{
         MakeFakeUsers()
         MakeFakeDonations()
+        MakeFakeDonationsForDonationGoals()
     }
 
     fun getCharities(email: String, region: String): List<FakeCharityResponse> {
@@ -57,7 +60,7 @@ class FakeDatabase {
                     peopleDonated = fakeDonations.filter { d -> d.charityId == c.id }.size,
                     donorDonated = fakeDonations.filter { d -> d.donorId == user.id }
                         .sumByDouble { s -> s.sum },
-                    projects = listOf()
+                    projects = fakeDonationGoals.filter { d -> d.charityId == charityId }.map{ d -> FakeProjectList(d.id, d.name) }
                 )
             }
 
@@ -148,18 +151,37 @@ class FakeDatabase {
         }
     }
 
-    private fun MakeFakeDonations(){
-        val values = listOf<Double>(0.5, 1.0, 2.0, 5.0, 10.0, 20.0, 50.0, 100.0, 500.0, 1000.0)
+    private fun MakeFakeDonations(number: Int = 50){
+        val values = DonationValues
         val donatorsIdList = fakeProfiles.map { p -> p.id }
         val charitiesIdList = fakeCharities.map{ c -> c.id }
         var lastDonationId = fakeDonations.lastOrNull()?.id?.plus(1) ?: 0
-        repeat(50){
+        repeat(number){
             fakeDonations.add(
                 FakeDonation(
                     id = lastDonationId++,
                     donorId = donatorsIdList.random(),
                     charityId = charitiesIdList.random(),
                     donationGoalId = null,
+                    sum = values.random()
+                )
+            )
+        }
+    }
+
+    private fun MakeFakeDonationsForDonationGoals(number: Int = 20){
+        val values = DonationValues
+        val donatorsIdList = fakeProfiles.map { p -> p.id }
+        val donationGoalsIdList = fakeDonationGoals.map{ c -> Pair(c.id, c.charityId) }
+        var lastDonationId = fakeDonations.lastOrNull()?.id?.plus(1) ?: 0
+        repeat(number){
+            val p = donationGoalsIdList.random()
+            fakeDonations.add(
+                FakeDonation(
+                    id = lastDonationId++,
+                    donorId = donatorsIdList.random(),
+                    charityId = p.second,
+                    donationGoalId = p.first,
                     sum = values.random()
                 )
             )
