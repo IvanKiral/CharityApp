@@ -4,28 +4,22 @@ import com.kiral.charityapp.domain.badges
 import com.kiral.charityapp.domain.fake.*
 import com.kiral.charityapp.domain.model.Profile
 import com.kiral.charityapp.domain.profiles
+import com.kiral.charityapp.domain.util.ProfileMapper
 
-class ProfileRepositoryImpl: ProfileRepository {
+class ProfileRepositoryImpl(
+    private val profileMapper: ProfileMapper,
+    private val fakeDatabase: FakeDatabase
+): ProfileRepository {
     override fun login(email: String): Profile? {
-        val x = fakeProfiles.filter { profile -> profile.email == email }.firstOrNull()
+        val x = fakeDatabase.login(email)
         return  if(x == null) x
-            else Profile(
-            id = x.id,
-            email = x.email,
-            name = x.name,
-            donations = fakeDonations.filter{ d -> d.donorId == x.id }.size,
-            credit = x.credit,
-            charities = "",
-            automaticDonationsValue = 0.0,
-            automaticDonationTimeFrequency = "day",
-            automaticDonations = false,
-            badges = listOf()
-        )
-
+            else profileMapper.mapToDomainModel(x)
     }
 
     override fun register(profile: Profile): Boolean {
-        val profileId = fakeProfiles.last().id + 1
+        val tmp = profileMapper.mapFromDomainModel(profile)
+        return fakeDatabase.registerUser(tmp)
+        /*val profileId = fakeProfiles.last().id + 1
         fakeProfiles.add(
             FakeProfile(
                 id = profileId,
@@ -44,11 +38,13 @@ class ProfileRepositoryImpl: ProfileRepository {
                 repeatingStatus = profile.automaticDonationTimeFrequency
             )
         )
-        return true
+        return true*/
     }
 
     override fun getProfile(email: String): Profile {
-        val x = fakeProfiles.filter { p -> p.email == email }.first()
+        val profile = fakeDatabase.getProfile(email)
+        return profileMapper.mapToDomainModel(profile)
+        /*val x = fakeProfiles.filter { p -> p.email == email }.first()
         val donationRepeat = fakeDonationRepeats.filter { d -> d.donorId == x.id }.first()
         return  if(x == null) x
         else Profile(
@@ -62,6 +58,6 @@ class ProfileRepositoryImpl: ProfileRepository {
             automaticDonationTimeFrequency = donationRepeat.repeatingStatus,
             automaticDonations = donationRepeat.active,
             badges = badges
-        )
+        )*/
     }
 }

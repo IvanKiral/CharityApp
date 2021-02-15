@@ -10,8 +10,8 @@ data class FakeProfile(
     //var Birthday
 )
 
-var fakeProfiles = mutableListOf(
-    FakeProfile(
+var fakeProfiles = mutableListOf<FakeProfile>(
+    /*FakeProfile(
         id = 0,
         name = "Alžbeta Pekná",
         region = "cze",
@@ -24,5 +24,5 @@ var fakeProfiles = mutableListOf(
         region = "svk",
         credit = 100.0,
         email = "ivan@email.com"
-    )
+    )*/
 )

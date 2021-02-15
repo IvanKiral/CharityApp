@@ -8,7 +8,7 @@ data class FakeDonation(
     val sum: Double
 )
 
-var fakeDonations = listOf(
+var fakeDonations = mutableListOf(
     FakeDonation(
         id = 0,
         donorId = 1,

@@ -88,7 +88,7 @@ class CharitiesFragment : Fragment() {
 
                 when (tabSelected) {
                     CharitiesScreen.Charities -> GridCharity(
-                        lst = viewModel.charities,
+                        lst = viewModel.getCharities(args.email, "svk"),
                         modifier = Modifier
                             .padding(top = 20.dp)
                             .align(Alignment.CenterHorizontally)
