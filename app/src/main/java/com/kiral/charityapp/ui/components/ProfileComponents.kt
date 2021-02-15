@@ -22,6 +22,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.kiral.charityapp.domain.model.Badge
 import com.kiral.charityapp.ui.profile.BadgeData
 import com.kiral.charityapp.ui.theme.*
 
@@ -57,7 +58,7 @@ fun ProfileImageWithBorder(
 
 @Composable
 fun BadgeRow(
-    badges: List<BadgeData>,
+    badges: List<Badge>,
     modifier: Modifier = Modifier
 ) {
     Box {
@@ -74,11 +75,11 @@ fun BadgeRow(
             modifier = modifier
 
         ) {
-            for (i in 0..4) {
+            listOf(3, 1, 0, 2, 4).forEachIndexed{ index, i ->
                 Badge(
-                    icon = vectorResource(id = badges[i].icon),
-                    iconSize = (22 + (2 - Math.abs(i - 2)) * 5).dp,
-                    boxSize = (52 + (2 - Math.abs(i - 2)) * 8).dp
+                    icon = if(i < badges.size) vectorResource(id = badges[i].iconId) else null,
+                    iconSize = (22 + (2 - Math.abs(index - 2)) * 5).dp,
+                    boxSize = (52 + (2 - Math.abs(index - 2)) * 8).dp
                 )
             }
         }
@@ -87,7 +88,7 @@ fun BadgeRow(
 
 @Composable
 fun Badge(
-    icon: ImageVector,
+    icon: ImageVector?,
     iconSize: Dp,
     boxSize: Dp,
     modifier: Modifier = Modifier,
@@ -100,12 +101,14 @@ fun Badge(
             .background(color = Color.White),
         contentAlignment = Alignment.Center
     ) {
-        Image(
-            imageVector = icon,
-            contentDescription = "",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.size(iconSize)
-        )
+        icon?.let {
+            Image(
+                imageVector = it,
+                contentDescription = "",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.size(iconSize)
+            )
+        }
     }
 }
 

@@ -4,7 +4,7 @@ data class FakeDonationRepeat(
     val id: Int,
     val donorId: Int,
     var active: Boolean,
-    var sum: Int,
+    var sum: Double,
     var repeatingStatus: String
 )
 
@@ -13,14 +13,14 @@ var fakeDonationRepeats = mutableListOf(
         id = 0,
         donorId = 0,
         active = true,
-        sum = 5,
+        sum = 5.0,
         repeatingStatus = "daily"
     ),
     FakeDonationRepeat(
         id = 1,
         donorId = 1,
         active = true,
-        sum = 10,
+        sum = 10.0,
         repeatingStatus = "weekly"
     )
 )

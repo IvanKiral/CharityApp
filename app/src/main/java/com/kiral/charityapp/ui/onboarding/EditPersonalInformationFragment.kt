@@ -75,7 +75,7 @@ class EditPersonalInformationFragment: Fragment(){
                         .padding(vertical = 8.dp)
                         .preferredHeight(64.dp),
                     onClick = {
-                        viewModel.addPersonalInformation("Test Test")
+                        viewModel.addPersonalInformation(name)
                         findNavController().navigate(R.id.action_editPersonalInformationFragment_to_selectCharitiesTypesFragment)
                     }
                 ) {

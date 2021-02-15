@@ -21,9 +21,9 @@ constructor(
             name = "",
             donations = 0,
             charities = "",
-            credit = 0f,
+            credit = 0.0,
             automaticDonations = false,
-            automaticDonationsValue = 0,
+            automaticDonationsValue = 0.0,
             badges = listOf()
         )
     }
@@ -36,13 +36,14 @@ constructor(
         profile.charities = charities
     }
 
-    fun addRegularPayments(value: Int, frequency: String){
+    fun addRegularPayments(value: Double, frequency: String){
+        profile.automaticDonations = if (value > 0) true else false
         profile.automaticDonationTimeFrequency = frequency
         profile.automaticDonationsValue = value
     }
 
     fun register(){
-        profile.id = profiles.size
+        profile.id = profiles.lastOrNull()?.id?.plus(1) ?: 0
         profileRepository.register(profile)
     }
 }

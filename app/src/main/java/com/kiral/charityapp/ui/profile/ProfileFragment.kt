@@ -27,9 +27,11 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.kiral.charityapp.R
+import com.kiral.charityapp.domain.model.Badge
 import com.kiral.charityapp.domain.model.Profile
 import com.kiral.charityapp.ui.components.*
 import com.kiral.charityapp.ui.theme.*
+import com.kiral.charityapp.utils.Convert
 import dagger.hilt.android.AndroidEntryPoint
 
 data class BadgeData(
@@ -112,7 +114,7 @@ class ProfileFragment : Fragment() {
                             }
                     )
                     Badges(
-                        badges = data,
+                        badges = profile.badges,
                         modifier = Modifier
                             .fillMaxWidth()
                             .constrainAs(badges) {
@@ -120,7 +122,7 @@ class ProfileFragment : Fragment() {
                             }
                     )
                     BoxRow(
-                        credit = "${profile.credit}€",
+                        credit = "${profile.credit.Convert()} €",
                         donations = profile.donations.toString(),
                         modifier = Modifier
                             .fillMaxWidth()
@@ -170,7 +172,7 @@ class ProfileFragment : Fragment() {
 
     @Composable
     fun Badges(
-        badges: List<BadgeData>,
+        badges: List<Badge>,
         modifier: Modifier = Modifier
     ) {
         Column(
@@ -267,7 +269,7 @@ class ProfileFragment : Fragment() {
         ) {
             Option(
                 title = stringResource(R.string.ProfileFragment_RegularDonations),
-                description = "${profile.automaticDonationsValue}€/${profile.automaticDonationTimeFrequency}",
+                description = "${profile.automaticDonationsValue.Convert()} €/${profile.automaticDonationTimeFrequency}",
                 hasSwitch = true,
                 modifier = Modifier.fillMaxWidth()
             )

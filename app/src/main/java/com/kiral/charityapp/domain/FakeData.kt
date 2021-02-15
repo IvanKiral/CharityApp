@@ -24,18 +24,6 @@ val badges: List<Badge> = listOf(
         description = "doggo",
         iconId = R.drawable.ic_dog
     ),
-    Badge(
-        id = 3,
-        title = "doggo",
-        description = "doggo",
-        iconId = R.drawable.ic_dog
-    ),
-    Badge(
-        id = 4,
-        title = "doggo",
-        description = "doggo",
-        iconId = R.drawable.ic_dog
-    ),
 )
 val profiles = mutableListOf(
     Profile(
@@ -43,10 +31,10 @@ val profiles = mutableListOf(
         email = "email@email.com",
         name = "Rachel Green",
         donations = 87,
-        credit = 27.5f,
+        credit = 27.5,
         charities = "",
         automaticDonations = true,
-        automaticDonationsValue = 1,
+        automaticDonationsValue = 1.0,
         automaticDonationTimeFrequency = "day",
         badges = badges
     ),
@@ -56,10 +44,10 @@ val profiles = mutableListOf(
         email = "test@email.com",
         name = "Ross Geller",
         donations = 10,
-        credit = 100f,
+        credit = 100.0,
         charities = "",
         automaticDonations = true,
-        automaticDonationsValue = 5,
+        automaticDonationsValue = 5.0,
         automaticDonationTimeFrequency = "day",
         badges = badges
     ),

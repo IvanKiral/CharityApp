@@ -23,6 +23,7 @@ import androidx.navigation.fragment.findNavController
 import com.kiral.charityapp.R
 import com.kiral.charityapp.ui.components.SingleChoicePicker
 import com.kiral.charityapp.ui.theme.CharityTheme
+import com.kiral.charityapp.utils.Convert
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -53,7 +54,7 @@ class SetupRegularPaymentsFragment: Fragment(){
                 val intervalItems = listOf("daily", "weekly", "monthly")
                 val (selectedInterval, setInterval) = remember { mutableStateOf(0)}
 
-                val amountItems = listOf(0, 0.5f, 1, 2, 5, 10, 20, 50, 100, 500, 1000)
+                val amountItems = listOf(0.0, 0.5, 1.0, 2.0, 5.0, 10.0, 20.0, 50.0, 100.0, 500.0, 1000.0)
                 val (selectedAmount, setAmount) = remember { mutableStateOf(0)}
 
                 Text(
@@ -66,7 +67,7 @@ class SetupRegularPaymentsFragment: Fragment(){
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     SingleChoicePicker(
-                        items = amountItems.map { i -> "$i €" },
+                        items = amountItems.map { i -> "${i.Convert()} €" },
                         selectedItem = selectedAmount,
                         setSelectedItem = setAmount,
                         modifier = Modifier
@@ -91,6 +92,7 @@ class SetupRegularPaymentsFragment: Fragment(){
                         .padding(vertical = 8.dp)
                         .preferredHeight(64.dp),
                     onClick = {
+                        viewModel.addRegularPayments(amountItems.get(selectedAmount), intervalItems.get(selectedInterval))
                         viewModel.register()
                         val action = SetupRegularPaymentsFragmentDirections
                             .actionSetupRegularPaymentsFragmentToCharitiesFragment(viewModel.profile.email)
