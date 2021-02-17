@@ -100,10 +100,12 @@ class CharityDetailFragment : Fragment() {
                     .fillMaxWidth()
                     .padding(top = 20.dp, start = 24.dp, end = 16.dp)
             ) {
-                DonationBox(
-                    text = "You donated 1.5€",
-                    backgroundColor = Color.Black.copy(alpha = 0.5f),
-                )
+                if(charity.donorDonated > 0) {
+                    DonationBox(
+                        text = "You donated ${charity.donorDonated.Convert()}  €",
+                        backgroundColor = Color.Black.copy(alpha = 0.5f),
+                    )
+                }
                 Image(
                     imageVector = vectorResource(id = R.drawable.ic_close),
                     contentDescription = "",
@@ -219,13 +221,6 @@ class CharityDetailFragment : Fragment() {
                     modifier = Modifier.padding(top = 12.dp)
                 )
             }
-
-
         }
     }
 }
-
-
-
-
-

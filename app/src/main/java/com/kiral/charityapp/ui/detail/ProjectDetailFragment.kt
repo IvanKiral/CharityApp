@@ -101,10 +101,12 @@ class ProjectDetailFragment : Fragment() {
                     .fillMaxWidth()
                     .padding(top = 20.dp, start = 24.dp, end = 16.dp)
             ) {
-                DonationBox(
-                    text = "You donated 1.5€",
-                    backgroundColor = Color.Black.copy(alpha = 0.5f),
-                )
+                if(project.donorDonated > 0) {
+                    DonationBox(
+                        text = "You donated ${project.donorDonated.Convert()}  €",
+                        backgroundColor = Color.Black.copy(alpha = 0.5f),
+                    )
+                }
                 Image(
                     imageVector = vectorResource(id = R.drawable.ic_close),
                     contentDescription = "",

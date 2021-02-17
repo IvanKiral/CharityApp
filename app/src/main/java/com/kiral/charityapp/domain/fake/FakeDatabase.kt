@@ -59,7 +59,7 @@ class FakeDatabase {
                     raised = fakeDonations.filter { d -> d.charityId == c.id }
                         .sumByDouble { s -> s.sum },
                     peopleDonated = fakeDonations.filter { d -> d.charityId == c.id }.size,
-                    donorDonated = fakeDonations.filter { d -> d.donorId == user.id }
+                    donorDonated = fakeDonations.filter { d -> d.donorId  == user.id && d.charityId == charityId }
                         .sumByDouble { s -> s.sum },
                     projects = fakeDonationGoals.filter { d -> d.charityId == charityId }
                         .map { d -> FakeProjectList(d.id, d.name) }

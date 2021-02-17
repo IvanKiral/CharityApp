@@ -64,10 +64,10 @@ fun BadgeRow(
     Box {
         Box(
             modifier
-                .height(20.dp)
+                .height(8.dp)
                 .fillMaxWidth()
-                .offset(y = 20.dp)
-                .shadow(36.dp)
+                .offset(y = 36.dp)
+                .shadow(20.dp)
         )
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -127,7 +127,7 @@ fun BoxWithAdd(
         Box(
             modifier = Modifier
                 .size(boxWeight, boxHeight)
-                .shadow(16.dp, shape = RoundedCornerShape(12.dp))
+                .shadow(12.dp, shape = RoundedCornerShape(12.dp))
                 .clip(RoundedCornerShape(12.dp))
                 .background(
                     Brush.verticalGradient(
