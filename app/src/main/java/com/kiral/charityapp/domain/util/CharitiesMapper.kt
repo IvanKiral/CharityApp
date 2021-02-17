@@ -17,6 +17,7 @@ class CharitiesMapper: Mapper<FakeCharityResponse, Charity>{
             raised = model.raised.toFloat(),
             peopleDonated = model.peopleDonated,
             donorDonated = model.donorDonated,
+            donorId = model.donorId,
             projects =  model.projects.map { CharityProject(
                 id = it.id,
                 name = it.name
@@ -35,6 +36,7 @@ class CharitiesMapper: Mapper<FakeCharityResponse, Charity>{
             description = domainModel.description,
             raised = domainModel.raised.toDouble(),
             peopleDonated = domainModel.peopleDonated,
+            donorId = domainModel.donorId,
             donorDonated = domainModel.donorDonated,
             projects =  domainModel.projects.map { FakeProjectList(it.id, it.name) }
         )

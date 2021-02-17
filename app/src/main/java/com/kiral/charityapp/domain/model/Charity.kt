@@ -11,8 +11,9 @@ data class Charity(
     val name: String,
     val address: String,
     val description: String,
-    val raised: Float,
+    var raised: Float,
     val peopleDonated: Int,
-    val donorDonated: Double,
+    var donorDonated: Double,
+    val donorId: Int,
     val projects: List<CharityProject> = listOf()
 )

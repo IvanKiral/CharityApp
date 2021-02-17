@@ -28,6 +28,7 @@ import androidx.navigation.fragment.findNavController
 import com.kiral.charityapp.R
 import com.kiral.charityapp.ui.components.ClickableIcon
 import com.kiral.charityapp.ui.components.FormTextField
+import com.kiral.charityapp.ui.components.InformationAlertDialog
 import com.kiral.charityapp.ui.theme.CharityTheme
 import dagger.hilt.android.AndroidEntryPoint
 

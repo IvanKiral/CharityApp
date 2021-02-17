@@ -1,10 +1,7 @@
 package com.kiral.charityapp.domain.fake
 
 import com.kiral.charityapp.domain.badges
-import com.kiral.charityapp.domain.fake.responses.FakeCharityResponse
-import com.kiral.charityapp.domain.fake.responses.FakeDonationGoalReponse
-import com.kiral.charityapp.domain.fake.responses.FakeProfilePost
-import com.kiral.charityapp.domain.fake.responses.FakeProjectList
+import com.kiral.charityapp.domain.fake.responses.*
 import com.kiral.charityapp.domain.model.Profile
 import com.kiral.charityapp.domain.profiles
 import com.kiral.charityapp.utils.DonationValues
@@ -33,6 +30,7 @@ class FakeDatabase {
                         description = c.description,
                         raised = fakeDonations.filter { d -> d.charityId == c.id }
                             .sumByDouble { s -> s.sum },
+                        donorId = user.id,
                         peopleDonated = fakeDonations.filter { d -> d.donorId == u.id }.size,
                         donorDonated = fakeDonations.filter { d -> d.donorId == u.id }
                             .sumByDouble { s -> s.sum },
@@ -58,6 +56,7 @@ class FakeDatabase {
                     description = c.description,
                     raised = fakeDonations.filter { d -> d.charityId == c.id }
                         .sumByDouble { s -> s.sum },
+                    donorId = user.id,
                     peopleDonated = fakeDonations.filter { d -> d.charityId == c.id }.size,
                     donorDonated = fakeDonations.filter { d -> d.donorId  == user.id && d.charityId == charityId }
                         .sumByDouble { s -> s.sum },
@@ -121,6 +120,7 @@ class FakeDatabase {
         return FakeDonationGoalReponse(
             id = donationGoal.id,
             charityId = donationGoal.charityId,
+            donorId = user.id,
             name = donationGoal.name,
             goalSum = donationGoal.goalSum,
             actualSum = fakeDonations
@@ -135,6 +135,25 @@ class FakeDatabase {
                 .filter { d -> d.donationGoalId == id && d.donorId == user.id }
                 .sumByDouble { s -> s.sum },
         )
+    }
+
+    fun addDonation(donation: FakeDonationPost): Boolean{
+        val user = fakeProfiles.filter { p -> p.id == donation.donorId }.first()
+        if(user.credit >= donation.sum) {
+            fakeDonations.add(
+                FakeDonation(
+                    id = fakeDonations.last().id + 1,
+                    donorId = donation.donorId,
+                    charityId = donation.charityId,
+                    donationGoalId = donation.donationGoalId,
+                    sum = donation.sum
+                )
+            )
+            fakeProfiles[fakeProfiles.indexOf(user)].credit -= donation.sum
+            return true
+        } else {
+            return false
+        }
     }
 
 

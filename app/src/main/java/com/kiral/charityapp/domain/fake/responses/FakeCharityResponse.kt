@@ -15,5 +15,6 @@ data class FakeCharityResponse(
     val raised: Double,
     val peopleDonated: Int,
     val donorDonated: Double,
+    val donorId: Int,
     val projects: List<FakeProjectList>
 )

@@ -3,6 +3,7 @@ package com.kiral.charityapp.domain.fake.responses
 data class FakeDonationGoalReponse(
     val id: Int,
     val charityId: Int,
+    val donorId: Int,
     val name: String,
     val goalSum: Double,
     val actualSum: Double,

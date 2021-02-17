@@ -23,6 +23,4 @@ var fakeDonations = mutableListOf(
         donationGoalId = null,
         sum = 10.0
     )
-
-
 )

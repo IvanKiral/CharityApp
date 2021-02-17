@@ -31,7 +31,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.kiral.charityapp.R
-import com.kiral.charityapp.domain.charities
 import com.kiral.charityapp.domain.model.Charity
 import com.kiral.charityapp.ui.theme.CharityTheme
 import com.kiral.charityapp.ui.theme.cardTextStyle

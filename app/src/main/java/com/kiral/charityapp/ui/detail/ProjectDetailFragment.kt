@@ -49,11 +49,12 @@ class ProjectDetailFragment : Fragment() {
 
     val args: ProjectDetailFragmentArgs by navArgs()
     val viewModel: ProjectDetailViewModel by viewModels()
-    lateinit var project: Project
+    private lateinit var project: Project
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        project = viewModel.getProject(args.projectId, args.email)
+        viewModel.getProject(args.projectId, args.email)
+        project = viewModel.project!!
     }
 
     @ExperimentalMaterialApi
@@ -101,9 +102,9 @@ class ProjectDetailFragment : Fragment() {
                     .fillMaxWidth()
                     .padding(top = 20.dp, start = 24.dp, end = 16.dp)
             ) {
-                if(project.donorDonated > 0) {
+                if(viewModel.donorDonated.value > 0) {
                     DonationBox(
-                        text = "You donated ${project.donorDonated.Convert()}  €",
+                        text = "You donated ${viewModel.donorDonated.value.Convert()}  €",
                         backgroundColor = Color.Black.copy(alpha = 0.5f),
                     )
                 }
@@ -125,6 +126,7 @@ class ProjectDetailFragment : Fragment() {
         val values = DonationValues
         val (selectedValue, setSelectedValue) = remember { mutableStateOf(0) }
         val (showDialog, setDialog) = remember { mutableStateOf(false ) }
+        val (showDonationSuccessDialog, setDonationSuccessDialog) = remember { mutableStateOf(false ) }
         Surface(
             modifier = modifier
                 .fillMaxSize()
@@ -192,8 +194,23 @@ class ProjectDetailFragment : Fragment() {
                     selectedValue = selectedValue,
                     setValue = setSelectedValue,
                     setShowDialog = setDialog,
-                    title = "Select value to donate"
+                    title = "Select value to donate",
+                    onConfirmButton = {
+                        if(viewModel.makeDonation(project.charityId, project.donorId, project.id, values.get(selectedValue))){
+                            setDonationSuccessDialog(true)
+                        }
+                        setDialog(false)
+                    }
                 )
+            }
+            if(showDonationSuccessDialog){
+                InformationAlertDialog(
+                    title = "Thank you for your contribution!",
+                    buttonText = "Okay" ,
+                    setShowDialog = setDonationSuccessDialog
+                ){
+                    Text("You did great today. Wanna share about your contribution?")
+                }
             }
         }
     }
@@ -219,7 +236,7 @@ class ProjectDetailFragment : Fragment() {
                 verticalAlignment = Alignment.Bottom
             ) {
                 Text(
-                    text = project.actualSum.Convert(),
+                    text = viewModel.actualSum.value.Convert(),
                     style = MaterialTheme.typography.body1.copy(
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold
@@ -232,7 +249,7 @@ class ProjectDetailFragment : Fragment() {
             }
 
             ProgressBar(
-                value = project.actualSum,
+                value = viewModel.actualSum.value,
                 maxValue = project.goalSum,
                 modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp)
             )

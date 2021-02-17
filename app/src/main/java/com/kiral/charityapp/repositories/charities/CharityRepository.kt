@@ -9,4 +9,6 @@ interface CharityRepository {
     fun get(id: Int, donorEmail:String): Charity
 
     fun getProject(id: Int, donorEmail: String): Project
+
+    fun makeDonationToCharity(charityId: Int, donorId: Int, projectId:Int?, value: Double): Boolean
 }

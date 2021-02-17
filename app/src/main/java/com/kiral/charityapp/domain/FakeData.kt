@@ -52,7 +52,7 @@ val profiles = mutableListOf(
         badges = badges
     ),
 )
-val charities = listOf(
+/*val charities = listOf(
     Charity(
         imgSrc = "https://images.unsplash.com/photo-1611464765133-794150e205dd?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=600&ixlib=rb-1.2.1&q=80&w=800",
         id = 0,
@@ -89,4 +89,4 @@ val charities = listOf(
         peopleDonated = 187,
         donorDonated = 1.5
     ),
-)
+)*/

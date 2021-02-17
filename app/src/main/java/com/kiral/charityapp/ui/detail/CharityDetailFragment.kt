@@ -48,11 +48,10 @@ class CharityDetailFragment : Fragment() {
     val args: CharityDetailFragmentArgs by navArgs()
 
     val viewModel: DetailViewModel by viewModels()
-    lateinit var charity: Charity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        charity = viewModel.getCharity(args.charityId, args.donorEmail)
+        viewModel.getCharity(id = args.charityId, donorEmail = args.donorEmail)
     }
 
     @ExperimentalMaterialApi
@@ -82,7 +81,7 @@ class CharityDetailFragment : Fragment() {
     @Composable
     fun CharityDetailHeader() {
         Box() {
-            charity.imgSrc.let { src ->
+            viewModel.charity.value.imgSrc.let { src ->
                 val image = loadPicture(url = src , defaultImage = R.drawable.children)
                 image.value?.let { img ->
                     Image(
@@ -100,9 +99,9 @@ class CharityDetailFragment : Fragment() {
                     .fillMaxWidth()
                     .padding(top = 20.dp, start = 24.dp, end = 16.dp)
             ) {
-                if(charity.donorDonated > 0) {
+                if(viewModel.donorDonated.value > 0) {
                     DonationBox(
-                        text = "You donated ${charity.donorDonated.Convert()}  €",
+                        text = "You donated ${viewModel.donorDonated.value.Convert()}  €",
                         backgroundColor = Color.Black.copy(alpha = 0.5f),
                     )
                 }
@@ -124,6 +123,7 @@ class CharityDetailFragment : Fragment() {
         val values = DonationValues
         val (selectedValue, setSelectedValue) = remember { mutableStateOf(0) }
         val (showDialog, setDialog) = remember { mutableStateOf(false ) }
+        val (showDonationSuccessDialog, setDonationSuccessDialog) = remember { mutableStateOf(false ) }
         Surface(
             modifier = modifier
                 .fillMaxSize()
@@ -138,7 +138,7 @@ class CharityDetailFragment : Fragment() {
                     .verticalScroll(rememberScrollState())
             ) {
                 Text(
-                    text = charity.name,
+                    text = viewModel.charity.value.name,
                     style = MaterialTheme.typography.h5
                 )
 
@@ -151,12 +151,12 @@ class CharityDetailFragment : Fragment() {
 
                 Text(
                     modifier = Modifier.padding(top = 4.dp),
-                    text = charity.address,
+                    text = viewModel.charity.value.address,
                     style = MaterialTheme.typography.body1
                 )
 
                 ExpandableText(
-                    text = charity.description,
+                    text = viewModel.charity.value.description,
                     modifier = Modifier.padding(top = 16.dp)
                 )
 
@@ -167,7 +167,7 @@ class CharityDetailFragment : Fragment() {
                 )
 
                 DonationRow(
-                    price = "${charity.raised.toDouble().Convert()}€",
+                    price = "${viewModel.raised.value.toDouble().Convert()}€",
                     modifier = Modifier.padding(top = 24.dp),
                     onButtonClick = {
                         setDialog(true)
@@ -176,7 +176,8 @@ class CharityDetailFragment : Fragment() {
 
                 InformationBox(
                     text = buildAnnotatedString {
-                        append(stringResource(R.string.CharityDetailFragment_InformationBox, charity.peopleDonated))
+                        append(stringResource(R.string.CharityDetailFragment_InformationBox,
+                            viewModel.charity.value.peopleDonated))
                     },
                     backgroundColor = InformationBoxBlue,
                     borderColor = InformationBoxBlueBorder,
@@ -193,8 +194,26 @@ class CharityDetailFragment : Fragment() {
                         selectedValue = selectedValue,
                         setValue = setSelectedValue,
                         setShowDialog = setDialog,
-                        title = "Select value to donate"
+                        title = "Select value to donate",
+                        onConfirmButton = {
+                            if(viewModel.makeDonation(viewModel.charity.value.id,
+                                    viewModel.charity.value.donorId,
+                                    values.get(selectedValue))
+                            ){
+                                setDonationSuccessDialog(true)
+                            }
+                            setDialog(false)
+                        }
                     )
+                }
+                if(showDonationSuccessDialog){
+                    InformationAlertDialog(
+                        title = "Thank you for your contribution!",
+                        buttonText = "Okay" ,
+                        setShowDialog = setDonationSuccessDialog
+                    ){
+                        Text("You did great today. Wanna share about your contribution?")
+                    }
                 }
             }
         }
@@ -209,7 +228,7 @@ class CharityDetailFragment : Fragment() {
                 text = "Projects",
                 style = MaterialTheme.typography.body1
             )
-            charity.projects.forEach{ project ->
+            viewModel.charity.value.projects.forEach{ project ->
                 ClickableText(
                     text = AnnotatedString(project.name),
                     style = MaterialTheme.typography.h5,
