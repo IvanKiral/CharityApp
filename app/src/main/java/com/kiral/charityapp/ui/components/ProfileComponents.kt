@@ -23,7 +23,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kiral.charityapp.domain.model.Badge
-import com.kiral.charityapp.ui.profile.BadgeData
 import com.kiral.charityapp.ui.theme.*
 
 @Composable
@@ -171,6 +170,7 @@ fun Option(
     title: String,
     description: String,
     modifier: Modifier = Modifier,
+    isSwitched: Boolean = false,
     hasSwitch: Boolean = false,
     onClick: () -> Unit = {},
     switchFunction: (Boolean) -> Unit = {}
@@ -203,7 +203,7 @@ fun Option(
             }
             if (hasSwitch) {
                 Switch(
-                    checked = true,
+                    checked = isSwitched,
                     onCheckedChange = switchFunction,
                     modifier = Modifier.align(Alignment.CenterEnd),
                     colors = SwitchDefaults.colors(checkedThumbColor = ButtonBlue)

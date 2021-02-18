@@ -11,12 +11,10 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun AlertDialogWithChoice(
-    values: List<String>,
-    selectedValue: Int,
-    setValue: (Int) -> Unit,
     title: String,
     setShowDialog: (Boolean) -> Unit,
     onConfirmButton: () -> Unit = {},
+    boxContent: @Composable () -> Unit = {}
 ){
     AlertDialog(
         onDismissRequest = {
@@ -59,12 +57,7 @@ fun AlertDialogWithChoice(
                 modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
-                SingleChoicePicker(
-                    items = values,
-                    selectedItem = selectedValue,
-                    setSelectedItem = setValue,
-                    textAlignment = Alignment.CenterHorizontally
-                )
+                boxContent()
             }
         },
         modifier = Modifier.fillMaxWidth(),

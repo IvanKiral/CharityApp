@@ -1,7 +1,7 @@
 package com.kiral.charityapp.ui.profile
 
+import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,11 +11,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.AnnotatedString
@@ -28,38 +30,26 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.kiral.charityapp.R
+import com.kiral.charityapp.domain.enums.DonationFrequency
 import com.kiral.charityapp.domain.model.Badge
 import com.kiral.charityapp.domain.model.Profile
 import com.kiral.charityapp.ui.components.*
 import com.kiral.charityapp.ui.theme.*
 import com.kiral.charityapp.utils.Convert
+import com.kiral.charityapp.utils.DonationValues
 import com.kiral.charityapp.utils.loadPicture
 import com.kiral.charityapp.utils.makeGravatrLink
 import dagger.hilt.android.AndroidEntryPoint
 
-data class BadgeData(
-    val icon: Int,
-)
-
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
-    val data = listOf<BadgeData>(
-        BadgeData(R.drawable.ic_dog),
-        BadgeData(R.drawable.ic_dog),
-        BadgeData(R.drawable.ic_dog),
-        BadgeData(R.drawable.ic_dog),
-        BadgeData(R.drawable.ic_dog)
-    )
-
     private val viewModel: ProfileViewModel by viewModels()
-    private lateinit var profile: Profile
-
-    val args: ProfileFragmentArgs by navArgs()
+    private val args: ProfileFragmentArgs by navArgs()
+    private lateinit var profile: State<Profile?>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.setProfile(args.email)
-        profile = viewModel.profile
     }
 
     override fun onCreateView(
@@ -67,16 +57,26 @@ class ProfileFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        profile = viewModel.profile
         return ComposeView(requireContext()).apply {
-            setContent {
-                ProfileScreen()
+            if (profile.value != null) {
+                setContent {
+                    CharityTheme {
+                        ProfileScreen(profile)
+                    }
+                }
             }
         }
     }
 
     @Composable
-    fun ProfileScreen() {
-        CharityTheme {
+    fun ProfileScreen(profile: State<Profile?>) {
+        profile.value?.let { p ->
+            val moneyValues = DonationValues
+            val (selectedMoney, setSelectedMoney) = remember { mutableStateOf(0) }
+            val frequencyValues = DonationFrequency.values().map { it.name }
+            val (selectedFrequency, setSelectedFreuency) = remember { mutableStateOf(0) }
+            val (donationDialog, setDonationDialog) = remember { mutableStateOf(false) }
             Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                 ConstraintLayout(
                     modifier = Modifier
@@ -97,11 +97,12 @@ class ProfileFragment : Fragment() {
                             .offset(x = -16.dp)
                     )
                     ProfilePicture(
-                        name = profile.name,
-                        //imageBitmap = imageResource(id = R.drawable.rachel),
-                        imageBitmap = profile.email.let { e ->
-                            Log.i("ProfileFragment", "String is ${e.makeGravatrLink()}")
-                            val img = loadPicture(url = e.makeGravatrLink(), defaultImage = R.drawable.ic_loading_photo)
+                        name = p.name,
+                        imageBitmap = p.email.let { e ->
+                            val img = loadPicture(
+                                url = e.makeGravatrLink(),
+                                defaultImage = R.drawable.ic_loading_photo
+                            )
                             img.value?.asImageBitmap()
                         },
                         imageSize = 128.dp,
@@ -122,7 +123,7 @@ class ProfileFragment : Fragment() {
                             }
                     )
                     Badges(
-                        badges = profile.badges,
+                        badges = p.badges,
                         modifier = Modifier
                             .fillMaxWidth()
                             .constrainAs(badges) {
@@ -130,20 +131,58 @@ class ProfileFragment : Fragment() {
                             }
                     )
                     BoxRow(
-                        credit = "${profile.credit.Convert()} €",
-                        donations = profile.donations.toString(),
+                        credit = "${p.credit.Convert()} €",
+                        donations = p.donations.toString(),
                         modifier = Modifier
                             .fillMaxWidth()
                             .constrainAs(boxrow) {
                                 top.linkTo(badges.bottom, margin = 24.dp)
-                            }
+                            },
+                        context = activity?.applicationContext!!
                     )
-                    OptionsMenu(modifier = Modifier
-                        .fillMaxWidth()
-                        .constrainAs(optionsMenu) {
-                            top.linkTo(boxrow.bottom)
+                    OptionsMenu(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .constrainAs(optionsMenu) {
+                                top.linkTo(boxrow.bottom)
+                            },
+                        setDonationDialog = setDonationDialog,
+                        regularDonationValue = p.automaticDonationsValue,
+                        regularDonationFrequency = p.automaticDonationTimeFrequency,
+                        isSwitched = p.automaticDonations,
+                        switchFunction = { b ->
+                            viewModel.setActive(b)
                         }
                     )
+                    if (donationDialog) {
+                        AlertDialogWithChoice(
+                            title = "Choose value and frequency of regular donations",
+                            setShowDialog = setDonationDialog,
+                            onConfirmButton = {
+                                viewModel.setRegularPayment(
+                                    moneyValues.get(selectedMoney),
+                                    frequencyValues.get(selectedFrequency)
+                                )
+                                setDonationDialog(false)
+                            }
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                SingleChoicePicker(
+                                    items = moneyValues.map { v -> v.Convert() + " €" },
+                                    selectedItem = selectedMoney,
+                                    setSelectedItem = setSelectedMoney,
+                                    textAlignment = Alignment.End
+                                )
+                                SingleChoicePicker(
+                                    items = frequencyValues,
+                                    selectedItem = selectedFrequency,
+                                    setSelectedItem = setSelectedFreuency,
+                                    textAlignment = Alignment.Start,
+                                    modifier = Modifier.padding(start = 8.dp)
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -210,7 +249,8 @@ class ProfileFragment : Fragment() {
     fun BoxRow(
         credit: String,
         donations: String,
-        modifier: Modifier = Modifier
+        modifier: Modifier = Modifier,
+        context: Context
     ) {
         Row(
             modifier = modifier,
@@ -247,7 +287,7 @@ class ProfileFragment : Fragment() {
                 gradientStartColor = BoxGradientStart,
                 gradientEndColor = BoxGradientEnd,
                 addButtonClick = {
-                    Toast.makeText(requireContext(), "click", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "click", Toast.LENGTH_SHORT).show()
                 }
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -270,23 +310,34 @@ class ProfileFragment : Fragment() {
 
     @Composable
     fun OptionsMenu(
-        modifier: Modifier = Modifier
+        modifier: Modifier = Modifier,
+        regularDonationValue: Double,
+        regularDonationFrequency: String,
+        isSwitched: Boolean,
+        switchFunction: (Boolean) -> Unit,
+        setDonationDialog: (Boolean) -> Unit
     ) {
         Column(
             modifier = modifier
         ) {
             Option(
                 title = stringResource(R.string.ProfileFragment_RegularDonations),
-                description = "${profile.automaticDonationsValue.Convert()} €/${profile.automaticDonationTimeFrequency}",
+                description = "${regularDonationValue.Convert()} €/${regularDonationFrequency}",
                 hasSwitch = true,
-                modifier = Modifier.fillMaxWidth()
+                isSwitched = isSwitched,
+                switchFunction = switchFunction,
+                modifier = Modifier.fillMaxWidth(),
+                onClick = {
+                    setDonationDialog(true)
+                }
             )
             Option(
                 title = stringResource(R.string.ProfileFragment_Logout),
                 description = stringResource(R.string.ProfileFragment_LogoutDescription),
                 hasSwitch = false,
-                modifier = Modifier.fillMaxWidth()
-            )
+                modifier = Modifier.fillMaxWidth(),
+
+                )
             Divider(
                 thickness = 1.dp,
                 color = DividerColor,

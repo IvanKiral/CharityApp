@@ -194,9 +194,6 @@ class ProjectDetailFragment : Fragment() {
             }
             if (showDialog) {
                 AlertDialogWithChoice(
-                    values = values.map { v -> v.Convert() + " €" },
-                    selectedValue = selectedValue,
-                    setValue = setSelectedValue,
                     setShowDialog = setDialog,
                     title = "Select value to donate",
                     onConfirmButton = {
@@ -211,7 +208,14 @@ class ProjectDetailFragment : Fragment() {
                         }
                         setDialog(false)
                     }
-                )
+                ){
+                    SingleChoicePicker(
+                        items = values.map { v -> v.Convert() + " €" },
+                        selectedItem = selectedValue,
+                        setSelectedItem = setSelectedValue,
+                        textAlignment = Alignment.Start
+                    )
+                }
             }
             if (showDonationSuccessDialog) {
                 InformationAlertDialog(

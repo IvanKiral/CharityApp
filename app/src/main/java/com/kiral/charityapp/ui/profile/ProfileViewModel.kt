@@ -1,5 +1,9 @@
 package com.kiral.charityapp.ui.profile
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.kiral.charityapp.domain.model.Profile
 import com.kiral.charityapp.repositories.charities.ProfileRepository
@@ -12,9 +16,27 @@ class ProfileViewModel
 constructor(
     private val profileRepository: ProfileRepository
 ): ViewModel() {
-    lateinit var profile: Profile
+
+    //lateinit var profile: Profile
+    private val _profile = mutableStateOf<Profile?>(null)
+    val profile: State<Profile?>
+        get() = _profile
+
+    val active = mutableStateOf(_profile.value?.automaticDonations)
 
     fun setProfile(email: String){
-        profile = profileRepository.getProfile(email)
+        _profile.value = profileRepository.getProfile(email)
+    }
+
+    fun setActive(value: Boolean){
+        _profile.value = _profile.value?.copy(automaticDonations = value)
+    }
+
+    fun setRegularPayment(value: Double, frequency:String){
+        _profile.value = _profile.value?.copy(
+            automaticDonations = true,
+            automaticDonationsValue = value,
+            automaticDonationTimeFrequency = frequency
+        )
     }
 }
