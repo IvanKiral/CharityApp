@@ -42,7 +42,7 @@ fun InformationAlertDialog(
                 ) {
                     Text(
                         text = buttonText,
-                        style = MaterialTheme.typography.button.copy(fontSize = 14.sp)
+                        style = MaterialTheme.typography.button.copy()
                     )
                 }
         },

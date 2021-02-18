@@ -1,5 +1,6 @@
 package com.kiral.charityapp.ui.detail
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +18,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.AmbientContext
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -24,6 +26,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -40,6 +43,7 @@ import com.kiral.charityapp.ui.theme.*
 import com.kiral.charityapp.utils.Convert
 import com.kiral.charityapp.utils.DonationValues
 import com.kiral.charityapp.utils.loadPicture
+import com.kiral.charityapp.utils.sharePhoto
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.DecimalFormat
 import java.text.NumberFormat
@@ -85,7 +89,7 @@ class ProjectDetailFragment : Fragment() {
     fun CharityDetailHeader() {
         Box() {
             project.charityImage.let { src ->
-                val image = loadPicture(url = src , defaultImage = R.drawable.children)
+                val image = loadPicture(url = src, defaultImage = R.drawable.children)
                 image.value?.let { img ->
                     Image(
                         bitmap = img.asImageBitmap(),
@@ -102,7 +106,7 @@ class ProjectDetailFragment : Fragment() {
                     .fillMaxWidth()
                     .padding(top = 20.dp, start = 24.dp, end = 16.dp)
             ) {
-                if(viewModel.donorDonated.value > 0) {
+                if (viewModel.donorDonated.value > 0) {
                     DonationBox(
                         text = "You donated ${viewModel.donorDonated.value.Convert()}  €",
                         backgroundColor = Color.Black.copy(alpha = 0.5f),
@@ -125,8 +129,8 @@ class ProjectDetailFragment : Fragment() {
     ) {
         val values = DonationValues
         val (selectedValue, setSelectedValue) = remember { mutableStateOf(0) }
-        val (showDialog, setDialog) = remember { mutableStateOf(false ) }
-        val (showDonationSuccessDialog, setDonationSuccessDialog) = remember { mutableStateOf(false ) }
+        val (showDialog, setDialog) = remember { mutableStateOf(false) }
+        val (showDonationSuccessDialog, setDonationSuccessDialog) = remember { mutableStateOf(false) }
         Surface(
             modifier = modifier
                 .fillMaxSize()
@@ -174,8 +178,8 @@ class ProjectDetailFragment : Fragment() {
                 )
                 InformationBox(
                     text = buildAnnotatedString {
-                         append(project.peopleDonated.toString() + " people")
-                        withStyle(SpanStyle(fontWeight = FontWeight.Bold)){
+                        append(project.peopleDonated.toString() + " people")
+                        withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
                             append(" and you ")
                         }
                         append("have donated to this project")
@@ -188,28 +192,68 @@ class ProjectDetailFragment : Fragment() {
                         .fillMaxWidth()
                 )
             }
-            if(showDialog) {
+            if (showDialog) {
                 AlertDialogWithChoice(
-                    values = values.map { v -> v.Convert() + " €"},
+                    values = values.map { v -> v.Convert() + " €" },
                     selectedValue = selectedValue,
                     setValue = setSelectedValue,
                     setShowDialog = setDialog,
                     title = "Select value to donate",
                     onConfirmButton = {
-                        if(viewModel.makeDonation(project.charityId, project.donorId, project.id, values.get(selectedValue))){
+                        if (viewModel.makeDonation(
+                                project.charityId,
+                                project.donorId,
+                                project.id,
+                                values.get(selectedValue)
+                            )
+                        ) {
                             setDonationSuccessDialog(true)
                         }
                         setDialog(false)
                     }
                 )
             }
-            if(showDonationSuccessDialog){
+            if (showDonationSuccessDialog) {
                 InformationAlertDialog(
                     title = "Thank you for your contribution!",
-                    buttonText = "Okay" ,
+                    buttonText = "Okay",
                     setShowDialog = setDonationSuccessDialog
-                ){
-                    Text("You did great today. Wanna share about your contribution?")
+                ) {
+                    Column() {
+                        Text(
+                            "You did great today! Wanna share about your contribution?",
+                            textAlign = TextAlign.Justify
+                        )
+                        Button(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 8.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = Color.White,
+                            ),
+                            onClick = {
+                                sharePhoto(activity?.applicationContext!!, project.charityImage)
+                            }) {
+                            Text("Share photo via", color = ButtonBlue)
+                        }
+                        Button(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 8.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = Color.White,
+                            ),
+                            onClick = {
+                                val share = Intent.createChooser(Intent().apply {
+                                    action = Intent.ACTION_SEND
+                                    type = "text/plain"
+                                    putExtra(Intent.EXTRA_TEXT, "https://cherrities.app")
+                                }, null)
+                                startActivity(share)
+                            }) {
+                            Text("Share link via", color = ButtonBlue)
+                        }
+                    }
                 }
             }
         }
@@ -219,7 +263,7 @@ class ProjectDetailFragment : Fragment() {
     fun CharityRaisedColumn(
         modifier: Modifier,
         onButtonClick: () -> Unit
-    ){
+    ) {
         Column(
             modifier = modifier,
             horizontalAlignment = Alignment.CenterHorizontally

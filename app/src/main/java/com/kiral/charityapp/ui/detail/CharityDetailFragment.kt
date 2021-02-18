@@ -1,5 +1,6 @@
 package com.kiral.charityapp.ui.detail
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -40,6 +41,7 @@ import com.kiral.charityapp.ui.theme.*
 import com.kiral.charityapp.utils.Convert
 import com.kiral.charityapp.utils.DonationValues
 import com.kiral.charityapp.utils.loadPicture
+import com.kiral.charityapp.utils.sharePhoto
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -212,7 +214,41 @@ class CharityDetailFragment : Fragment() {
                         buttonText = "Okay" ,
                         setShowDialog = setDonationSuccessDialog
                     ){
-                        Text("You did great today. Wanna share about your contribution?")
+                        Column() {
+                            Text(
+                                "You did great today! Wanna share about your contribution?",
+                                textAlign = TextAlign.Justify
+                            )
+                            Button(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 8.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    backgroundColor = Color.White,
+                                ),
+                                onClick = {
+                                    sharePhoto(activity?.applicationContext!!, viewModel.charity.value.imgSrc)
+                                }) {
+                                Text("Share photo via", color = ButtonBlue)
+                            }
+                            Button(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 8.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    backgroundColor = Color.White,
+                                ),
+                                onClick = {
+                                    val share = Intent.createChooser(Intent().apply {
+                                        action = Intent.ACTION_SEND
+                                        type = "text/plain"
+                                        putExtra(Intent.EXTRA_TEXT, "https://cherrities.app")
+                                    }, null)
+                                    startActivity(share)
+                                }) {
+                                Text("Share link via", color = ButtonBlue)
+                            }
+                        }
                     }
                 }
             }
