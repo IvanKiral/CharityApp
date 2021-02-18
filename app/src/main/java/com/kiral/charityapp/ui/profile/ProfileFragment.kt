@@ -1,6 +1,7 @@
 package com.kiral.charityapp.ui.profile
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,6 +33,8 @@ import com.kiral.charityapp.domain.model.Profile
 import com.kiral.charityapp.ui.components.*
 import com.kiral.charityapp.ui.theme.*
 import com.kiral.charityapp.utils.Convert
+import com.kiral.charityapp.utils.loadPicture
+import com.kiral.charityapp.utils.makeGravatrLink
 import dagger.hilt.android.AndroidEntryPoint
 
 data class BadgeData(
@@ -95,7 +98,12 @@ class ProfileFragment : Fragment() {
                     )
                     ProfilePicture(
                         name = profile.name,
-                        imageBitmap = imageResource(id = R.drawable.rachel),
+                        //imageBitmap = imageResource(id = R.drawable.rachel),
+                        imageBitmap = profile.email.let { e ->
+                            Log.i("ProfileFragment", "String is ${e.makeGravatrLink()}")
+                            val img = loadPicture(url = e.makeGravatrLink(), defaultImage = R.drawable.ic_loading_photo)
+                            img.value?.asImageBitmap()
+                        },
                         imageSize = 128.dp,
                         modifier = Modifier.constrainAs(profilePicture) {
                             top.linkTo(parent.top)
@@ -144,7 +152,7 @@ class ProfileFragment : Fragment() {
     @Composable
     fun ProfilePicture(
         name: String,
-        imageBitmap: ImageBitmap,
+        imageBitmap: ImageBitmap?,
         imageSize: Dp,
         modifier: Modifier = Modifier,
         borderMargin: Dp = 14.dp,

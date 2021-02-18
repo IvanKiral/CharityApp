@@ -28,7 +28,7 @@ import com.kiral.charityapp.ui.theme.*
 
 @Composable
 fun ProfileImageWithBorder(
-    imageBitmap: ImageBitmap,
+    imageBitmap: ImageBitmap?,
     imageSize: Dp,
     modifier: Modifier = Modifier,
     borderMargin: Dp = 14.dp,
@@ -44,14 +44,16 @@ fun ProfileImageWithBorder(
             ),
         contentAlignment = Alignment.Center
     ) {
-        Image(
-            bitmap = imageBitmap,
-            contentDescription = "",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .size(imageSize)
-                .clip(CircleShape)
-        )
+        imageBitmap?.let{
+            Image(
+                bitmap = imageBitmap,
+                contentDescription = "",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(imageSize)
+                    .clip(CircleShape)
+            )
+        }
     }
 }
 

@@ -92,9 +92,6 @@ fun sharePhoto(context: Context, url: String) {
                         catch (e: Exception){
 
                         }
-
-
-
                     }
                 }
             }
