@@ -6,11 +6,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
@@ -23,7 +25,8 @@ fun FormTextField(
     onChange: (String) -> Unit,
     label: String,
     modifier: Modifier = Modifier,
-    password: Boolean = false
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default
 ) {
     Box(
         modifier = modifier
@@ -41,7 +44,8 @@ fun FormTextField(
             value = text,
             inactiveColor = Color.Transparent,
             onValueChange = onChange,
-            visualTransformation = if (password) PasswordVisualTransformation() else VisualTransformation.None,
+            visualTransformation = visualTransformation,
+            keyboardOptions = keyboardOptions,
             placeholder = {
                 Text(
                     text = label,

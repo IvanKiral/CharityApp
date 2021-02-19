@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -20,17 +21,23 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.kiral.charityapp.R
 import com.kiral.charityapp.ui.components.ClickableIcon
 import com.kiral.charityapp.ui.components.FormTextField
 import com.kiral.charityapp.ui.home.CharitiesFragmentDirections
 import com.kiral.charityapp.ui.theme.CharityTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class RegistrationFragment : Fragment() {
+    private val viewModel: RegistrationViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,14 +53,13 @@ class RegistrationFragment : Fragment() {
 
     @Composable
     fun RegistrationScreen() {
+        val scrollState = rememberScrollState()
         CharityTheme {
-            val (loginText, setLoginText) = remember { mutableStateOf("") }
-            val (passwordText, setPasswordText) = remember { mutableStateOf("") }
-            val (checkPasswordText, setCheckPasswordText) = remember { mutableStateOf("") }
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 32.dp),
+                    .padding(horizontal = 32.dp)
+                    .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
@@ -64,23 +70,27 @@ class RegistrationFragment : Fragment() {
                 )
 
                 FormTextField(
-                    text = loginText,
-                    onChange = setLoginText,
+                    text = viewModel.emailText.value,
+                    onChange = { viewModel.setEmailText(it) },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                     label = stringResource(R.string.RegistrationFragment_Email)
                 )
 
                 FormTextField(
-                    text = passwordText,
-                    onChange = setPasswordText,
+                    text = viewModel.passwordText.value,
+                    onChange = { viewModel.setPasswordText(it) },
                     label = stringResource(R.string.RegistrationFragment_Password),
+                    visualTransformation = PasswordVisualTransformation(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                     modifier = Modifier.padding(top = 16.dp)
                 )
 
                 FormTextField(
-                    text = checkPasswordText,
-                    onChange = setCheckPasswordText,
+                    text = viewModel.checkPasswordText.value,
+                    onChange = { viewModel.setCheckPasswordText(it) },
                     label = stringResource(R.string.RegistrationFragment_PasswordConfirmation),
-                    password = true,
+                    visualTransformation = PasswordVisualTransformation(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                     modifier = Modifier.padding(top = 16.dp)
                 )
 
@@ -90,9 +100,9 @@ class RegistrationFragment : Fragment() {
                         .padding(top = 16.dp)
                         .preferredHeight(64.dp),
                     onClick = {
-                        if(loginText != "") {
+                        if(viewModel.emailText.value != "") {
                             val action = RegistrationFragmentDirections
-                                .actionRegistrationFragmentToEditPersonalInformationFragment(loginText)
+                                .actionRegistrationFragmentToEditPersonalInformationFragment(viewModel.emailText.value)
                             findNavController().navigate(action)
                         } else{
                             Toast.makeText(requireContext(), "Please fill up your credentials", Toast.LENGTH_SHORT).show()

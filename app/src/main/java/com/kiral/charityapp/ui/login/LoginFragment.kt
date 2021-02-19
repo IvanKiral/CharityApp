@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -20,6 +21,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
@@ -51,13 +55,13 @@ class LoginFragment : Fragment() {
 
     @Composable
     fun LoginScreen() {
+        val scrollState = rememberScrollState()
         CharityTheme {
-            val (loginText, setLoginText) = remember { mutableStateOf("") }
-            val (passwordText, setPasswordText) = remember { mutableStateOf("") }
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 32.dp),
+                    .padding(horizontal = 32.dp)
+                    .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
@@ -68,16 +72,18 @@ class LoginFragment : Fragment() {
                 )
 
                 FormTextField(
-                    text = loginText,
-                    onChange = setLoginText,
+                    text = viewModel.loginText.value,
+                    onChange = { viewModel.setLoginText(it) },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                     label = stringResource(R.string.LoginFragment_Email)
                 )
 
                 FormTextField(
-                    text = passwordText,
-                    onChange = setPasswordText,
+                    text = viewModel.passwordText.value,
+                    onChange = { viewModel.setPasswordText(it) },
                     label = stringResource(R.string.LoginFragment_Password),
-                    password = true,
+                    visualTransformation = PasswordVisualTransformation(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                     modifier = Modifier.padding(top = 16.dp)
                 )
 
@@ -87,9 +93,9 @@ class LoginFragment : Fragment() {
                         .padding(top = 16.dp)
                         .preferredHeight(64.dp),
                     onClick = {
-                        if (loginText != "" && passwordText != "") {
-                            if(viewModel.profileExists(loginText)) {
-                                val action = LoginFragmentDirections.actionLoginFragmentToCharitiesFragment(loginText)
+                        if (viewModel.loginText.value != "" && viewModel.passwordText.value != "") {
+                            if(viewModel.profileExists(viewModel.loginText.value)) {
+                                val action = LoginFragmentDirections.actionLoginFragmentToCharitiesFragment(viewModel.loginText.value)
                                 findNavController().navigate(action)
                             }else{
                                 Toast.makeText(requireContext(),"There is no user with such credentials", Toast.LENGTH_SHORT).show()
