@@ -31,13 +31,12 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.kiral.charityapp.R
-import com.kiral.charityapp.domain.model.Charity
+import com.kiral.charityapp.domain.model.CharityListItem
 import com.kiral.charityapp.ui.theme.CharityTheme
 import com.kiral.charityapp.ui.theme.cardTextStyle
 import com.kiral.charityapp.ui.theme.ProfileIconBorder
 import com.kiral.charityapp.utils.loadPicture
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 enum class CharitiesScreen {
     Charities, Ranking
@@ -105,7 +104,7 @@ class CharitiesFragment : Fragment() {
     @ExperimentalFoundationApi
     @Composable
     fun GridCharity(
-        lst: List<Charity>,
+        lst: List<CharityListItem>,
         modifier: Modifier = Modifier
     ) {
         LazyVerticalGrid(
@@ -128,7 +127,7 @@ class CharitiesFragment : Fragment() {
 
     @Composable
     fun CharityItem(
-        charity: Charity,
+        charity: CharityListItem,
         onClick: () -> Unit,
         modifier: Modifier = Modifier
     ) {

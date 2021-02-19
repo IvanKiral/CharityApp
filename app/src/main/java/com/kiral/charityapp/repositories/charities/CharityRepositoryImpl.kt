@@ -3,20 +3,22 @@ package com.kiral.charityapp.repositories.charities
 import com.kiral.charityapp.domain.fake.*
 import com.kiral.charityapp.domain.fake.responses.FakeDonationPost
 import com.kiral.charityapp.domain.model.Charity
+import com.kiral.charityapp.domain.model.CharityListItem
 import com.kiral.charityapp.domain.model.Project
 import com.kiral.charityapp.domain.util.CharitiesMapper
+import com.kiral.charityapp.domain.util.CharityListItemMapper
 import com.kiral.charityapp.domain.util.ProjectMapper
 
 class CharityRepositoryImpl(
     private val charityMapper: CharitiesMapper,
     private val projectMapper: ProjectMapper,
+    private val charityListMapper: CharityListItemMapper,
     private val fakeDatabse: FakeDatabase
 ) : CharityRepository {
 
-    override fun search(email: String, region: String): List<Charity> {
-        //TODO change Charity to CharityList
+    override fun search(email: String, region: String): List<CharityListItem> {
         val charitiesResponse = fakeDatabse.getCharities(email, region)
-        return charityMapper.mapToDomainModelList(charitiesResponse)
+        return charityListMapper.mapToDomainModelList(charitiesResponse)
     }
 
     override fun get(id: Int, donorEmail: String): Charity {
@@ -38,6 +40,4 @@ class CharityRepositoryImpl(
             )
         )
     }
-
-
 }

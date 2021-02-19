@@ -15,30 +15,17 @@ class FakeDatabase {
         MakeFakeDonationsForDonationGoals()
     }
 
-    fun getCharities(email: String, region: String): List<FakeCharityResponse> {
-        val user = fakeProfiles.filter { p -> p.email == email }.firstOrNull()
-        user?.let { u ->
-            return fakeCharities
-                .filter { c -> c.region == region }
-                .map { c ->
-                    FakeCharityResponse(
-                        id = c.id,
-                        name = c.name,
-                        imgSrc = c.imgSrc,
-                        address = c.address,
-                        region = c.region,
-                        description = c.description,
-                        raised = fakeDonations.filter { d -> d.charityId == c.id }
-                            .sumByDouble { s -> s.sum },
-                        donorId = user.id,
-                        peopleDonated = fakeDonations.filter { d -> d.donorId == u.id }.size,
-                        donorDonated = fakeDonations.filter { d -> d.donorId == u.id }
-                            .sumByDouble { s -> s.sum },
-                        projects = listOf()
-                    )
-                }
-        }
-        return listOf()
+    fun getCharities(email: String, region: String): List<FakeCharityListResponse> {
+        //val user = fakeProfiles.filter { p -> p.email == email }.firstOrNull()
+        return fakeCharities
+            .filter { c -> c.region == region }
+            .map { c ->
+                FakeCharityListResponse(
+                    id = c.id,
+                    name = c.name,
+                    imgSrc = c.imgSrc,
+                )
+            }
     }
 
     fun getCharity(charityId: Int, email: String): FakeCharityResponse {
@@ -58,7 +45,7 @@ class FakeDatabase {
                         .sumByDouble { s -> s.sum },
                     donorId = user.id,
                     peopleDonated = fakeDonations.filter { d -> d.charityId == c.id }.size,
-                    donorDonated = fakeDonations.filter { d -> d.donorId  == user.id && d.charityId == charityId }
+                    donorDonated = fakeDonations.filter { d -> d.donorId == user.id && d.charityId == charityId }
                         .sumByDouble { s -> s.sum },
                     projects = fakeDonationGoals.filter { d -> d.charityId == charityId }
                         .map { d -> FakeProjectList(d.id, d.name) }
@@ -137,9 +124,9 @@ class FakeDatabase {
         )
     }
 
-    fun addDonation(donation: FakeDonationPost): Boolean{
+    fun addDonation(donation: FakeDonationPost): Boolean {
         val user = fakeProfiles.filter { p -> p.id == donation.donorId }.first()
-        if(user.credit >= donation.sum) {
+        if (user.credit >= donation.sum) {
             fakeDonations.add(
                 FakeDonation(
                     id = fakeDonations.last().id + 1,
