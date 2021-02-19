@@ -4,7 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -49,10 +52,12 @@ class EditPersonalInformationFragment: Fragment(){
 
     @Composable
     fun EditInfoScreen(){
+        val scrollState = rememberScrollState()
         CharityTheme() {
-            val (name, setName) = remember { mutableStateOf("")}
             Column(
-                modifier = Modifier.padding(horizontal = 32.dp),
+                modifier = Modifier
+                    .padding(horizontal = 32.dp)
+                    .verticalScroll(scrollState),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -63,8 +68,8 @@ class EditPersonalInformationFragment: Fragment(){
                 )
 
                 FormTextField(
-                    text = name ,
-                    onChange = setName,
+                    text = viewModel.name.value ,
+                    onChange = { viewModel.setName(it) },
                     label = "Type your name",
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
@@ -75,7 +80,7 @@ class EditPersonalInformationFragment: Fragment(){
                         .padding(vertical = 8.dp)
                         .preferredHeight(64.dp),
                     onClick = {
-                        viewModel.addPersonalInformation(name)
+                        viewModel.addPersonalInformation()
                         findNavController().navigate(R.id.action_editPersonalInformationFragment_to_selectCharitiesTypesFragment)
                     }
                 ) {

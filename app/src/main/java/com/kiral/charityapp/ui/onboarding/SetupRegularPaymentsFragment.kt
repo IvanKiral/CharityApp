@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -28,7 +30,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SetupRegularPaymentsFragment: Fragment(){
-
     private val viewModel: OnBoardingViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -45,17 +46,15 @@ class SetupRegularPaymentsFragment: Fragment(){
 
     @Composable
     fun SetupPaymentsScreen(){
-        CharityTheme() {
+        val scrollState = rememberScrollState()
+        CharityTheme {
             Column(
-                modifier = Modifier.padding(horizontal = 32.dp),
+                modifier = Modifier.padding(horizontal = 32.dp)
+                    .verticalScroll(scrollState),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                val intervalItems = listOf("daily", "weekly", "monthly")
-                val (selectedInterval, setInterval) = remember { mutableStateOf(0)}
 
-                val amountItems = listOf(0.0, 0.5, 1.0, 2.0, 5.0, 10.0, 20.0, 50.0, 100.0, 500.0, 1000.0)
-                val (selectedAmount, setAmount) = remember { mutableStateOf(0)}
 
                 Text(
                     text = stringResource(R.string.SetupRegularPaymentsFragment_Title),
@@ -67,18 +66,18 @@ class SetupRegularPaymentsFragment: Fragment(){
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     SingleChoicePicker(
-                        items = amountItems.map { i -> "${i.Convert()} €" },
-                        selectedItem = selectedAmount,
-                        setSelectedItem = setAmount,
+                        items = viewModel.amountItems.map { i -> "${i.Convert()} €" },
+                        selectedItem = viewModel.selectedAmount.value,
+                        setSelectedItem = { viewModel.setSelectedAmount(it) },
                         modifier = Modifier
                             .fillMaxWidth(0.5f)
                             .padding(horizontal = 8.dp),
                         textAlignment = Alignment.End
                     )
                     SingleChoicePicker(
-                        items = intervalItems,
-                        selectedItem = selectedInterval,
-                        setSelectedItem = setInterval,
+                        items = viewModel.intervalItems,
+                        selectedItem = viewModel.selectedInterval.value,
+                        setSelectedItem = { viewModel.setSelectedInterval(it) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 8.dp),
@@ -92,7 +91,7 @@ class SetupRegularPaymentsFragment: Fragment(){
                         .padding(vertical = 8.dp)
                         .preferredHeight(64.dp),
                     onClick = {
-                        viewModel.addRegularPayments(amountItems.get(selectedAmount), intervalItems.get(selectedInterval))
+                        viewModel.addRegularPayments()
                         viewModel.register()
                         val action = SetupRegularPaymentsFragmentDirections
                             .actionSetupRegularPaymentsFragmentToCharitiesFragment(viewModel.profile.email)
@@ -101,7 +100,7 @@ class SetupRegularPaymentsFragment: Fragment(){
                     }
                 ) {
                     Text(
-                        text = if (selectedAmount != 0) "Continue" else "Skip",
+                        text = if (viewModel.selectedAmount.value != 0) "Continue" else "Skip",
                         style = MaterialTheme.typography.button
                     )
                 }
