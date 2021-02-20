@@ -5,60 +5,50 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.AmbientContext
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.kiral.charityapp.R
-import com.kiral.charityapp.domain.model.Charity
 import com.kiral.charityapp.domain.model.Project
 import com.kiral.charityapp.ui.components.*
 import com.kiral.charityapp.ui.theme.*
 import com.kiral.charityapp.utils.Convert
-import com.kiral.charityapp.utils.DonationValues
 import com.kiral.charityapp.utils.loadPicture
 import com.kiral.charityapp.utils.sharePhoto
 import dagger.hilt.android.AndroidEntryPoint
-import java.text.DecimalFormat
-import java.text.NumberFormat
 
 @AndroidEntryPoint
 class ProjectDetailFragment : Fragment() {
 
     val args: ProjectDetailFragmentArgs by navArgs()
     val viewModel: ProjectDetailViewModel by viewModels()
-    private lateinit var project: Project
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.getProject(args.projectId, args.email)
-        project = viewModel.project!!
     }
 
     @ExperimentalMaterialApi
@@ -79,16 +69,23 @@ class ProjectDetailFragment : Fragment() {
     fun CharityDetailScreen() {
         CharityTheme() {
             Column {
-                CharityDetailHeader()
-                CharityDetailBody(modifier = Modifier.offset(y = -20.dp))
+                val project = viewModel.project
+                project.value?.let{ p ->
+                    CharityDetailHeader(p.charityImage, p.donorDonated)
+                    CharityDetailBody(p, modifier = Modifier.offset(y = -20.dp))
+                }
+
             }
         }
     }
 
     @Composable
-    fun CharityDetailHeader() {
+    fun CharityDetailHeader(
+        charityImage: String,
+        donorDonated: Double
+    ) {
         Box() {
-            project.charityImage.let { src ->
+            charityImage.let { src ->
                 val image = loadPicture(url = src, defaultImage = R.drawable.children)
                 image.value?.let { img ->
                     Image(
@@ -106,9 +103,9 @@ class ProjectDetailFragment : Fragment() {
                     .fillMaxWidth()
                     .padding(top = 20.dp, start = 24.dp, end = 16.dp)
             ) {
-                if (viewModel.donorDonated.value > 0) {
+                if (donorDonated > 0) {
                     DonationBox(
-                        text = "You donated ${viewModel.donorDonated.value.Convert()}  €",
+                        text = "You donated ${donorDonated.Convert()}  €",
                         backgroundColor = Color.Black.copy(alpha = 0.5f),
                     )
                 }
@@ -125,12 +122,9 @@ class ProjectDetailFragment : Fragment() {
 
     @Composable
     fun CharityDetailBody(
+        project: Project,
         modifier: Modifier = Modifier
     ) {
-        val values = DonationValues
-        val (selectedValue, setSelectedValue) = remember { mutableStateOf(0) }
-        val (showDialog, setDialog) = remember { mutableStateOf(false) }
-        val (showDonationSuccessDialog, setDonationSuccessDialog) = remember { mutableStateOf(false) }
         Surface(
             modifier = modifier
                 .fillMaxSize()
@@ -173,7 +167,9 @@ class ProjectDetailFragment : Fragment() {
                         .padding(top = 24.dp)
                 )
                 CharityRaisedColumn(
-                    onButtonClick = { setDialog(true) },
+                    actualSum = project.actualSum,
+                    goalSum = project.goalSum,
+                    onButtonClick = { viewModel.setShowDialog(true) },
                     modifier = Modifier.padding(top = 16.dp)
                 )
                 InformationBox(
@@ -192,36 +188,31 @@ class ProjectDetailFragment : Fragment() {
                         .fillMaxWidth()
                 )
             }
-            if (showDialog) {
+            if (viewModel.showDialog.value) {
                 AlertDialogWithChoice(
-                    setShowDialog = setDialog,
+                    setShowDialog = { viewModel.setShowDialog(it) },
                     title = "Select value to donate",
                     onConfirmButton = {
-                        if (viewModel.makeDonation(
-                                project.charityId,
-                                project.donorId,
-                                project.id,
-                                values.get(selectedValue)
-                            )
+                        if (viewModel.makeDonation()
                         ) {
-                            setDonationSuccessDialog(true)
+                            viewModel.setDonationSuccessDialog(true)
                         }
-                        setDialog(false)
+                        viewModel.setShowDialog(false)
                     }
                 ){
                     SingleChoicePicker(
-                        items = values.map { v -> v.Convert() + " €" },
-                        selectedItem = selectedValue,
-                        setSelectedItem = setSelectedValue,
+                        items = viewModel.values.map { v -> v.Convert() + " €" },
+                        selectedItem = viewModel.selectedValue.value,
+                        setSelectedItem = { viewModel.setSelectedValue(it) },
                         textAlignment = Alignment.Start
                     )
                 }
             }
-            if (showDonationSuccessDialog) {
+            if (viewModel.showDonationSuccessDialog.value) {
                 InformationAlertDialog(
                     title = "Thank you for your contribution!",
                     buttonText = "Okay",
-                    setShowDialog = setDonationSuccessDialog
+                    setShowDialog = { viewModel.setDonationSuccessDialog(it)}
                 ) {
                     Column() {
                         Text(
@@ -265,6 +256,8 @@ class ProjectDetailFragment : Fragment() {
 
     @Composable
     fun CharityRaisedColumn(
+        actualSum: Double,
+        goalSum: Double,
         modifier: Modifier,
         onButtonClick: () -> Unit
     ) {
@@ -284,21 +277,21 @@ class ProjectDetailFragment : Fragment() {
                 verticalAlignment = Alignment.Bottom
             ) {
                 Text(
-                    text = viewModel.actualSum.value.Convert(),
+                    text = actualSum.Convert(),
                     style = MaterialTheme.typography.body1.copy(
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold
                     )
                 )
                 Text(
-                    text = " / " + project.goalSum.Convert() + "€",
+                    text = " / " + goalSum.Convert() + "€",
                     style = MaterialTheme.typography.body1
                 )
             }
 
             ProgressBar(
-                value = viewModel.actualSum.value,
-                maxValue = project.goalSum,
+                value = actualSum,
+                maxValue = goalSum,
                 modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp)
             )
             Button(

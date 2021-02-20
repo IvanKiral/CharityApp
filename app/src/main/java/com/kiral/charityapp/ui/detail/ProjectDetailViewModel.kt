@@ -1,11 +1,12 @@
 package com.kiral.charityapp.ui.detail
 
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.kiral.charityapp.domain.model.Charity
 import com.kiral.charityapp.domain.model.Project
 import com.kiral.charityapp.repositories.charities.CharityRepository
+import com.kiral.charityapp.utils.DonationValues
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -17,24 +18,46 @@ constructor(
 ): ViewModel(){
 
     private val _project: MutableState<Project?> = mutableStateOf(null)
-    val project
-        get() = _project.value
+    val project: State<Project?>
+        get() = _project
 
-    lateinit var donorDonated: MutableState<Double>
-    lateinit var actualSum: MutableState<Double>
+    val values = DonationValues
+    val selectedValue = mutableStateOf(0)
+    val showDialog = mutableStateOf(false)
+    val showDonationSuccessDialog = mutableStateOf(false)
+
+    // var donorDonated: MutableState<Double>
+    //lateinit var actualSum: MutableState<Double>
 
     fun getProject(id: Int, donorEmail:String) {
         _project.value = charityRepository.getProject(id, donorEmail)
-        donorDonated = mutableStateOf(_project.value!!.donorDonated)
-        actualSum = mutableStateOf(_project.value!!.actualSum)
+        //donorDonated = mutableStateOf(_project.value!!.donorDonated)
+        //actualSum = mutableStateOf(_project.value!!.actualSum)
     }
 
-    fun makeDonation(charityId:Int, donorId: Int, projectId:Int, value: Double): Boolean{
-        if(charityRepository.makeDonationToCharity(charityId, donorId, projectId, value)){
-            donorDonated.value += value
-            actualSum.value += value.toFloat()
-            return true
+    fun makeDonation(): Boolean{
+        _project.value?.let { c ->
+            val value = values.get(selectedValue.value)
+            if (charityRepository.makeDonationToCharity(c.id, c.donorId, null, value)) {
+                _project.value = _project.value?.copy()?.apply {
+                    donorDonated = donorDonated.plus(value)
+                    actualSum = actualSum.plus(value)
+                }
+                return true
+            }
         }
         return false
+    }
+
+    fun setSelectedValue(value: Int) {
+        selectedValue.value = value
+    }
+
+    fun setShowDialog(value: Boolean) {
+        showDialog.value = value
+    }
+
+    fun setDonationSuccessDialog(value: Boolean) {
+        showDonationSuccessDialog.value = value
     }
 }
