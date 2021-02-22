@@ -5,10 +5,10 @@ data class Profile(
     val email: String,
     var name: String,
     var donations: Int,
-    var credit: Float,
+    var credit: Double,
     var charities: String,
     var automaticDonations: Boolean,
-    var automaticDonationsValue: Int,
+    var automaticDonationsValue: Double,
     var automaticDonationTimeFrequency: String ="day",
     val badges: List<Badge>
 )

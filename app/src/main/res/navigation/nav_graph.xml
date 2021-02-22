@@ -2,28 +2,8 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/loginFragment">
+    app:startDestination="@id/mainFragment">
 
-    <fragment
-        android:id="@+id/loginFragment"
-        android:name="com.kiral.charityapp.ui.login.LoginFragment"
-        android:label="LoginFragment" >
-        <action
-            android:id="@+id/action_loginFragment_to_editPersonalInformationFragment"
-            app:destination="@id/editPersonalInformationFragment"
-            app:enterAnim="@anim/fragment_fade_enter"
-            app:exitAnim="@anim/fragment_fade_exit"
-            app:popUpTo="@id/loginFragment"
-            app:popUpToInclusive="true" />
-        <action
-            android:id="@+id/action_loginFragment_to_charitiesFragment"
-            app:destination="@id/charitiesFragment" />
-        <action
-            android:id="@+id/action_loginFragment_to_registrationFragment"
-            app:destination="@id/registrationFragment"
-            app:enterAnim="@anim/fragment_fade_enter"
-            app:exitAnim="@anim/fragment_fade_exit" />
-    </fragment>
     <fragment
         android:id="@+id/editPersonalInformationFragment"
         android:name="com.kiral.charityapp.ui.onboarding.EditPersonalInformationFragment"
@@ -57,8 +37,8 @@
             app:destination="@id/charitiesFragment"
             app:enterAnim="@android:anim/fade_in"
             app:exitAnim="@android:anim/fade_out"
-            app:popUpTo="@+id/editPersonalInformationFragment"
-            app:popUpToInclusive="true" />
+            app:popUpTo="@id/welcomeFragment"
+           app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/charitiesFragment"
@@ -89,41 +69,76 @@
             android:name="charityId"
             app:argType="integer"
             android:defaultValue="-1" />
+        <argument
+            android:name="donorId"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_charityDetailFragment_to_projectDetailFragment"
+            app:destination="@id/projectDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.kiral.charityapp.ui.profile.ProfileFragment"
         android:label="ProfileFragment" >
         <action
-            android:id="@+id/action_profileFragment_to_loginFragment"
-            app:destination="@id/loginFragment" />
-        <action
             android:id="@+id/action_profileFragment_to_badgesFragment"
             app:destination="@id/badgesFragment"
             app:enterAnim="@anim/fragment_fade_enter"
             app:exitAnim="@anim/fragment_fade_exit" />
         <argument
-            android:name="email"
-            app:argType="string"
-            android:defaultValue='""' />
-    </fragment>
-    <fragment
-        android:id="@+id/registrationFragment"
-        android:name="com.kiral.charityapp.ui.login.RegistrationFragment"
-        android:label="RegistrationFragment" >
+            android:name="id"
+            app:argType="integer" />
         <action
-            android:id="@+id/action_registrationFragment_to_loginFragment"
-            app:destination="@id/loginFragment"
-            app:enterAnim="@anim/fragment_fade_enter"
-            app:exitAnim="@anim/fragment_fade_exit"
-            app:popUpTo="@id/loginFragment"
+            android:id="@+id/action_profileFragment_to_welcomeFragment"
+            app:destination="@id/welcomeFragment"
+            app:popUpTo="@id/charitiesFragment"
             app:popUpToInclusive="true" />
-        <action
-            android:id="@+id/action_registrationFragment_to_editPersonalInformationFragment"
-            app:destination="@id/editPersonalInformationFragment" />
     </fragment>
     <fragment
         android:id="@+id/badgesFragment"
         android:name="com.kiral.charityapp.ui.badges.BadgesFragment"
         android:label="BadgesFragment" />
+    <fragment
+        android:id="@+id/projectDetailFragment"
+        android:name="com.kiral.charityapp.ui.detail.ProjectDetailFragment"
+        android:label="ProjectDetailFragment" >
+        <argument
+            android:name="projectId"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="donorId"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/welcomeFragment"
+        android:name="com.kiral.charityapp.ui.welcome.WelcomeFragment"
+        android:label="WelcomeFragment" >
+        <action
+            android:id="@+id/action_welcomeFragment_to_editPersonalInformationFragment"
+            app:destination="@id/editPersonalInformationFragment" />
+        <action
+            android:id="@+id/action_welcomeFragment_to_charitiesFragment"
+            app:destination="@id/charitiesFragment"
+            app:popUpTo="@id/welcomeFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_welcomeFragment_to_charityDetailFragment"
+            app:destination="@id/charityDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.kiral.charityapp.ui.main.MainFragment"
+        android:label="MainFragment" >
+        <action
+            android:id="@+id/action_mainFragment_to_welcomeFragment"
+            app:destination="@id/welcomeFragment"
+            app:popUpTo="@id/mainFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_mainFragment_to_charitiesFragment"
+            app:destination="@id/charitiesFragment"
+            app:popUpTo="@id/mainFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>

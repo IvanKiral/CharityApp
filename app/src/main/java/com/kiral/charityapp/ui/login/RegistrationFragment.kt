@@ -5,13 +5,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.foundation.ClickableText
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.preferredHeight
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Button
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.AmbientContext
@@ -20,17 +27,21 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
+import androidx.fragment.app.viewModels
 import com.kiral.charityapp.R
 import com.kiral.charityapp.ui.components.ClickableIcon
 import com.kiral.charityapp.ui.components.FormTextField
-import com.kiral.charityapp.ui.home.CharitiesFragmentDirections
 import com.kiral.charityapp.ui.theme.CharityTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class RegistrationFragment : Fragment() {
+    private val viewModel: RegistrationViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,14 +57,13 @@ class RegistrationFragment : Fragment() {
 
     @Composable
     fun RegistrationScreen() {
+        val scrollState = rememberScrollState()
         CharityTheme {
-            val (loginText, setLoginText) = remember { mutableStateOf("") }
-            val (passwordText, setPasswordText) = remember { mutableStateOf("") }
-            val (checkPasswordText, setCheckPasswordText) = remember { mutableStateOf("") }
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 32.dp),
+                    .padding(horizontal = 32.dp)
+                    .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
@@ -64,23 +74,27 @@ class RegistrationFragment : Fragment() {
                 )
 
                 FormTextField(
-                    text = loginText,
-                    onChange = setLoginText,
+                    text = viewModel.emailText.value,
+                    onChange = { viewModel.setEmailText(it) },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                     label = stringResource(R.string.RegistrationFragment_Email)
                 )
 
                 FormTextField(
-                    text = passwordText,
-                    onChange = setPasswordText,
+                    text = viewModel.passwordText.value,
+                    onChange = { viewModel.setPasswordText(it) },
                     label = stringResource(R.string.RegistrationFragment_Password),
+                    visualTransformation = PasswordVisualTransformation(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                     modifier = Modifier.padding(top = 16.dp)
                 )
 
                 FormTextField(
-                    text = checkPasswordText,
-                    onChange = setCheckPasswordText,
+                    text = viewModel.checkPasswordText.value,
+                    onChange = { viewModel.setCheckPasswordText(it) },
                     label = stringResource(R.string.RegistrationFragment_PasswordConfirmation),
-                    password = true,
+                    visualTransformation = PasswordVisualTransformation(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                     modifier = Modifier.padding(top = 16.dp)
                 )
 
@@ -90,13 +104,13 @@ class RegistrationFragment : Fragment() {
                         .padding(top = 16.dp)
                         .preferredHeight(64.dp),
                     onClick = {
-                        if(loginText != "") {
+                        /*if(viewModel.emailText.value != "") {
                             val action = RegistrationFragmentDirections
-                                .actionRegistrationFragmentToEditPersonalInformationFragment(loginText)
+                                .actionRegistrationFragmentToEditPersonalInformationFragment(viewModel.emailText.value)
                             findNavController().navigate(action)
                         } else{
                             Toast.makeText(requireContext(), "Please fill up your credentials", Toast.LENGTH_SHORT).show()
-                        }
+                        }*/
                     }
                 ) {
                     Text(
@@ -125,7 +139,7 @@ class RegistrationFragment : Fragment() {
                     text = AnnotatedString(stringResource(R.string.RegistrationFragment_Login)),
                     style = TextStyle(textDecoration = TextDecoration.Underline),
                     onClick = {
-                        findNavController().navigate(R.id.action_registrationFragment_to_loginFragment)
+                        //findNavController().navigate(R.id.action_registrationFragment_to_loginFragment)
                     }
                 )
             }

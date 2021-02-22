@@ -4,9 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.InteractionState
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
@@ -35,11 +33,6 @@ class SelectCharitiesTypesFragment : Fragment() {
 
     private val viewModel: OnBoardingViewModel by activityViewModels()
 
-    private val categories = listOf(
-        "Environment charity", "Animal charity",
-        "Health charity", "Education charity", "Art and culture charity"
-    )
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -54,12 +47,12 @@ class SelectCharitiesTypesFragment : Fragment() {
 
     @Composable
     fun SelectCharitiesScreen() {
-        val lst = MutableList(categories.size) { false }
-        val selected = remember { lst.toMutableStateList() }
-
+        val scrollState = rememberScrollState()
         CharityTheme() {
             Column(
-                modifier = Modifier.padding(horizontal = 32.dp),
+                modifier = Modifier
+                    .padding(horizontal = 32.dp)
+                    .verticalScroll(scrollState),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -71,8 +64,8 @@ class SelectCharitiesTypesFragment : Fragment() {
                 )
 
                 CharitiesSelector(
-                    categories = categories,
-                    categoriesSelected = selected,
+                    categories = viewModel.categories,
+                    categoriesSelected = viewModel.selected,
                     modifier = Modifier
                         .align(Alignment.Start)
                         .padding(top = 64.dp)
@@ -84,14 +77,7 @@ class SelectCharitiesTypesFragment : Fragment() {
                         .padding(vertical = 32.dp)
                         .preferredHeight(64.dp),
                     onClick = {
-                        val charities = selected.foldIndexed(
-                            "",
-                            { index, result, sel ->
-                                if(sel) result + categories[index] + (if(index != selected.filter { it == true }.size - 1) ";" else "")
-                                else result + ""
-                            }
-                        )
-                        viewModel.addCharitiesTypes(charities)
+                        viewModel.addCharitiesTypes()
                         findNavController().navigate(R.id.action_selectCharitiesTypesFragment_to_setupRegularPaymentsFragment)
                     }
                 ) {
@@ -109,11 +95,11 @@ class SelectCharitiesTypesFragment : Fragment() {
     ) {
 
         Column(modifier = modifier) {
-            for (i in 0 until categories.size) {
+            for (i in categories.indices) {
                 RowSelector(
                     text = categories[i],
                     selected = categoriesSelected[i],
-                    onRowClick = {categoriesSelected[i] = !categoriesSelected[i]}
+                    onRowClick = { categoriesSelected[i] = !categoriesSelected[i] }
                 )
             }
         }

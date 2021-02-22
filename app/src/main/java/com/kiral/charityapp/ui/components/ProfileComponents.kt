@@ -22,12 +22,12 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.kiral.charityapp.ui.profile.BadgeData
+import com.kiral.charityapp.domain.model.Badge
 import com.kiral.charityapp.ui.theme.*
 
 @Composable
 fun ProfileImageWithBorder(
-    imageBitmap: ImageBitmap,
+    imageBitmap: ImageBitmap?,
     imageSize: Dp,
     modifier: Modifier = Modifier,
     borderMargin: Dp = 14.dp,
@@ -43,30 +43,32 @@ fun ProfileImageWithBorder(
             ),
         contentAlignment = Alignment.Center
     ) {
-        Image(
-            bitmap = imageBitmap,
-            contentDescription = "",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .size(imageSize)
-                .clip(CircleShape)
-        )
+        imageBitmap?.let{
+            Image(
+                bitmap = imageBitmap,
+                contentDescription = "",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(imageSize)
+                    .clip(CircleShape)
+            )
+        }
     }
 }
 
 
 @Composable
 fun BadgeRow(
-    badges: List<BadgeData>,
+    badges: List<Badge>,
     modifier: Modifier = Modifier
 ) {
     Box {
         Box(
             modifier
-                .height(20.dp)
+                .height(8.dp)
                 .fillMaxWidth()
-                .offset(y = 20.dp)
-                .shadow(36.dp)
+                .offset(y = 36.dp)
+                .shadow(20.dp)
         )
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -74,11 +76,11 @@ fun BadgeRow(
             modifier = modifier
 
         ) {
-            for (i in 0..4) {
+            listOf(3, 1, 0, 2, 4).forEachIndexed{ index, i ->
                 Badge(
-                    icon = vectorResource(id = badges[i].icon),
-                    iconSize = (22 + (2 - Math.abs(i - 2)) * 5).dp,
-                    boxSize = (52 + (2 - Math.abs(i - 2)) * 8).dp
+                    icon = if(i < badges.size) vectorResource(id = badges[i].iconId) else null,
+                    iconSize = (22 + (2 - Math.abs(index - 2)) * 5).dp,
+                    boxSize = (52 + (2 - Math.abs(index - 2)) * 8).dp
                 )
             }
         }
@@ -87,7 +89,7 @@ fun BadgeRow(
 
 @Composable
 fun Badge(
-    icon: ImageVector,
+    icon: ImageVector?,
     iconSize: Dp,
     boxSize: Dp,
     modifier: Modifier = Modifier,
@@ -100,12 +102,14 @@ fun Badge(
             .background(color = Color.White),
         contentAlignment = Alignment.Center
     ) {
-        Image(
-            imageVector = icon,
-            contentDescription = "",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.size(iconSize)
-        )
+        icon?.let {
+            Image(
+                imageVector = it,
+                contentDescription = "",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.size(iconSize)
+            )
+        }
     }
 }
 
@@ -124,7 +128,7 @@ fun BoxWithAdd(
         Box(
             modifier = Modifier
                 .size(boxWeight, boxHeight)
-                .shadow(16.dp, shape = RoundedCornerShape(12.dp))
+                .shadow(12.dp, shape = RoundedCornerShape(12.dp))
                 .clip(RoundedCornerShape(12.dp))
                 .background(
                     Brush.verticalGradient(
@@ -166,6 +170,7 @@ fun Option(
     title: String,
     description: String,
     modifier: Modifier = Modifier,
+    isSwitched: Boolean = false,
     hasSwitch: Boolean = false,
     onClick: () -> Unit = {},
     switchFunction: (Boolean) -> Unit = {}
@@ -198,7 +203,7 @@ fun Option(
             }
             if (hasSwitch) {
                 Switch(
-                    checked = true,
+                    checked = isSwitched,
                     onCheckedChange = switchFunction,
                     modifier = Modifier.align(Alignment.CenterEnd),
                     colors = SwitchDefaults.colors(checkedThumbColor = ButtonBlue)

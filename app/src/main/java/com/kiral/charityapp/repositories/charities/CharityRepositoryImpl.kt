@@ -1,12 +1,43 @@
 package com.kiral.charityapp.repositories.charities
 
-import com.kiral.charityapp.domain.charities
+import com.kiral.charityapp.domain.fake.FakeDatabase
+import com.kiral.charityapp.domain.fake.responses.FakeDonationPost
 import com.kiral.charityapp.domain.model.Charity
+import com.kiral.charityapp.domain.model.CharityListItem
+import com.kiral.charityapp.domain.model.Project
+import com.kiral.charityapp.domain.util.CharitiesMapper
+import com.kiral.charityapp.domain.util.CharityListItemMapper
+import com.kiral.charityapp.domain.util.ProjectMapper
 
-class CharityRepositoryImpl: CharityRepository {
-    override fun search(): List<Charity> {
-        return charities
+class CharityRepositoryImpl(
+    private val charityMapper: CharitiesMapper,
+    private val projectMapper: ProjectMapper,
+    private val charityListMapper: CharityListItemMapper,
+    private val fakeDatabse: FakeDatabase
+) : CharityRepository {
+
+    override fun search(id: Int, region: String): List<CharityListItem> {
+        val charitiesResponse = fakeDatabse.getCharities(id, region)
+        return charityListMapper.mapToDomainModelList(charitiesResponse)
     }
 
-    override fun get(id: Int): Charity = charities[id]
+    override fun get(id: Int, donorId: Int): Charity {
+        val tmp = fakeDatabse.getCharity(id, donorId)
+        return charityMapper.mapToDomainModel(tmp)
+    }
+
+    override fun getProject(id: Int, donorId: Int): Project {
+        return projectMapper.mapToDomainModel(fakeDatabse.getProject(id, donorId))
+    }
+
+    override fun makeDonationToCharity(charityId: Int, donorId: Int, projectId: Int?, value: Double): Boolean {
+        return fakeDatabse.addDonation(
+            FakeDonationPost(
+                charityId = charityId,
+                donorId = donorId,
+                donationGoalId = projectId,
+                sum = value,
+            )
+        )
+    }
 }

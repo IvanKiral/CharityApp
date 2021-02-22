@@ -24,18 +24,6 @@ val badges: List<Badge> = listOf(
         description = "doggo",
         iconId = R.drawable.ic_dog
     ),
-    Badge(
-        id = 3,
-        title = "doggo",
-        description = "doggo",
-        iconId = R.drawable.ic_dog
-    ),
-    Badge(
-        id = 4,
-        title = "doggo",
-        description = "doggo",
-        iconId = R.drawable.ic_dog
-    ),
 )
 val profiles = mutableListOf(
     Profile(
@@ -43,10 +31,10 @@ val profiles = mutableListOf(
         email = "email@email.com",
         name = "Rachel Green",
         donations = 87,
-        credit = 27.5f,
+        credit = 27.5,
         charities = "",
         automaticDonations = true,
-        automaticDonationsValue = 1,
+        automaticDonationsValue = 1.0,
         automaticDonationTimeFrequency = "day",
         badges = badges
     ),
@@ -56,15 +44,15 @@ val profiles = mutableListOf(
         email = "test@email.com",
         name = "Ross Geller",
         donations = 10,
-        credit = 100f,
+        credit = 100.0,
         charities = "",
         automaticDonations = true,
-        automaticDonationsValue = 5,
+        automaticDonationsValue = 5.0,
         automaticDonationTimeFrequency = "day",
         badges = badges
     ),
 )
-val charities = listOf(
+/*val charities = listOf(
     Charity(
         imgSrc = "https://images.unsplash.com/photo-1611464765133-794150e205dd?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=600&ixlib=rb-1.2.1&q=80&w=800",
         id = 0,
@@ -74,7 +62,8 @@ val charities = listOf(
                 "\n" +
                 "Venenatis a condimentum vitae sapien pellentesque. Massa sed elementum tempus egestas. Molestie at elementum eu facilisis. Eu non diam phasellus vestibulum lorem sed risus ultricies tristique. Ultrices",
         raised = 1250.0f,
-        peopleDonated = 187
+        peopleDonated = 187,
+        donorDonated = 1.5
     ),
     Charity(
         imgSrc = "https://source.unsplash.com/random/800x600",
@@ -85,7 +74,8 @@ val charities = listOf(
                 "\n" +
                 "Venenatis a condimentum vitae sapien pellentesque. Massa sed elementum tempus egestas. Molestie at elementum eu facilisis. Eu non diam phasellus vestibulum lorem sed risus ultricies tristique. Ultrices",
         raised = 1250.0f,
-        peopleDonated = 187
+        peopleDonated = 187,
+        donorDonated = 1.5
     ),
     Charity(
         imgSrc = "https://source.unsplash.com/random/800x600",
@@ -96,6 +86,7 @@ val charities = listOf(
                 "\n" +
                 "Venenatis a condimentum vitae sapien pellentesque. Massa sed elementum tempus egestas. Molestie at elementum eu facilisis. Eu non diam phasellus vestibulum lorem sed risus ultricies tristique. Ultrices",
         raised = 1250.0f,
-        peopleDonated = 187
+        peopleDonated = 187,
+        donorDonated = 1.5
     ),
-)
+)*/
