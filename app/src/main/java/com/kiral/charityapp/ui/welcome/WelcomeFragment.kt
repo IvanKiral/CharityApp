@@ -21,6 +21,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.auth0.android.Auth0
 import com.auth0.android.authentication.AuthenticationAPIClient
@@ -34,6 +35,7 @@ import com.kiral.charityapp.R
 import com.kiral.charityapp.ui.theme.CharityTheme
 import com.kiral.charityapp.utils.Auth
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -105,9 +107,9 @@ class WelcomeFragment : Fragment() {
                     Auth.withUserEmail(account, accessToken) { email ->
                         val id = viewModel.getProfileId(email)
                         id?.let { userId ->
-                            /*lifecycleScope.launch {
+                            lifecycleScope.launch {
                                 write_id(userId)
-                            }*/
+                            }
                             findNavController().navigate(R.id.action_welcomeFragment_to_charitiesFragment)
                         }
                         if (id == null) {

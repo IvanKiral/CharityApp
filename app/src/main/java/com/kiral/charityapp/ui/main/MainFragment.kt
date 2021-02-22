@@ -11,6 +11,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.asLiveData
 import androidx.navigation.fragment.findNavController
 import com.auth0.android.Auth0
 import com.auth0.android.authentication.AuthenticationAPIClient
@@ -22,6 +23,8 @@ import com.auth0.android.result.Credentials
 import com.kiral.charityapp.R
 import com.kiral.charityapp.utils.Auth
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -43,39 +46,39 @@ class MainFragment : Fragment() {
         val client = AuthenticationAPIClient(account)
         val manager = CredentialsManager(client, SharedPreferencesStorage(requireContext()))
         if (manager.hasValidCredentials()) {
-            /*val uId: Flow<Int> = dataStore.data
+            val uId: Flow<Int> = dataStore.data
                 .map { preferences ->
                     preferences[USER_ID] ?: -1
                 }
-            uId.asLiveData().observe(viewLifecycleOwner){
-                if(it == -1){
-                    logout()
+            uId.asLiveData().observe(viewLifecycleOwner) {
+                if (it == -1) {
+                    Auth.logout(account, requireContext(), dataStore)
+                    findNavController().navigate(R.id.action_mainFragment_to_welcomeFragment)
                 } else {
-                    findNavController().navigate(R.id.action_welcomeFragment_to_charitiesFragment)
-                }
-            }*/
-            manager.getCredentials(object : Callback<Credentials, CredentialsManagerException> {
-                override fun onSuccess(result: Credentials) {
-                    Log.i("WelcomeFragment", "credentials obtained!")
-                    Auth.withUserEmail(account, result.accessToken) { email ->
-                        val id = viewModel.getProfileId(email)
-                        if (id == null) {
-                            Auth.logout(account, requireContext(), dataStore)
-                            findNavController().navigate(R.id.action_mainFragment_to_welcomeFragment)
-                        } else {
-                            findNavController().navigate(R.id.action_mainFragment_to_charitiesFragment)
+                    manager.getCredentials(object :
+                        Callback<Credentials, CredentialsManagerException> {
+                        override fun onSuccess(result: Credentials) {
+                            Log.i("WelcomeFragment", "credentials obtained!")
+                            Auth.withUserEmail(account, result.accessToken) { email ->
+                                val id = viewModel.getProfileId(email)
+                                if (id == null) {
+                                    Auth.logout(account, requireContext(), dataStore)
+                                    findNavController().navigate(R.id.action_mainFragment_to_welcomeFragment)
+                                } else {
+                                    findNavController().navigate(R.id.action_mainFragment_to_charitiesFragment)
+                                }
+                            }
+                        }
+
+                        override fun onFailure(error: CredentialsManagerException) {
+                            Log.i("WelcomeFragment", "Error has occured ${error}")
                         }
                     }
-
-                }
-
-                override fun onFailure(error: CredentialsManagerException) {
-                    Log.i("WelcomeFragment", "Error has occured ${error}")
+                    )
                 }
             }
-            )
-        }
-        else{
+
+        } else {
             findNavController().navigate(R.id.action_mainFragment_to_welcomeFragment)
         }
         return ComposeView(requireContext()).apply {

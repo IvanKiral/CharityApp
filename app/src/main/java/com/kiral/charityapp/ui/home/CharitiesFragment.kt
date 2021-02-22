@@ -48,24 +48,26 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.asLiveData
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.auth0.android.Auth0
 import com.auth0.android.authentication.AuthenticationAPIClient
-import com.auth0.android.authentication.AuthenticationException
 import com.auth0.android.authentication.storage.CredentialsManager
 import com.auth0.android.authentication.storage.CredentialsManagerException
 import com.auth0.android.authentication.storage.SharedPreferencesStorage
 import com.auth0.android.callback.Callback
 import com.auth0.android.result.Credentials
-import com.auth0.android.result.UserProfile
 import com.kiral.charityapp.R
 import com.kiral.charityapp.domain.model.CharityListItem
 import com.kiral.charityapp.ui.theme.CharityTheme
 import com.kiral.charityapp.ui.theme.ProfileIconBorder
 import com.kiral.charityapp.ui.theme.cardTextStyle
+import com.kiral.charityapp.utils.Auth
 import com.kiral.charityapp.utils.loadPicture
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 enum class CharitiesScreen {
@@ -102,28 +104,28 @@ class CharitiesFragment : Fragment() {
     ): View {
         val apiClient = AuthenticationAPIClient(account)
         val manager = CredentialsManager(apiClient, SharedPreferencesStorage(requireContext()))
+        val uId: Flow<Int> = dataStore.data
+            .map { preferences ->
+                preferences[USER_ID] ?: -1
+            }
 
         manager.getCredentials(object: Callback<Credentials, CredentialsManagerException> {
             override fun onSuccess(result: Credentials) {
-                /*Log.i("CharitiesFragmentID", credentials.toString())
-                TODO use this caching id when backend is ready
-                val uId: Flow<Int> = dataStore.data
-                    .map { preferences ->
-                        // No type safety.
-                        preferences[USER_ID] ?: -1
-                    }
                 uId.asLiveData().observe(viewLifecycleOwner){
                     if(it != null){
                         if(it != -1){
+                            userId = it
                             viewModel.getCharities(it, "svk")
                         }
                         else {
-                            showUserProfile(auth0, credentials.accessToken)
+                            Auth.withUserEmail(account, result.accessToken){ email ->
+                                userId = viewModel.getId(email)
+                                Log.i("CharitiesFragment", "inShowUser")
+                                viewModel.getCharities(userId, "svk")
+                            }
                         }
                     }
-                }*/
-
-                showUserProfile(account, result.accessToken)
+                }
             }
             override fun onFailure(error: CredentialsManagerException) {
                 // No credentials were previously saved or they couldn't be refreshed
@@ -231,29 +233,6 @@ class CharitiesFragment : Fragment() {
                 modifier = Modifier.padding(top = 8.dp)
             )
         }
-    }
-
-    private fun showUserProfile(account: Auth0, accessToken: String) {
-        val client = AuthenticationAPIClient(account)
-
-        client.userInfo(accessToken)
-            .start(object : Callback<UserProfile, AuthenticationException> {
-                override fun onFailure(error: AuthenticationException) {
-                    Log.i("CharitiesFragment", "Somethings wrong")
-                    // Something went wrong!
-                }
-
-                override fun onSuccess(result: UserProfile) {
-                    email = result.email
-                    userId = viewModel.getId(email!!)
-                    Log.i("CharitiesFragment", "inShowUser")
-                    /*lifecycleScope.launch {
-                        write_id(userId!!)
-                    }*/
-
-                    viewModel.getCharities(userId, "svk")
-                }
-            })
     }
 }
 
