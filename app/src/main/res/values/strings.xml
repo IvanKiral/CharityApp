@@ -2,7 +2,7 @@
     <string name="app_name">CharityApp</string>
     <string name="ExpandableText_ReadMore">Read more</string>
     <string name="ExpandableText_Less">Less</string>
-    <string name="CharityDetailFragment_InformationBox">187 people and you have donated this project.</string>
+    <string name="CharityDetailFragment_InformationBox"> %1$d people and you have donated this project.</string>
     <string name="CharityDetailFragment_Raised">Raised last week</string>
     <string name="CharityDetailFragment_ButtonDonation">Extra Donation</string>
     <string name="CharitiesFragment_Charities">Charities</string>

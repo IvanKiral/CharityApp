@@ -8,6 +8,12 @@ import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import java.security.MessageDigest
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.util.*
+
+val HEX_CHARS = "0123456789ABCDEF".toCharArray()
 
 fun Modifier.drawColoredShadow(
     color: Color,
@@ -39,4 +45,32 @@ fun Modifier.drawColoredShadow(
             paint
         )
     }
+}
+
+fun Double.Convert(): String{
+    val format = DecimalFormat("#,###.##")
+    val formatSymbols = DecimalFormatSymbols()
+    formatSymbols.decimalSeparator = '.'
+    formatSymbols.groupingSeparator = ' '
+    format.decimalFormatSymbols = formatSymbols
+    return format.format(this).toString()
+}
+
+fun String.makeGravatrLink(): String{
+    return gravatarLink + this.toLowerCase(Locale.ROOT).md5().toLowerCase(Locale.ROOT)
+}
+
+fun String.md5(): String {
+    val md = MessageDigest.getInstance("MD5")
+    return HexBinary(md.digest(toByteArray()))
+}
+
+fun HexBinary(data: ByteArray): String {
+    val r = StringBuilder(data.size * 2)
+    data.forEach { b ->
+        val i = b.toInt()
+        r.append(HEX_CHARS[i shr 4 and 0xF])
+        r.append(HEX_CHARS[i and 0xF])
+    }
+    return r.toString()
 }
