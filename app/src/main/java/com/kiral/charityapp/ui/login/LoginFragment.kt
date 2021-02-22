@@ -45,20 +45,14 @@ import com.kiral.charityapp.ui.components.ClickableIcon
 import com.kiral.charityapp.ui.components.FormTextField
 import com.kiral.charityapp.ui.theme.CharityTheme
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
 
-    private lateinit var account: Auth0
+    @Inject
+    lateinit var account: Auth0
     private val viewModel: LoginViewModel by viewModels()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        account = Auth0(
-            getString(R.string.com_auth0_client_id),
-            getString(R.string.com_auth0_domain)
-        )
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -178,7 +172,6 @@ class LoginFragment : Fragment() {
     }
 
     private fun loginWithBrowser() {
-        // Setup the WebAuthProvider, using the custom scheme and scope.
 
         val apiClient = AuthenticationAPIClient(account)
         val manager = CredentialsManager(apiClient, SharedPreferencesStorage(requireContext()))
@@ -197,7 +190,6 @@ class LoginFragment : Fragment() {
                 }
             })
     }
-
     private fun logout() {
         WebAuthProvider.logout(account)
             .withScheme("demo")
@@ -211,7 +203,5 @@ class LoginFragment : Fragment() {
                 }
             })
     }
-
-
 }
 

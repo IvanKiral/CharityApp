@@ -112,7 +112,7 @@
     </fragment>
     <fragment
         android:id="@+id/welcomeFragment"
-        android:name="com.kiral.charityapp.ui.login.WelcomeFragment"
+        android:name="com.kiral.charityapp.ui.welcome.WelcomeFragment"
         android:label="WelcomeFragment" >
         <action
             android:id="@+id/action_welcomeFragment_to_editPersonalInformationFragment"

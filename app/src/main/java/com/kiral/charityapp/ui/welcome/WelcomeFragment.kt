@@ -1,7 +1,6 @@
-package com.kiral.charityapp.ui.login
+package com.kiral.charityapp.ui.welcome
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,9 +30,9 @@ import com.auth0.android.authentication.storage.SharedPreferencesStorage
 import com.auth0.android.callback.Callback
 import com.auth0.android.provider.WebAuthProvider
 import com.auth0.android.result.Credentials
-import com.auth0.android.result.UserProfile
 import com.kiral.charityapp.R
 import com.kiral.charityapp.ui.theme.CharityTheme
+import com.kiral.charityapp.utils.Auth
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -43,18 +42,10 @@ class WelcomeFragment : Fragment() {
     lateinit var dataStore: DataStore<Preferences>
 
     private val viewModel: WelcomeViewModel by viewModels()
-    private lateinit var account: Auth0
+    @Inject
+    lateinit var account: Auth0
 
     val USER_ID = intPreferencesKey("user_id")
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        account = Auth0(
-            getString(R.string.com_auth0_client_id),
-            getString(R.string.com_auth0_domain)
-        )
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -111,7 +102,7 @@ class WelcomeFragment : Fragment() {
                 override fun onSuccess(result: Credentials) {
                     val accessToken = result.accessToken
                     manager.saveCredentials(result)
-                    navigate(account, accessToken) { email ->
+                    Auth.withUserEmail(account, accessToken) { email ->
                         val id = viewModel.getProfileId(email)
                         id?.let { userId ->
                             /*lifecycleScope.launch {
@@ -128,26 +119,6 @@ class WelcomeFragment : Fragment() {
                         }
                     }
 
-                }
-            })
-    }
-
-    private fun navigate(
-        account: Auth0,
-        accessToken: String,
-        onSuccessFunction: (String) -> Unit,
-    ) {
-        val client = AuthenticationAPIClient(account)
-
-        client.userInfo(accessToken)
-            .start(object : Callback<UserProfile, AuthenticationException> {
-                override fun onFailure(error: AuthenticationException) {
-                    Log.i("CharitiesFragment", "Somethings wrong")
-                    // Something went wrong!
-                }
-
-                override fun onSuccess(result: UserProfile) {
-                    onSuccessFunction(result.email!!)
                 }
             })
     }

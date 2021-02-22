@@ -1,4 +1,4 @@
-package com.kiral.charityapp.ui.login
+package com.kiral.charityapp.ui.welcome
 
 import androidx.lifecycle.ViewModel
 import com.kiral.charityapp.repositories.charities.ProfileRepository

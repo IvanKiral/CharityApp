@@ -39,18 +39,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.auth0.android.Auth0
-import com.auth0.android.authentication.AuthenticationAPIClient
-import com.auth0.android.authentication.AuthenticationException
-import com.auth0.android.authentication.storage.CredentialsManager
-import com.auth0.android.authentication.storage.SharedPreferencesStorage
-import com.auth0.android.callback.Callback
-import com.auth0.android.provider.WebAuthProvider
 import com.kiral.charityapp.R
 import com.kiral.charityapp.domain.enums.DonationFrequency
 import com.kiral.charityapp.domain.model.Badge
@@ -70,21 +63,19 @@ import com.kiral.charityapp.ui.theme.TextBadgesTitle
 import com.kiral.charityapp.ui.theme.TextBoxBlackSubTitle
 import com.kiral.charityapp.ui.theme.TextBoxBlackTitle
 import com.kiral.charityapp.ui.theme.TextShowBadges
+import com.kiral.charityapp.utils.Auth
 import com.kiral.charityapp.utils.Convert
 import com.kiral.charityapp.utils.DonationValues
 import com.kiral.charityapp.utils.loadPicture
 import com.kiral.charityapp.utils.makeGravatrLink
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
     @Inject
     lateinit var dataStore: DataStore<Preferences>
-    private lateinit var account: Auth0
+    @Inject lateinit var account: Auth0
 
     private val viewModel: ProfileViewModel by viewModels()
     private val args: ProfileFragmentArgs by navArgs()
@@ -100,10 +91,6 @@ class ProfileFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        account = Auth0(
-            getString(R.string.com_auth0_client_id),
-            getString(R.string.com_auth0_domain)
-        )
         profile = viewModel.profile
         return ComposeView(requireContext()).apply {
             if (profile.value != null) {
@@ -383,36 +370,21 @@ class ProfileFragment : Fragment() {
                 description = stringResource(R.string.ProfileFragment_LogoutDescription),
                 hasSwitch = false,
                 modifier = Modifier.fillMaxWidth(),
-                onClick = { logout() }
-                )
+                onClick = { Auth.logout(
+                    account,
+                    requireContext(),
+                    dataStore,
+                ){
+                    findNavController().navigate(R.id.action_profileFragment_to_welcomeFragment)
+                }
+                }
+            )
             Divider(
                 thickness = 1.dp,
                 color = DividerColor,
                 modifier = Modifier.fillMaxWidth()
             )
         }
-    }
-
-    private fun logout() {
-        val client = AuthenticationAPIClient(account)
-        val manager = CredentialsManager(client, SharedPreferencesStorage(requireContext()))
-        WebAuthProvider.logout(account)
-            .withScheme("demo")
-            .start(requireContext(), object: Callback<Void?, AuthenticationException> {
-                override fun onSuccess(result: Void?) {
-                    manager.clearCredentials()
-                    CoroutineScope(Dispatchers.IO).launch {
-                        dataStore.edit {
-                            it.clear()
-                        }
-                    }
-                    findNavController().navigate(R.id.action_profileFragment_to_welcomeFragment)
-                }
-
-                override fun onFailure(error: AuthenticationException) {
-                    // Something went wrong!
-                }
-            })
     }
 }
 

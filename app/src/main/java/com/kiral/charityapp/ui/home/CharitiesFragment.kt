@@ -74,9 +74,11 @@ enum class CharitiesScreen {
 
 @AndroidEntryPoint
 class CharitiesFragment : Fragment() {
-
     @Inject
     lateinit var dataStore: DataStore<Preferences>
+
+    @Inject
+    lateinit var account: Auth0
 
     private val viewModel: CharitiesViewModel by viewModels()
     private val args: CharitiesFragmentArgs by navArgs()
@@ -85,11 +87,6 @@ class CharitiesFragment : Fragment() {
     var userId: Int = -1
 
     val USER_ID = intPreferencesKey("user_id")
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
 
     suspend fun write_id(id: Int) {
         dataStore.edit { settings ->
@@ -103,13 +100,13 @@ class CharitiesFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val auth0 = Auth0(requireContext())
-        val apiClient = AuthenticationAPIClient(auth0)
+        val apiClient = AuthenticationAPIClient(account)
         val manager = CredentialsManager(apiClient, SharedPreferencesStorage(requireContext()))
 
         manager.getCredentials(object: Callback<Credentials, CredentialsManagerException> {
             override fun onSuccess(result: Credentials) {
                 /*Log.i("CharitiesFragmentID", credentials.toString())
+                TODO use this caching id when backend is ready
                 val uId: Flow<Int> = dataStore.data
                     .map { preferences ->
                         // No type safety.
@@ -126,7 +123,7 @@ class CharitiesFragment : Fragment() {
                     }
                 }*/
 
-                showUserProfile(auth0, result.accessToken)
+                showUserProfile(account, result.accessToken)
             }
             override fun onFailure(error: CredentialsManagerException) {
                 // No credentials were previously saved or they couldn't be refreshed
@@ -355,7 +352,5 @@ fun Tabs(
             }
         }
     }
-
-
 
 }
