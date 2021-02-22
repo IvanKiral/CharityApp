@@ -7,5 +7,5 @@ interface ProfileRepository{
 
     fun register(profile: Profile): Boolean
 
-    fun getProfile(email: String): Profile
+    fun getProfile(id: Int): Profile
 }

@@ -5,11 +5,11 @@ import com.kiral.charityapp.domain.model.CharityListItem
 import com.kiral.charityapp.domain.model.Project
 
 interface CharityRepository {
-    fun search(email: String, region: String): List<CharityListItem>
+    fun search(id: Int, region: String): List<CharityListItem>
 
-    fun get(id: Int, donorEmail:String): Charity
+    fun get(id: Int, donorId: Int): Charity
 
-    fun getProject(id: Int, donorEmail: String): Project
+    fun getProject(id: Int, donorId: Int): Project
 
     fun makeDonationToCharity(charityId: Int, donorId: Int, projectId:Int?, value: Double): Boolean
 }

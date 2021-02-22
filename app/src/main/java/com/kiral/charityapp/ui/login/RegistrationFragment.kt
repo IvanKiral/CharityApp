@@ -5,14 +5,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.ClickableText
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.preferredHeight
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Button
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.AmbientContext
@@ -27,11 +33,9 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import com.kiral.charityapp.R
 import com.kiral.charityapp.ui.components.ClickableIcon
 import com.kiral.charityapp.ui.components.FormTextField
-import com.kiral.charityapp.ui.home.CharitiesFragmentDirections
 import com.kiral.charityapp.ui.theme.CharityTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -100,13 +104,13 @@ class RegistrationFragment : Fragment() {
                         .padding(top = 16.dp)
                         .preferredHeight(64.dp),
                     onClick = {
-                        if(viewModel.emailText.value != "") {
+                        /*if(viewModel.emailText.value != "") {
                             val action = RegistrationFragmentDirections
                                 .actionRegistrationFragmentToEditPersonalInformationFragment(viewModel.emailText.value)
                             findNavController().navigate(action)
                         } else{
                             Toast.makeText(requireContext(), "Please fill up your credentials", Toast.LENGTH_SHORT).show()
-                        }
+                        }*/
                     }
                 ) {
                     Text(
@@ -135,7 +139,7 @@ class RegistrationFragment : Fragment() {
                     text = AnnotatedString(stringResource(R.string.RegistrationFragment_Login)),
                     style = TextStyle(textDecoration = TextDecoration.Underline),
                     onClick = {
-                        findNavController().navigate(R.id.action_registrationFragment_to_loginFragment)
+                        //findNavController().navigate(R.id.action_registrationFragment_to_loginFragment)
                     }
                 )
             }

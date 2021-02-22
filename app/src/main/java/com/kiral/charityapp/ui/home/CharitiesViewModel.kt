@@ -1,9 +1,11 @@
 package com.kiral.charityapp.ui.home
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.kiral.charityapp.domain.model.Charity
 import com.kiral.charityapp.domain.model.CharityListItem
 import com.kiral.charityapp.repositories.charities.CharityRepository
+import com.kiral.charityapp.repositories.charities.ProfileRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -11,9 +13,21 @@ import javax.inject.Inject
 class CharitiesViewModel
 @Inject
 constructor(
+    private val profileRepository: ProfileRepository,
     private val charityRepository: CharityRepository
 ): ViewModel(){
-    fun getCharities(email: String, region: String): List<CharityListItem>{
-        return charityRepository.search(email, region)
+
+    private val _charities = mutableStateOf<List<CharityListItem>>(ArrayList())
+    val charities: State<List<CharityListItem>>
+        get() = _charities
+
+    fun getCharities(id: Int, region: String) {
+        _charities.value =  charityRepository.search(id, region)
+    }
+
+    fun getId(email: String): Int{
+        val x = profileRepository.login(email)
+        return if(x == null) 0 else x.id!!
+
     }
 }

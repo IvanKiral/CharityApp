@@ -5,9 +5,25 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.foundation.ClickableText
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.preferredHeight
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Divider
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,8 +45,18 @@ import androidx.navigation.fragment.navArgs
 import com.kiral.charityapp.R
 import com.kiral.charityapp.domain.model.Charity
 import com.kiral.charityapp.domain.model.CharityProject
-import com.kiral.charityapp.ui.components.*
-import com.kiral.charityapp.ui.theme.*
+import com.kiral.charityapp.ui.components.AlertDialogWithChoice
+import com.kiral.charityapp.ui.components.DonationBox
+import com.kiral.charityapp.ui.components.DonationRow
+import com.kiral.charityapp.ui.components.ExpandableText
+import com.kiral.charityapp.ui.components.InformationAlertDialog
+import com.kiral.charityapp.ui.components.InformationBox
+import com.kiral.charityapp.ui.components.SingleChoicePicker
+import com.kiral.charityapp.ui.theme.BottomSheetShape
+import com.kiral.charityapp.ui.theme.ButtonBlue
+import com.kiral.charityapp.ui.theme.CharityTheme
+import com.kiral.charityapp.ui.theme.InformationBoxBlue
+import com.kiral.charityapp.ui.theme.InformationBoxBlueBorder
 import com.kiral.charityapp.utils.Convert
 import com.kiral.charityapp.utils.loadPicture
 import com.kiral.charityapp.utils.sharePhoto
@@ -43,7 +69,7 @@ class CharityDetailFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.getCharity(id = args.charityId, donorEmail = args.donorEmail)
+        viewModel.getCharity(id = args.charityId, args.donorId)
     }
 
     @ExperimentalMaterialApi
@@ -276,7 +302,7 @@ class CharityDetailFragment : Fragment() {
                         val action = CharityDetailFragmentDirections
                             .actionCharityDetailFragmentToProjectDetailFragment(
                                 project.id,
-                                args.donorEmail
+                                args.donorId
                             )
                         findNavController().navigate(action)
                     },

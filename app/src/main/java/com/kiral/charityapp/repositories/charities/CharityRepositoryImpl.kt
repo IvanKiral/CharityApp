@@ -1,6 +1,6 @@
 package com.kiral.charityapp.repositories.charities
 
-import com.kiral.charityapp.domain.fake.*
+import com.kiral.charityapp.domain.fake.FakeDatabase
 import com.kiral.charityapp.domain.fake.responses.FakeDonationPost
 import com.kiral.charityapp.domain.model.Charity
 import com.kiral.charityapp.domain.model.CharityListItem
@@ -16,18 +16,18 @@ class CharityRepositoryImpl(
     private val fakeDatabse: FakeDatabase
 ) : CharityRepository {
 
-    override fun search(email: String, region: String): List<CharityListItem> {
-        val charitiesResponse = fakeDatabse.getCharities(email, region)
+    override fun search(id: Int, region: String): List<CharityListItem> {
+        val charitiesResponse = fakeDatabse.getCharities(id, region)
         return charityListMapper.mapToDomainModelList(charitiesResponse)
     }
 
-    override fun get(id: Int, donorEmail: String): Charity {
-        val tmp = fakeDatabse.getCharity(id, donorEmail)
+    override fun get(id: Int, donorId: Int): Charity {
+        val tmp = fakeDatabse.getCharity(id, donorId)
         return charityMapper.mapToDomainModel(tmp)
     }
 
-    override fun getProject(id: Int, donorEmail: String): Project {
-        return projectMapper.mapToDomainModel(fakeDatabse.getProject(id, donorEmail))
+    override fun getProject(id: Int, donorId: Int): Project {
+        return projectMapper.mapToDomainModel(fakeDatabse.getProject(id, donorId))
     }
 
     override fun makeDonationToCharity(charityId: Int, donorId: Int, projectId: Int?, value: Double): Boolean {

@@ -29,8 +29,8 @@ constructor(
     // var donorDonated: MutableState<Double>
     //lateinit var actualSum: MutableState<Double>
 
-    fun getProject(id: Int, donorEmail:String) {
-        _project.value = charityRepository.getProject(id, donorEmail)
+    fun getProject(id: Int, donorId:Int) {
+        _project.value = charityRepository.getProject(id, donorId)
         //donorDonated = mutableStateOf(_project.value!!.donorDonated)
         //actualSum = mutableStateOf(_project.value!!.actualSum)
     }

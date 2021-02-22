@@ -6,9 +6,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.foundation.ClickableText
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ConstraintLayout
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Divider
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
@@ -16,7 +26,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.*
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -25,31 +37,62 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.auth0.android.Auth0
+import com.auth0.android.authentication.AuthenticationAPIClient
+import com.auth0.android.authentication.AuthenticationException
+import com.auth0.android.authentication.storage.CredentialsManager
+import com.auth0.android.authentication.storage.SharedPreferencesStorage
+import com.auth0.android.callback.Callback
+import com.auth0.android.provider.WebAuthProvider
 import com.kiral.charityapp.R
 import com.kiral.charityapp.domain.enums.DonationFrequency
 import com.kiral.charityapp.domain.model.Badge
 import com.kiral.charityapp.domain.model.Profile
-import com.kiral.charityapp.ui.components.*
-import com.kiral.charityapp.ui.theme.*
+import com.kiral.charityapp.ui.components.AlertDialogWithChoice
+import com.kiral.charityapp.ui.components.BadgeRow
+import com.kiral.charityapp.ui.components.BoxWithAdd
+import com.kiral.charityapp.ui.components.ClickableIcon
+import com.kiral.charityapp.ui.components.Option
+import com.kiral.charityapp.ui.components.ProfileImageWithBorder
+import com.kiral.charityapp.ui.components.SingleChoicePicker
+import com.kiral.charityapp.ui.theme.BoxGradientEnd
+import com.kiral.charityapp.ui.theme.BoxGradientStart
+import com.kiral.charityapp.ui.theme.CharityTheme
+import com.kiral.charityapp.ui.theme.DividerColor
+import com.kiral.charityapp.ui.theme.TextBadgesTitle
+import com.kiral.charityapp.ui.theme.TextBoxBlackSubTitle
+import com.kiral.charityapp.ui.theme.TextBoxBlackTitle
+import com.kiral.charityapp.ui.theme.TextShowBadges
 import com.kiral.charityapp.utils.Convert
 import com.kiral.charityapp.utils.DonationValues
 import com.kiral.charityapp.utils.loadPicture
 import com.kiral.charityapp.utils.makeGravatrLink
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
+    @Inject
+    lateinit var dataStore: DataStore<Preferences>
+    private lateinit var account: Auth0
+
     private val viewModel: ProfileViewModel by viewModels()
     private val args: ProfileFragmentArgs by navArgs()
     private lateinit var profile: State<Profile?>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.setProfile(args.email)
+        viewModel.setProfile(args.id)
     }
 
     override fun onCreateView(
@@ -57,6 +100,10 @@ class ProfileFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        account = Auth0(
+            getString(R.string.com_auth0_client_id),
+            getString(R.string.com_auth0_domain)
+        )
         profile = viewModel.profile
         return ComposeView(requireContext()).apply {
             if (profile.value != null) {
@@ -336,7 +383,7 @@ class ProfileFragment : Fragment() {
                 description = stringResource(R.string.ProfileFragment_LogoutDescription),
                 hasSwitch = false,
                 modifier = Modifier.fillMaxWidth(),
-
+                onClick = { logout() }
                 )
             Divider(
                 thickness = 1.dp,
@@ -344,6 +391,28 @@ class ProfileFragment : Fragment() {
                 modifier = Modifier.fillMaxWidth()
             )
         }
+    }
+
+    private fun logout() {
+        val client = AuthenticationAPIClient(account)
+        val manager = CredentialsManager(client, SharedPreferencesStorage(requireContext()))
+        WebAuthProvider.logout(account)
+            .withScheme("demo")
+            .start(requireContext(), object: Callback<Void?, AuthenticationException> {
+                override fun onSuccess(result: Void?) {
+                    manager.clearCredentials()
+                    CoroutineScope(Dispatchers.IO).launch {
+                        dataStore.edit {
+                            it.clear()
+                        }
+                    }
+                    findNavController().navigate(R.id.action_profileFragment_to_welcomeFragment)
+                }
+
+                override fun onFailure(error: AuthenticationException) {
+                    // Something went wrong!
+                }
+            })
     }
 }
 

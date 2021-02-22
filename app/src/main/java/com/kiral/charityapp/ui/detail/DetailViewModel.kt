@@ -25,8 +25,8 @@ constructor(
     val showDialog = mutableStateOf(false)
     val showDonationSuccessDialog = mutableStateOf(false)
 
-    fun getCharity(id: Int, donorEmail: String) {
-        _charity.value = chairtyRepository.get(id, donorEmail)
+    fun getCharity(id: Int, donorId: Int) {
+        _charity.value = chairtyRepository.get(id, donorId)
     }
 
     fun makeDonation(): Boolean {

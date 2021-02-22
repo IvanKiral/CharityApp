@@ -1,9 +1,7 @@
 package com.kiral.charityapp.repositories.charities
 
-import com.kiral.charityapp.domain.badges
-import com.kiral.charityapp.domain.fake.*
+import com.kiral.charityapp.domain.fake.FakeDatabase
 import com.kiral.charityapp.domain.model.Profile
-import com.kiral.charityapp.domain.profiles
 import com.kiral.charityapp.domain.util.ProfileMapper
 
 class ProfileRepositoryImpl(
@@ -41,8 +39,8 @@ class ProfileRepositoryImpl(
         return true*/
     }
 
-    override fun getProfile(email: String): Profile {
-        val profile = fakeDatabase.getProfile(email)
+    override fun getProfile(id: Int): Profile {
+        val profile = fakeDatabase.getProfile(id)
         return profileMapper.mapToDomainModel(profile)
         /*val x = fakeProfiles.filter { p -> p.email == email }.first()
         val donationRepeat = fakeDonationRepeats.filter { d -> d.donorId == x.id }.first()

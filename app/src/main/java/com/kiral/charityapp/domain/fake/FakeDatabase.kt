@@ -1,9 +1,12 @@
 package com.kiral.charityapp.domain.fake
 
 import com.kiral.charityapp.domain.badges
-import com.kiral.charityapp.domain.fake.responses.*
-import com.kiral.charityapp.domain.model.Profile
-import com.kiral.charityapp.domain.profiles
+import com.kiral.charityapp.domain.fake.responses.FakeCharityListResponse
+import com.kiral.charityapp.domain.fake.responses.FakeCharityResponse
+import com.kiral.charityapp.domain.fake.responses.FakeDonationGoalReponse
+import com.kiral.charityapp.domain.fake.responses.FakeDonationPost
+import com.kiral.charityapp.domain.fake.responses.FakeProfilePost
+import com.kiral.charityapp.domain.fake.responses.FakeProjectList
 import com.kiral.charityapp.utils.DonationValues
 import kotlin.random.Random
 
@@ -15,7 +18,7 @@ class FakeDatabase {
         MakeFakeDonationsForDonationGoals()
     }
 
-    fun getCharities(email: String, region: String): List<FakeCharityListResponse> {
+    fun getCharities(id: Int, region: String): List<FakeCharityListResponse> {
         //val user = fakeProfiles.filter { p -> p.email == email }.firstOrNull()
         return fakeCharities
             .filter { c -> c.region == region }
@@ -28,8 +31,8 @@ class FakeDatabase {
             }
     }
 
-    fun getCharity(charityId: Int, email: String): FakeCharityResponse {
-        val user = fakeProfiles.filter { p -> p.email == email }.first()
+    fun getCharity(charityId: Int, donorId: Int): FakeCharityResponse {
+        //val user = fakeProfiles.filter { p -> p.email == email }.first()
         return fakeCharities
             .filter { c -> c.id == charityId }
             .first()
@@ -43,9 +46,9 @@ class FakeDatabase {
                     description = c.description,
                     raised = fakeDonations.filter { d -> d.charityId == c.id }
                         .sumByDouble { s -> s.sum },
-                    donorId = user.id,
+                    donorId = donorId,
                     peopleDonated = fakeDonations.filter { d -> d.charityId == c.id }.size,
-                    donorDonated = fakeDonations.filter { d -> d.donorId == user.id && d.charityId == charityId }
+                    donorDonated = fakeDonations.filter { d -> d.donorId == donorId && d.charityId == charityId }
                         .sumByDouble { s -> s.sum },
                     projects = fakeDonationGoals.filter { d -> d.charityId == charityId }
                         .map { d -> FakeProjectList(d.id, d.name) }
@@ -77,8 +80,8 @@ class FakeDatabase {
         return true
     }
 
-    fun getProfile(email: String): FakeProfilePost {
-        val x = fakeProfiles.filter { p -> p.email == email }.first()
+    fun getProfile(id: Int): FakeProfilePost {
+        val x = fakeProfiles.filter { p -> p.id == id }.first()
         val donationRepeat = fakeDonationRepeats.filter { d -> d.donorId == x.id }.first()
         return FakeProfilePost(
             id = x.id,
@@ -97,17 +100,32 @@ class FakeDatabase {
 
     fun login(email: String): FakeProfilePost? {
         val x = fakeProfiles.filter { p -> p.email == email }.firstOrNull()
-        return if (x == null) x else getProfile(email)
+        return if (x == null) x else {
+            val donationRepeat = fakeDonationRepeats.filter { d -> d.donorId == x.id }.first()
+            FakeProfilePost(
+                id = x.id,
+                email = x.email,
+                name = x.name,
+                region = x.region,
+                donations = fakeDonations.filter { d -> d.donorId == x.id }.size,
+                credit = x.credit,
+                charities = "",
+                donationRepeat = donationRepeat.active,
+                donationRepeatFrequency = donationRepeat.repeatingStatus,
+                donationRepeatValue = donationRepeat.sum,
+                badges = badges
+            )
+        }
     }
 
-    fun getProject(id: Int, email: String): FakeDonationGoalReponse {
-        val user = fakeProfiles.filter { p -> p.email == email }.first()
+    fun getProject(id: Int, donorId: Int): FakeDonationGoalReponse {
+        //val user = fakeProfiles.filter { p -> p.email == email }.first()
         val donationGoal = fakeDonationGoals.filter { d -> d.id == id }.first()
         val charity = fakeCharities.filter { c -> c.id == donationGoal.charityId }.first()
         return FakeDonationGoalReponse(
             id = donationGoal.id,
             charityId = donationGoal.charityId,
-            donorId = user.id,
+            donorId = donorId,
             name = donationGoal.name,
             goalSum = donationGoal.goalSum,
             actualSum = fakeDonations
@@ -119,7 +137,7 @@ class FakeDatabase {
             charityAdress = charity.address,
             peopleDonated = fakeDonations.filter { d -> d.donationGoalId == id }.size,
             donorDonated = fakeDonations
-                .filter { d -> d.donationGoalId == id && d.donorId == user.id }
+                .filter { d -> d.donationGoalId == id && d.donorId == donorId }
                 .sumByDouble { s -> s.sum },
         )
     }
@@ -180,6 +198,26 @@ class FakeDatabase {
                 )
             )
         }
+
+        fakeProfiles.add(
+            FakeProfile(
+                id = lastUserId,
+                name = "Ivan Kiráľ",
+                region = "svk",
+                credit = Random.nextDouble(5000.0),
+                email = "ivan.kir78@gmail.com"
+            )
+        )
+
+        fakeDonationRepeats.add(
+            FakeDonationRepeat(
+                id = lastDonationRepeatId++,
+                donorId = lastUserId++,
+                active = true,
+                sum = values.random(),
+                repeatingStatus = listOf("daily", "weekly", "montly").random()
+            )
+        )
     }
 
     private fun MakeFakeDonations(number: Int = 50) {
