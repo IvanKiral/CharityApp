@@ -75,6 +75,9 @@
         <action
             android:id="@+id/action_charityDetailFragment_to_projectDetailFragment"
             app:destination="@id/projectDetailFragment" />
+        <action
+            android:id="@+id/action_charityDetailFragment_to_donorsFragment"
+            app:destination="@id/donorsFragment" />
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
@@ -141,4 +144,8 @@
             app:popUpTo="@id/mainFragment"
             app:popUpToInclusive="true" />
     </fragment>
+    <fragment
+        android:id="@+id/donorsFragment"
+        android:name="com.kiral.charityapp.ui.donators.DonorsFragment"
+        android:label="DonorsFragment" />
 </navigation>

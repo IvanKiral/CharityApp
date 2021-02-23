@@ -209,7 +209,10 @@ class CharityDetailFragment : Fragment() {
                     borderColor = InformationBoxBlueBorder,
                     modifier = Modifier
                         .padding(top = 24.dp)
-                        .fillMaxWidth()
+                        .fillMaxWidth(),
+                    onClick = {
+                        findNavController().navigate(R.id.action_charityDetailFragment_to_donorsFragment)
+                    }
                 )
                 ProjectsColumn(
                     projects = charity.projects,
