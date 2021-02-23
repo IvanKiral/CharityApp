@@ -1,12 +1,10 @@
 package com.kiral.charityapp.ui.onboarding
 
-import androidx.compose.foundation.ScrollState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import com.kiral.charityapp.domain.enums.DonationFrequency
 import com.kiral.charityapp.domain.model.Profile
-import com.kiral.charityapp.domain.profiles
 import com.kiral.charityapp.repositories.charities.ProfileRepository
 import com.kiral.charityapp.utils.DonationValues
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,6 +24,8 @@ constructor(
     lateinit var profile: Profile
 
     val name = mutableStateOf("")
+    val country = mutableStateOf("")
+    val selectedCountry = mutableStateOf("")
 
     val lst = MutableList(categories.size) { false }
     val selected = lst.toMutableStateList()
@@ -36,12 +36,15 @@ constructor(
     val amountItems = DonationValues
     val selectedAmount = mutableStateOf(0)
 
+    val countryDialog = mutableStateOf(false)
+
     fun createNewProfile(email: String){
         profile = Profile(
             email = email,
             name = "",
             donations = 0,
             charities = "",
+            region = "",
             credit = 0.0,
             automaticDonations = false,
             automaticDonationsValue = 0.0,
@@ -51,6 +54,7 @@ constructor(
 
     fun addPersonalInformation(){
         profile.name = name.value
+        profile.region = selectedCountry.value
     }
 
     fun addCharitiesTypes(){
@@ -70,7 +74,6 @@ constructor(
     }
 
     fun register(){
-        profile.id = profiles.lastOrNull()?.id?.plus(1) ?: 0
         profileRepository.register(profile)
     }
 
@@ -84,5 +87,17 @@ constructor(
 
     fun setSelectedInterval(value: Int){
         selectedInterval.value = value
+    }
+
+    fun setCountryDialog(value: Boolean){
+        countryDialog.value = value
+    }
+
+    fun setCountry(value: String){
+        country.value = value
+    }
+
+    fun setSelectedCountry(value: String){
+        selectedCountry.value = value
     }
 }

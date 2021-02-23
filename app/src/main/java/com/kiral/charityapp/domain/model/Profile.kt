@@ -5,6 +5,7 @@ data class Profile(
     val email: String,
     var name: String,
     var donations: Int,
+    var region: String,
     var credit: Double,
     var charities: String,
     var automaticDonations: Boolean,

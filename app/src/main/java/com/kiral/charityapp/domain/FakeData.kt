@@ -2,8 +2,6 @@ package com.kiral.charityapp.domain
 
 import com.kiral.charityapp.R
 import com.kiral.charityapp.domain.model.Badge
-import com.kiral.charityapp.domain.model.Charity
-import com.kiral.charityapp.domain.model.Profile
 
 val badges: List<Badge> = listOf(
     Badge(
@@ -25,7 +23,7 @@ val badges: List<Badge> = listOf(
         iconId = R.drawable.ic_dog
     ),
 )
-val profiles = mutableListOf(
+/*val profiles = mutableListOf(
     Profile(
         id = 0,
         email = "email@email.com",
@@ -51,7 +49,7 @@ val profiles = mutableListOf(
         automaticDonationTimeFrequency = "day",
         badges = badges
     ),
-)
+)*/
 /*val charities = listOf(
     Charity(
         imgSrc = "https://images.unsplash.com/photo-1611464765133-794150e205dd?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=600&ixlib=rb-1.2.1&q=80&w=800",

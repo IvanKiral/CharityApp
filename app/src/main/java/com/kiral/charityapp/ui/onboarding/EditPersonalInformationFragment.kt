@@ -4,16 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.preferredHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
@@ -25,9 +26,12 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.kiral.charityapp.R
+import com.kiral.charityapp.ui.components.BoxedText
+import com.kiral.charityapp.ui.components.CountryDialog
 import com.kiral.charityapp.ui.components.FormTextField
-import com.kiral.charityapp.ui.detail.CharityDetailFragmentArgs
 import com.kiral.charityapp.ui.theme.CharityTheme
+import com.kiral.charityapp.utils.getCountries
+import com.kiral.charityapp.utils.getCurrentLocale
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -37,12 +41,18 @@ class EditPersonalInformationFragment: Fragment(){
 
     private val viewModel: OnBoardingViewModel by activityViewModels()
 
+    private lateinit var countries: Map<String, String>
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        val locale = getCurrentLocale(requireContext())
+        viewModel.setCountry(locale.displayCountry)
         viewModel.createNewProfile(args.email)
+        viewModel.setSelectedCountry(locale.country)
+        countries = getCountries(requireContext())
         return ComposeView(requireContext()).apply {
             setContent {
                 EditInfoScreen()
@@ -53,6 +63,7 @@ class EditPersonalInformationFragment: Fragment(){
     @Composable
     fun EditInfoScreen(){
         val scrollState = rememberScrollState()
+
         CharityTheme() {
             Column(
                 modifier = Modifier
@@ -72,6 +83,19 @@ class EditPersonalInformationFragment: Fragment(){
                     onChange = { viewModel.setName(it) },
                     label = "Type your name",
                     modifier = Modifier.padding(vertical = 8.dp)
+                )
+                BoxedText(
+                    text = viewModel.country.value,
+                    modifier = Modifier.padding(vertical = 8.dp)
+                ){
+                    viewModel.setCountryDialog(true)
+                }
+
+                CountryDialog(
+                    isShown = viewModel.countryDialog.value,
+                    setDialog = { viewModel.setCountryDialog(it) },
+                    setCountryText = { viewModel.setCountry(it) },
+                    setCountry = { viewModel.setCountry(it) }
                 )
 
                 Button(
