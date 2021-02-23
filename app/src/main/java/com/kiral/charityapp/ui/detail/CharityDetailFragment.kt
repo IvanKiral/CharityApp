@@ -211,7 +211,9 @@ class CharityDetailFragment : Fragment() {
                         .padding(top = 24.dp)
                         .fillMaxWidth(),
                     onClick = {
-                        findNavController().navigate(R.id.action_charityDetailFragment_to_donorsFragment)
+                        val action = CharityDetailFragmentDirections
+                            .actionCharityDetailFragmentToDonorsFragment(args.charityId)
+                        findNavController().navigate(action)
                     }
                 )
                 ProjectsColumn(

@@ -146,6 +146,10 @@
     </fragment>
     <fragment
         android:id="@+id/donorsFragment"
-        android:name="com.kiral.charityapp.ui.donators.DonorsFragment"
-        android:label="DonorsFragment" />
+        android:name="com.kiral.charityapp.ui.donors.DonorsFragment"
+        android:label="DonorsFragment" >
+        <argument
+            android:name="charityId"
+            app:argType="integer" />
+    </fragment>
 </navigation>

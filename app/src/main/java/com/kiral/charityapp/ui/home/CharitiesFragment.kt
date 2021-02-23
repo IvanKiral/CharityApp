@@ -18,7 +18,7 @@ import androidx.compose.foundation.layout.preferredHeight
 import androidx.compose.foundation.layout.preferredSize
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
@@ -184,12 +184,13 @@ class CharitiesFragment : Fragment() {
             GridCells.Fixed(2),
             modifier = modifier
         ) {
-            items(lst) {
+            itemsIndexed(lst) { index, item ->
+                Log.i("CharitiesFragment", "Index is $index")
                 CharityItem(
-                    charity = it,
+                    charity = item,
                     onClick = {
                         val action = CharitiesFragmentDirections
-                            .actionCharitiesFragmentToCharityDetailFragment(it.id, userId)
+                            .actionCharitiesFragmentToCharityDetailFragment(item.id, userId)
                         findNavController()
                             .navigate(action)
                     }
