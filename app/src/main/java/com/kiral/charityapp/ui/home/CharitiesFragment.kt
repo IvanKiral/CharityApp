@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.preferredHeight
 import androidx.compose.foundation.layout.preferredSize
 import androidx.compose.foundation.lazy.GridCells
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
@@ -60,6 +61,8 @@ import com.auth0.android.callback.Callback
 import com.auth0.android.result.Credentials
 import com.kiral.charityapp.R
 import com.kiral.charityapp.domain.model.CharityListItem
+import com.kiral.charityapp.domain.model.LeaderBoardProfile
+import com.kiral.charityapp.ui.components.LeaderBoardItem
 import com.kiral.charityapp.ui.theme.CharityTheme
 import com.kiral.charityapp.ui.theme.ProfileIconBorder
 import com.kiral.charityapp.ui.theme.cardTextStyle
@@ -172,7 +175,42 @@ class CharitiesFragment : Fragment() {
 
     @Composable
     fun RankingScreen() {
-    }
+        val leaderboard = listOf<LeaderBoardProfile>(
+            LeaderBoardProfile(
+                id = 0,
+                order = 1,
+                name = "Ivan",
+                email = "fdsadfas",
+                donated = 150.0
+            ),
+            LeaderBoardProfile(
+                id = 0,
+                order = 2,
+                name = "Alžbeta",
+                email = "fdsadfas",
+                donated = 120.0
+            ),
+            LeaderBoardProfile(
+                id = 0,
+                order = 3,
+                name = "Michaela",
+                email = "fdsadfas",
+                donated = 90.0
+            ),
+            LeaderBoardProfile(
+                id = 0,
+                order = 4,
+                name = "Martin",
+                email = "fdsadfas",
+                donated = 60.0
+            ),
+        )
+        LazyColumn(){
+            itemsIndexed(leaderboard){ index, item ->
+                    LeaderBoardItem(item = item)
+                }
+            }
+        }
 
     @ExperimentalFoundationApi
     @Composable

@@ -1,0 +1,77 @@
+package com.kiral.charityapp.ui.components
+
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Divider
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import com.kiral.charityapp.R
+import com.kiral.charityapp.domain.model.LeaderBoardProfile
+import com.kiral.charityapp.utils.Convert
+import com.kiral.charityapp.utils.loadPicture
+import com.kiral.charityapp.utils.makeGravatrLink
+
+@Composable
+fun LeaderBoardItem(
+    item: LeaderBoardProfile,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(72.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(71.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                item.order.toString(),
+                style = MaterialTheme.typography.body2
+            )
+            ProfileImageWithBorder(
+                imageBitmap = item.email.let { e ->
+                    val img = loadPicture(
+                        url = e.makeGravatrLink(),
+                        defaultImage = R.drawable.ic_loading_photo
+                    )
+                    img.value?.asImageBitmap()
+                },
+                borderMargin = 4.dp,
+                imageSize = 48.dp,
+                modifier = Modifier.padding(start = 16.dp)
+            )
+            Text(
+                item.name,
+                style = MaterialTheme.typography.body2,
+                modifier = Modifier
+                    .fillMaxWidth(0.7f)
+                    .padding(start = 16.dp)
+            )
+            Text(
+                text = item.donated.Convert(),
+                style = MaterialTheme.typography.body2,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp),
+                textAlign = TextAlign.End
+            )
+        }
+        Divider(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(1.dp)
+        )
+    }
+}
