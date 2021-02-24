@@ -11,6 +11,8 @@ data class Charity(
     val name: String,
     val address: String,
     val description: String,
+    val howDonationHelps: String,
+    val whyToDonate: String,
     var raised: Float,
     val peopleDonated: Int,
     var donorDonated: Double,

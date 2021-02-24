@@ -32,12 +32,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -57,6 +60,7 @@ import com.kiral.charityapp.ui.theme.ButtonBlue
 import com.kiral.charityapp.ui.theme.CharityTheme
 import com.kiral.charityapp.ui.theme.InformationBoxBlue
 import com.kiral.charityapp.ui.theme.InformationBoxBlueBorder
+import com.kiral.charityapp.ui.utils.buildInformationText
 import com.kiral.charityapp.utils.Convert
 import com.kiral.charityapp.utils.loadPicture
 import com.kiral.charityapp.utils.sharePhoto
@@ -178,7 +182,20 @@ class CharityDetailFragment : Fragment() {
                 )
 
                 ExpandableText(
-                    text = charity.description,
+                    text = buildAnnotatedString{
+                        withStyle(SpanStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold)){
+                            append("Our story\n")
+                        }
+                        append(charity.description + "\n\n")
+                        withStyle(SpanStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold)){
+                            append("How donation helps\n")
+                        }
+                        append(charity.howDonationHelps + "\n\n")
+                        withStyle(SpanStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold)){
+                            append("Why donate\n")
+                        }
+                        append(charity.whyToDonate)
+                    },
                     modifier = Modifier.padding(top = 16.dp)
                 )
 
@@ -197,14 +214,11 @@ class CharityDetailFragment : Fragment() {
                 )
 
                 InformationBox(
-                    text = buildAnnotatedString {
-                        append(
-                            stringResource(
-                                R.string.CharityDetailFragment_InformationBox,
-                                charity.peopleDonated
-                            )
-                        )
-                    },
+                    text = buildInformationText(
+                        charity.peopleDonated,
+                        charity.donorDonated,
+                        "donated to this charity."
+                    ),
                     backgroundColor = InformationBoxBlue,
                     borderColor = InformationBoxBlueBorder,
                     modifier = Modifier

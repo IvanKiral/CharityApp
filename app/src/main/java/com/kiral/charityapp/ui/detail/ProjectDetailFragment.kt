@@ -35,11 +35,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
@@ -60,6 +58,7 @@ import com.kiral.charityapp.ui.theme.CharityTheme
 import com.kiral.charityapp.ui.theme.InformationBoxBlue
 import com.kiral.charityapp.ui.theme.InformationBoxBlueBorder
 import com.kiral.charityapp.ui.theme.TextDonationGray
+import com.kiral.charityapp.ui.utils.buildInformationText
 import com.kiral.charityapp.utils.Convert
 import com.kiral.charityapp.utils.loadPicture
 import com.kiral.charityapp.utils.sharePhoto
@@ -95,7 +94,7 @@ class ProjectDetailFragment : Fragment() {
         CharityTheme() {
             Column {
                 val project = viewModel.project
-                project.value?.let{ p ->
+                project.value?.let { p ->
                     CharityDetailHeader(p.charityImage, p.donorDonated)
                     CharityDetailBody(p, modifier = Modifier.offset(y = -20.dp))
                 }
@@ -182,7 +181,7 @@ class ProjectDetailFragment : Fragment() {
                 )
 
                 ExpandableText(
-                    text = project.description,
+                    text = AnnotatedString(project.description),
                     modifier = Modifier.padding(top = 16.dp)
                 )
 
@@ -198,14 +197,11 @@ class ProjectDetailFragment : Fragment() {
                     modifier = Modifier.padding(top = 16.dp)
                 )
                 InformationBox(
-                    text = buildAnnotatedString {
-                        append(project.peopleDonated.toString() + " people")
-                        withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
-                            append(" and you ")
-                        }
-                        append("have donated to this project")
-                        //append(stringResource(R.string.CharityDetailFragment_InformationBox, project.peopleDonated))
-                    },
+                    text = buildInformationText(
+                        project.peopleDonated,
+                        project.donorDonated,
+                        "donated to this project."
+                    ),
                     backgroundColor = InformationBoxBlue,
                     borderColor = InformationBoxBlueBorder,
                     modifier = Modifier
@@ -224,7 +220,7 @@ class ProjectDetailFragment : Fragment() {
                         }
                         viewModel.setShowDialog(false)
                     }
-                ){
+                ) {
                     SingleChoicePicker(
                         items = viewModel.values.map { v -> v.Convert() + " €" },
                         selectedItem = viewModel.selectedValue.value,
@@ -237,7 +233,7 @@ class ProjectDetailFragment : Fragment() {
                 InformationAlertDialog(
                     title = "Thank you for your contribution!",
                     buttonText = "Okay",
-                    setShowDialog = { viewModel.setDonationSuccessDialog(it)}
+                    setShowDialog = { viewModel.setDonationSuccessDialog(it) }
                 ) {
                     Column() {
                         Text(
@@ -252,7 +248,10 @@ class ProjectDetailFragment : Fragment() {
                                 backgroundColor = Color.White,
                             ),
                             onClick = {
-                                sharePhoto(activity?.applicationContext!!, project.charityImage)
+                                sharePhoto(
+                                    activity?.applicationContext!!,
+                                    project.charityImage
+                                )
                             }) {
                             Text("Share photo via", color = ButtonBlue)
                         }
