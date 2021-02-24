@@ -9,6 +9,11 @@ val gravatarLink = "https://www.gravatar.com/avatar/"
 
 val DONORS_PAGE_SIZE = 5
 
+val global_categories = listOf(
+    "Environment charity", "Animal charity",
+    "Health charity", "Education charity", "Art and culture charity"
+)
+
 val badgesMap = mapOf<Int, BadgeData>(
     0 to BadgeData(
         "You have donated 1",

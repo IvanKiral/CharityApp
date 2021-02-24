@@ -10,6 +10,7 @@ import com.kiral.charityapp.repositories.charities.ProfileRepository
 import com.kiral.charityapp.ui.BaseApplication
 import com.kiral.charityapp.utils.DonationValues
 import com.kiral.charityapp.utils.getCountries
+import com.kiral.charityapp.utils.global_categories
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -21,10 +22,7 @@ constructor(
     private val application: BaseApplication,
     private val profileRepository: ProfileRepository
 ): AndroidViewModel(application){
-    val categories = listOf(
-        "Environment charity", "Animal charity",
-        "Health charity", "Education charity", "Art and culture charity"
-    )
+    val categories = global_categories
 
     lateinit var profile: Profile
 

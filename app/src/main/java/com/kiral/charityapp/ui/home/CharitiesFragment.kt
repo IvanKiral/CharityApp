@@ -12,6 +12,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.preferredHeight
@@ -62,6 +65,7 @@ import com.auth0.android.result.Credentials
 import com.kiral.charityapp.R
 import com.kiral.charityapp.domain.model.CharityListItem
 import com.kiral.charityapp.domain.model.LeaderBoardProfile
+import com.kiral.charityapp.ui.components.CharitiesSelector
 import com.kiral.charityapp.ui.components.LeaderBoardItem
 import com.kiral.charityapp.ui.theme.CharityTheme
 import com.kiral.charityapp.ui.theme.ProfileIconBorder
@@ -154,22 +158,55 @@ class CharitiesFragment : Fragment() {
                     tabSelected = tabSelected,
                     modifier = Modifier.fillMaxWidth(),
                     onProfileClick = {
-                        val action = CharitiesFragmentDirections.actionCharitiesFragmentToProfileFragment(userId)
-                        findNavController().navigate(action)
+                        if(!viewModel.showFilter.value) {
+                            val action =
+                                CharitiesFragmentDirections.actionCharitiesFragmentToProfileFragment(
+                                    userId
+                                )
+                            findNavController().navigate(action)
+                        } else{
+                            viewModel.showFilter.value = false
+                        }
+                    },
+                    onProfileLongClick = {
+                        viewModel.showFilter.value = true
                     },
                     onTabSelected = { tabSelected = it }
                 )
-
-                when (tabSelected) {
-                    CharitiesScreen.Charities -> GridCharity(
+                if(!viewModel.showFilter.value) {
+                    when (tabSelected) {
+                        CharitiesScreen.Charities -> GridCharity(
                             lst = viewModel.charities.value,
                             modifier = Modifier
                                 .padding(top = 20.dp)
                                 .align(Alignment.CenterHorizontally)
-                    )
-                    CharitiesScreen.Ranking -> RankingScreen()
+                        )
+                        CharitiesScreen.Ranking -> RankingScreen()
+                    }
+                } else{
+                 FilterScreen()
                 }
             }
+        }
+    }
+
+    @Composable
+    fun FilterScreen(){
+        Column(
+            modifier = Modifier.fillMaxSize(),
+        ){
+            Spacer(modifier = Modifier.fillMaxHeight(0.05f))
+            Text(
+                text = "Select charities to show",
+                style = MaterialTheme.typography.h5,
+                modifier = Modifier.fillMaxWidth(),
+                //textAlign = TextAlign.Center
+            )
+            CharitiesSelector(
+                categories = viewModel.categories,
+                categoriesSelected = viewModel.selected,
+                modifier = Modifier.padding(top = 32.dp)
+            )
         }
     }
 
@@ -280,6 +317,7 @@ fun CharityAppBar(
     tabSelected: CharitiesScreen,
     modifier: Modifier = Modifier,
     onProfileClick: () -> Unit,
+    onProfileLongClick: () -> Unit,
     onTabSelected: (CharitiesScreen) -> Unit
 ) {
     Row(
@@ -304,7 +342,8 @@ fun CharityAppBar(
                 modifier = Modifier
                     .align(alignment = Alignment.CenterEnd),
                 imageVector = vectorResource(id = R.drawable.ic_profile),
-                onClick = onProfileClick
+                onClick = onProfileClick,
+                onLongClick = onProfileLongClick
             )
         }
     }
@@ -314,7 +353,8 @@ fun CharityAppBar(
 fun IconRoundCorner(
     modifier: Modifier = Modifier,
     imageVector: ImageVector,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onLongClick: () -> Unit = {}
 ) {
     Box(modifier = modifier) {
         Box(
@@ -323,7 +363,7 @@ fun IconRoundCorner(
                 .preferredSize(56.dp)
                 .border(width = 1.dp, color = ProfileIconBorder, shape = CircleShape)
                 .clip(shape = CircleShape)
-                .clickable(onClick = onClick)
+                .clickable(onClick = onClick, onLongClick = onLongClick)
         ) {
             Image(
                 imageVector = imageVector,
