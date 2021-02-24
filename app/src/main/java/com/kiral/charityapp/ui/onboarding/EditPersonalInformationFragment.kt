@@ -30,7 +30,6 @@ import com.kiral.charityapp.ui.components.BoxedText
 import com.kiral.charityapp.ui.components.CountryDialog
 import com.kiral.charityapp.ui.components.FormTextField
 import com.kiral.charityapp.ui.theme.CharityTheme
-import com.kiral.charityapp.utils.getCountries
 import com.kiral.charityapp.utils.getCurrentLocale
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -41,7 +40,6 @@ class EditPersonalInformationFragment: Fragment(){
 
     private val viewModel: OnBoardingViewModel by activityViewModels()
 
-    private lateinit var countries: Map<String, String>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,7 +50,6 @@ class EditPersonalInformationFragment: Fragment(){
         viewModel.setCountry(locale.displayCountry)
         viewModel.createNewProfile(args.email)
         viewModel.setSelectedCountry(locale.country)
-        countries = getCountries(requireContext())
         return ComposeView(requireContext()).apply {
             setContent {
                 EditInfoScreen()
@@ -92,10 +89,11 @@ class EditPersonalInformationFragment: Fragment(){
                 }
 
                 CountryDialog(
+                    countries = viewModel.countries.value,
                     isShown = viewModel.countryDialog.value,
                     setDialog = { viewModel.setCountryDialog(it) },
                     setCountryText = { viewModel.setCountry(it) },
-                    setCountry = { viewModel.setCountry(it) }
+                    setCountry = { viewModel.setSelectedCountry(it) },
                 )
 
                 Button(

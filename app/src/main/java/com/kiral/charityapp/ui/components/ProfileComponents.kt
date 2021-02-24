@@ -1,13 +1,30 @@
 package com.kiral.charityapp.ui.components
 
+import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.preferredSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Divider
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.material.Switch
+import androidx.compose.material.SwitchDefaults
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,12 +35,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.AmbientConfiguration
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kiral.charityapp.domain.model.Badge
-import com.kiral.charityapp.ui.theme.*
+import com.kiral.charityapp.ui.theme.ButtonBlue
+import com.kiral.charityapp.ui.theme.DividerColor
+import com.kiral.charityapp.ui.theme.TextBlue
+import com.kiral.charityapp.ui.theme.TextOptionSubtitle
+import com.kiral.charityapp.ui.theme.TextOptionTitle
 
 @Composable
 fun ProfileImageWithBorder(
@@ -63,26 +85,41 @@ fun BadgeRow(
     modifier: Modifier = Modifier
 ) {
     Box {
-        Box(
-            modifier
-                .height(8.dp)
-                .fillMaxWidth()
-                .offset(y = 36.dp)
-                .shadow(20.dp)
-        )
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
             modifier = modifier
 
         ) {
-            listOf(3, 1, 0, 2, 4).forEachIndexed{ index, i ->
-                Badge(
-                    icon = if(i < badges.size) vectorResource(id = badges[i].iconId) else null,
-                    iconSize = (22 + (2 - Math.abs(index - 2)) * 5).dp,
-                    boxSize = (52 + (2 - Math.abs(index - 2)) * 8).dp
-                )
+            val configuration = AmbientConfiguration.current
+            val boxDifference  = when(configuration.orientation){
+                Configuration.ORIENTATION_LANDSCAPE -> 20.dp
+                else  -> 8.dp
             }
+            val imagePadding  = when(configuration.orientation){
+                Configuration.ORIENTATION_LANDSCAPE -> 16.dp
+                else  -> 6.dp
+            }
+            val lstMiddle = listOf(3,1,0,2,4).size / 2
+            BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
+                val size = (maxWidth  - boxDifference.times(8)) / 5
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = modifier
+
+                ) {
+                    listOf(3,1,0,2,4).forEachIndexed { index, i ->
+                        val badgeSize = size + (boxDifference.times(lstMiddle - Math.abs(index - lstMiddle)))
+                        Badge(
+                            icon = if (i < badges.size) vectorResource(id = badges[i].iconId) else null,
+                            iconSize = (badgeSize.minus(imagePadding.times(4))) + ((lstMiddle - Math.abs(index - lstMiddle)) * 5).dp,
+                            boxSize = badgeSize
+                        )
+                    }
+                }
+            }
+
         }
     }
 }
@@ -95,20 +132,25 @@ fun Badge(
     modifier: Modifier = Modifier,
     cornerRadius: Dp = 12.dp
 ) {
-    Box(
+    Surface(
         modifier = modifier
-            .size(boxSize)
-            .clip(RoundedCornerShape(cornerRadius))
-            .background(color = Color.White),
-        contentAlignment = Alignment.Center
+            .preferredSize(boxSize),
+        shape = RoundedCornerShape(cornerRadius),
+        elevation = 8.dp
     ) {
-        icon?.let {
-            Image(
-                imageVector = it,
-                contentDescription = "",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.size(iconSize)
-            )
+        Box(modifier = Modifier
+            .size(40.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            icon?.let {
+                Image(
+                    imageVector = it,
+                    contentDescription = "",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(iconSize)
+                )
+            }
         }
     }
 }

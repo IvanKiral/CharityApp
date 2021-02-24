@@ -20,6 +20,7 @@ import com.kiral.charityapp.BuildConfig
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 import java.text.Collator
@@ -130,18 +131,19 @@ fun startSharingIntentWithImage(context: Context, uri: Uri) {
     context.startActivity(share)
 }
 
-fun getCountries(context: Context): Map<String, String> {
-    val currentLocale = getCurrentLocale(context)
-    return Locale.getISOCountries()
-        .map {
-            val locale = Locale("", it)
-            it.toLowerCase(Locale.ROOT) to locale.getDisplayCountry()
-        }.sortedWith { s1, s2 ->
-            Collator.getInstance(currentLocale).compare(s1.second, s2.second)
-        }
-        .toMap()
+suspend fun getCountries(context: Context): Map<String, String> {
+    return withContext(Dispatchers.IO) {
+        val currentLocale = getCurrentLocale(context)
+        Locale.getISOCountries()
+            .map {
+                val locale = Locale("", it)
+                it.toLowerCase(Locale.ROOT) to locale.getDisplayCountry()
+            }.sortedWith { s1, s2 ->
+                Collator.getInstance(currentLocale).compare(s1.second, s2.second)
+            }
+            .toMap()
+    }
 }
-
 
 fun getCurrentLocale(context: Context): Locale {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

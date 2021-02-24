@@ -2,18 +2,23 @@ package com.kiral.charityapp.ui.profile
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 import com.kiral.charityapp.domain.model.Profile
 import com.kiral.charityapp.repositories.charities.ProfileRepository
+import com.kiral.charityapp.ui.BaseApplication
+import com.kiral.charityapp.utils.getCountries
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel
 @Inject
 constructor(
+    private val application: BaseApplication,
     private val profileRepository: ProfileRepository
-): ViewModel() {
+): AndroidViewModel(application) {
 
     //lateinit var profile: Profile
     private val _profile = mutableStateOf<Profile?>(null)
@@ -22,8 +27,19 @@ constructor(
 
     val active = mutableStateOf(_profile.value?.automaticDonations)
 
+    val countryDialog = mutableStateOf(false)
+
     fun setProfile(id: Int){
         _profile.value = profileRepository.getProfile(id)
+    }
+
+    val countries = mutableStateOf(mapOf<String, String>())
+
+
+    init {
+        viewModelScope.launch {
+            countries.value = getCountries(application.baseContext)
+        }
     }
 
     fun setActive(value: Boolean){
@@ -36,5 +52,9 @@ constructor(
             automaticDonationsValue = value,
             automaticDonationTimeFrequency = frequency
         )
+    }
+
+    fun setCountryDialog(value: Boolean){
+        countryDialog.value = value
     }
 }

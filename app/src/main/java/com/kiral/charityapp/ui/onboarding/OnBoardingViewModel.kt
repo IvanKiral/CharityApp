@@ -2,20 +2,25 @@ package com.kiral.charityapp.ui.onboarding
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.toMutableStateList
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 import com.kiral.charityapp.domain.enums.DonationFrequency
 import com.kiral.charityapp.domain.model.Profile
 import com.kiral.charityapp.repositories.charities.ProfileRepository
+import com.kiral.charityapp.ui.BaseApplication
 import com.kiral.charityapp.utils.DonationValues
+import com.kiral.charityapp.utils.getCountries
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class OnBoardingViewModel
 @Inject
 constructor(
+    private val application: BaseApplication,
     private val profileRepository: ProfileRepository
-): ViewModel(){
+): AndroidViewModel(application){
     val categories = listOf(
         "Environment charity", "Animal charity",
         "Health charity", "Education charity", "Art and culture charity"
@@ -37,6 +42,14 @@ constructor(
     val selectedAmount = mutableStateOf(0)
 
     val countryDialog = mutableStateOf(false)
+
+    val countries = mutableStateOf(mapOf<String, String>())
+
+    init {
+        viewModelScope.launch {
+            countries.value = getCountries(application.baseContext)
+        }
+    }
 
     fun createNewProfile(email: String){
         profile = Profile(
@@ -98,6 +111,7 @@ constructor(
     }
 
     fun setSelectedCountry(value: String){
+        profile.region = value
         selectedCountry.value = value
     }
 }
