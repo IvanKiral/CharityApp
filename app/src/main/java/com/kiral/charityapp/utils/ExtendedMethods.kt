@@ -1,5 +1,9 @@
 package com.kiral.charityapp.utils
 
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
@@ -45,6 +49,19 @@ fun Modifier.drawColoredShadow(
             paint
         )
     }
+}
+
+fun Bitmap.toGrayscale(): Bitmap {
+    val width = this.width
+    val height = this.height
+    val grayPaint = android.graphics.Paint()
+    val colorMatrix = ColorMatrix()
+    colorMatrix.setSaturation(0f)
+    grayPaint.colorFilter = ColorMatrixColorFilter(colorMatrix)
+    val bmpGrayscale: Bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+    val canvas = Canvas(bmpGrayscale)
+    canvas.drawBitmap(this, 0f, 0f, grayPaint)
+    return bmpGrayscale
 }
 
 fun Double.Convert(): String{

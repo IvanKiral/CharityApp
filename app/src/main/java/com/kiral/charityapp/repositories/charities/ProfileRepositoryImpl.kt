@@ -1,8 +1,11 @@
 package com.kiral.charityapp.repositories.charities
 
 import com.kiral.charityapp.domain.fake.FakeDatabase
+import com.kiral.charityapp.domain.model.Badge
 import com.kiral.charityapp.domain.model.Profile
 import com.kiral.charityapp.domain.util.ProfileMapper
+import com.kiral.charityapp.utils.badgesMap
+import kotlin.random.Random
 
 class ProfileRepositoryImpl(
     private val profileMapper: ProfileMapper,
@@ -57,5 +60,20 @@ class ProfileRepositoryImpl(
             automaticDonations = donationRepeat.active,
             badges = badges
         )*/
+    }
+
+    override fun getBadges(donorId: Int): List<Badge> {
+        val lst = mutableListOf<Badge>()
+        badgesMap.forEach{(key, value) ->
+            lst.add(
+                Badge(
+                    id = 0,
+                    title = value.title,
+                    active = Random.nextBoolean(),
+                    iconId = value.icon
+                )
+            )
+        }
+        return lst.sortedBy { b -> b.active }
     }
 }

@@ -8,9 +8,7 @@ import android.view.ViewGroup
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -79,21 +77,23 @@ class DonorsFragment : Fragment() {
         Column(
             modifier = Modifier
         ) {
-            Text(
-                text = "Donors",
-                style = MaterialTheme.typography.h5,
-                modifier = Modifier
-                        .padding(top = 16.dp, start = 16.dp, end = 16.dp)
-            )
-            Divider(
-                modifier = Modifier
-                    .padding(top = 16.dp, start = 16.dp, end = 16.dp)
-                    .fillMaxWidth(),
-            )
+
             LazyColumn(
                 modifier = Modifier
-                    .fillMaxSize()
             ) {
+                item{
+                    Text(
+                        text = "Donors",
+                        style = MaterialTheme.typography.h5,
+                        modifier = Modifier
+                            .padding(top = 16.dp, start = 16.dp, end = 16.dp)
+                    )
+                    Divider(
+                        modifier = Modifier
+                            .padding(top = 16.dp, start = 16.dp, end = 16.dp)
+                            .fillMaxWidth(),
+                    )
+                }
                 itemsIndexed(donorList.value) { index, donor ->
                     viewModel.indexPosition = index
                     if ((index + 1) >= (viewModel.page.value * DONORS_PAGE_SIZE) && !viewModel.loading.value) {
@@ -113,9 +113,7 @@ class DonorsFragment : Fragment() {
                         modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp)
                     )
                 }
-
             }
-            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 

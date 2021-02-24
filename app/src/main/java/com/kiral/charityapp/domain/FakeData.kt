@@ -1,9 +1,6 @@
 package com.kiral.charityapp.domain
 
-import com.kiral.charityapp.R
-import com.kiral.charityapp.domain.model.Badge
-
-val badges: List<Badge> = listOf(
+/*val badges: List<Badge> = listOf(
     Badge(
         id = 0,
         title = "doggo",
@@ -22,7 +19,7 @@ val badges: List<Badge> = listOf(
         description = "doggo",
         iconId = R.drawable.ic_dog
     ),
-)
+)*/
 /*val profiles = mutableListOf(
     Profile(
         id = 0,

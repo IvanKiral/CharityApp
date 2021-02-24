@@ -57,6 +57,25 @@ fun loadPicture(
 }
 
 
+@Composable
+fun loadPictureFromDrawable(
+    @DrawableRes drawable: Int
+): MutableState<Bitmap?> {
+    val state: MutableState<Bitmap?> = mutableStateOf(null)
+
+    Glide.with(AmbientContext.current)
+        .asBitmap()
+        .load(drawable)
+        .into(object : CustomTarget<Bitmap>() {
+            override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                state.value = resource
+            }
+
+            override fun onLoadCleared(placeholder: Drawable?) {}
+        })
+    return state
+}
+
 fun sharePhoto(context: Context, url: String) {
     Glide.with(context).asBitmap().load(url)
         .into(object : CustomTarget<Bitmap>() {

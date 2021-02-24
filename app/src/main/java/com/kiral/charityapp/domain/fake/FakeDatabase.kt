@@ -1,6 +1,5 @@
 package com.kiral.charityapp.domain.fake
 
-import com.kiral.charityapp.domain.badges
 import com.kiral.charityapp.domain.fake.responses.FakeCharityDonorsResponse
 import com.kiral.charityapp.domain.fake.responses.FakeCharityListResponse
 import com.kiral.charityapp.domain.fake.responses.FakeCharityResponse
@@ -97,7 +96,7 @@ class FakeDatabase {
             donationRepeat = donationRepeat.active,
             donationRepeatFrequency = donationRepeat.repeatingStatus,
             donationRepeatValue = donationRepeat.sum,
-            badges = badges
+            badges = listOf()
         )
     }
 
@@ -116,7 +115,7 @@ class FakeDatabase {
                 donationRepeat = donationRepeat.active,
                 donationRepeatFrequency = donationRepeat.repeatingStatus,
                 donationRepeatValue = donationRepeat.sum,
-                badges = badges
+                badges = listOf()
             )
         }
     }
