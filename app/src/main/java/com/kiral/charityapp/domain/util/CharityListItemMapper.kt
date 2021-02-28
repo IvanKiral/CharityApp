@@ -1,9 +1,6 @@
 package com.kiral.charityapp.domain.util
 
-import com.kiral.charityapp.domain.fake.responses.FakeCharityListResponse
-import com.kiral.charityapp.domain.model.CharityListItem
-
-class CharityListItemMapper: Mapper<FakeCharityListResponse, CharityListItem>{
+/*class CharityListItemMapper: Mapper<FakeCharityListResponse, CharityListItem>{
     override fun mapToDomainModel(model: FakeCharityListResponse): CharityListItem {
         return CharityListItem(
             id = model.id,
@@ -24,4 +21,4 @@ class CharityListItemMapper: Mapper<FakeCharityListResponse, CharityListItem>{
         return entities.map {e -> mapToDomainModel(e)}
     }
 
-}
+}*/

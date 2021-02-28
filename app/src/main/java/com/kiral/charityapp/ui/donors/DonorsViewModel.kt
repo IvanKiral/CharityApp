@@ -2,10 +2,12 @@ package com.kiral.charityapp.ui.donors
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.kiral.charityapp.domain.model.Donor
 import com.kiral.charityapp.repositories.charities.CharityRepository
 import com.kiral.charityapp.utils.DONORS_PAGE_SIZE
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,8 +23,10 @@ constructor(
 
     fun getCharityDonors(charityId: Int, page: Int)  {
         val tmp = ArrayList(charityDonors.value)
-        tmp.addAll(charityRepository.getCharityDonors(charityId, page))
-        charityDonors.value = tmp.toList()
+        viewModelScope.launch {
+            tmp.addAll(charityRepository.getCharityDonors(charityId, page))
+            charityDonors.value = tmp.toList()
+        }
     }
 
     fun nextPage(charityId: Int){

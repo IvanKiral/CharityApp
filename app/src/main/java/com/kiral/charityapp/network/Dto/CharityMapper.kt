@@ -1,20 +1,19 @@
-package com.kiral.charityapp.domain.util
+package com.kiral.charityapp.network.Dto
 
-import com.kiral.charityapp.domain.fake.responses.FakeCharityResponse
-import com.kiral.charityapp.domain.fake.responses.FakeProjectList
 import com.kiral.charityapp.domain.model.Charity
 import com.kiral.charityapp.domain.model.CharityProject
+import com.kiral.charityapp.domain.util.Mapper
 
-class CharitiesMapper: Mapper<FakeCharityResponse, Charity>{
-    override fun mapToDomainModel(model: FakeCharityResponse): Charity {
+class CharityMapper: Mapper<CharityDto, Charity> {
+    override fun mapToDomainModel(model: CharityDto): Charity {
         return Charity(
             id = model.id,
             name = model.name,
             imgSrc = model.imgSrc,
             address = model.address,
-            description = model.description,
-            howDonationHelps = model.description,
-            whyToDonate = model.description,
+            description = model.charityStory,
+            howDonationHelps = model.howDonationHelps,
+            whyToDonate = model.whyToDonate,
             raised = model.raised.toFloat(),
             peopleDonated = model.peopleDonated,
             donorDonated = model.donorDonated,
@@ -23,28 +22,23 @@ class CharitiesMapper: Mapper<FakeCharityResponse, Charity>{
                 id = it.id,
                 name = it.name
             ) }
-
         )
     }
 
-    override fun mapFromDomainModel(domainModel: Charity): FakeCharityResponse {
-        return FakeCharityResponse(
+    override fun mapFromDomainModel(domainModel: Charity): CharityDto {
+        return CharityDto(
             id = domainModel.id,
             name = domainModel.name,
             imgSrc = domainModel.imgSrc,
             address = domainModel.address,
-            region = "svk",
-            description = domainModel.description,
+            charityStory = domainModel.description,
+            howDonationHelps = domainModel.howDonationHelps,
+            whyToDonate = domainModel.whyToDonate,
             raised = domainModel.raised.toDouble(),
             peopleDonated = domainModel.peopleDonated,
             //donorId = domainModel.donorId,
             donorDonated = domainModel.donorDonated,
-            projects =  domainModel.projects.map { FakeProjectList(it.id, it.name) }
+            projects =  domainModel.projects.map { ProjectListItemDto(it.id, it.name) }
         )
     }
-
-    fun mapToDomainModelList(lst: List<FakeCharityResponse>): List<Charity>{
-        return lst.map { r -> mapToDomainModel(r) }
-    }
-
 }

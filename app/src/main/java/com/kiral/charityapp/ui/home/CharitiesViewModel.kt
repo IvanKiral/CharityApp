@@ -4,11 +4,14 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.kiral.charityapp.domain.model.CharityListItem
 import com.kiral.charityapp.repositories.charities.CharityRepository
 import com.kiral.charityapp.repositories.charities.ProfileRepository
 import com.kiral.charityapp.utils.global_categories
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,7 +20,7 @@ class CharitiesViewModel
 constructor(
     private val profileRepository: ProfileRepository,
     private val charityRepository: CharityRepository
-): ViewModel(){
+) : ViewModel() {
     val categories = global_categories
 
     private val _charities = mutableStateOf<List<CharityListItem>>(ArrayList())
@@ -30,11 +33,17 @@ constructor(
     val showFilter = mutableStateOf(false)
 
     fun getCharities(id: Int, region: String) {
-        _charities.value =  charityRepository.search(id, region)
+
+        val errorHandler = CoroutineExceptionHandler{_, e ->
+
+        }
+        viewModelScope.launch(errorHandler) {
+            _charities.value = charityRepository.search(id, region)
+        }
     }
 
-    fun getId(email: String): Int{
+    fun getId(email: String): Int {
         val x = profileRepository.login(email)
-        return if(x == null) 0 else x.id!!
+        return if (x == null) 0 else x.id!!
     }
 }

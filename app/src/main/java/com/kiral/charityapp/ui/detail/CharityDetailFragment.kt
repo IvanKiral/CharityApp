@@ -238,12 +238,7 @@ class CharityDetailFragment : Fragment() {
                     AlertDialogWithChoice(
                         setShowDialog = { viewModel.setShowDialog(it) },
                         title = "Select value to donate",
-                        onConfirmButton = {
-                            if (viewModel.makeDonation()) {
-                                viewModel.setDonationSuccessDialog(true)
-                            }
-                            viewModel.setShowDialog(false)
-                        }
+                        onConfirmButton = { viewModel.makeDonation(args.donorId) }
                     ) {
                         SingleChoicePicker(
                             items = viewModel.values.map { v -> v.Convert() + " €" },

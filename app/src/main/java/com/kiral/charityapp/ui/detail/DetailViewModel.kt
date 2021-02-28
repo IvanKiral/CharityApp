@@ -4,10 +4,12 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.kiral.charityapp.domain.model.Charity
 import com.kiral.charityapp.repositories.charities.CharityRepository
 import com.kiral.charityapp.utils.DonationValues
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,21 +28,25 @@ constructor(
     val showDonationSuccessDialog = mutableStateOf(false)
 
     fun getCharity(id: Int, donorId: Int) {
-        _charity.value = chairtyRepository.get(id, donorId)
+        viewModelScope.launch {
+            _charity.value = chairtyRepository.get(id, donorId)
+        }
     }
 
-    fun makeDonation(): Boolean {
-        _charity.value?.let { c ->
-            val value = values.get(selectedValue.value)
-            if (chairtyRepository.makeDonationToCharity(c.id, c.donorId, null, value)) {
-                _charity.value = _charity.value?.copy()?.apply {
-                    donorDonated = donorDonated.plus(value)
-                    raised = raised.plus(value).toFloat()
+    fun makeDonation(donorId: Int) {
+        viewModelScope.launch {
+            _charity.value?.let { c ->
+                val value = values.get(selectedValue.value)
+                if (chairtyRepository.makeDonationToCharity(c.id, donorId, null, value)) {
+                    _charity.value = _charity.value?.copy()?.apply {
+                        donorDonated = donorDonated.plus(value)
+                        raised = raised.plus(value).toFloat()
+                    }
+                    setDonationSuccessDialog(true)
                 }
-                return true
+                setShowDialog(false)
             }
         }
-        return false
     }
 
     fun setSelectedValue(value: Int) {
