@@ -1,12 +1,14 @@
 package com.kiral.charityapp.domain.fake
 
-import com.kiral.charityapp.domain.badges
+import com.kiral.charityapp.domain.fake.responses.FakeCharityDonorsResponse
 import com.kiral.charityapp.domain.fake.responses.FakeCharityListResponse
 import com.kiral.charityapp.domain.fake.responses.FakeCharityResponse
 import com.kiral.charityapp.domain.fake.responses.FakeDonationGoalReponse
 import com.kiral.charityapp.domain.fake.responses.FakeDonationPost
+import com.kiral.charityapp.domain.fake.responses.FakeDonorDonation
 import com.kiral.charityapp.domain.fake.responses.FakeProfilePost
 import com.kiral.charityapp.domain.fake.responses.FakeProjectList
+import com.kiral.charityapp.utils.DONORS_PAGE_SIZE
 import com.kiral.charityapp.utils.DonationValues
 import kotlin.random.Random
 
@@ -94,7 +96,7 @@ class FakeDatabase {
             donationRepeat = donationRepeat.active,
             donationRepeatFrequency = donationRepeat.repeatingStatus,
             donationRepeatValue = donationRepeat.sum,
-            badges = badges
+            badges = listOf()
         )
     }
 
@@ -113,7 +115,7 @@ class FakeDatabase {
                 donationRepeat = donationRepeat.active,
                 donationRepeatFrequency = donationRepeat.repeatingStatus,
                 donationRepeatValue = donationRepeat.sum,
-                badges = badges
+                badges = listOf()
             )
         }
     }
@@ -159,6 +161,22 @@ class FakeDatabase {
         } else {
             return false
         }
+    }
+
+    fun getCharityDonors(charityId: Int, page: Int): FakeCharityDonorsResponse {
+        val lst = fakeDonations.filter { d -> d.charityId == charityId }
+        val count = lst.count()
+        return FakeCharityDonorsResponse(
+            count = count,
+            donors = lst.drop((page - 1) * DONORS_PAGE_SIZE).take(DONORS_PAGE_SIZE).map{ d ->
+                val user = fakeProfiles.first { p -> p.id == d.donorId }
+                FakeDonorDonation(
+                    name = user.name,
+                    email =  user.email,
+                    donated = d.sum
+                )
+            }
+        )
     }
 
 

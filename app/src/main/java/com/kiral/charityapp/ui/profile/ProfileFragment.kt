@@ -46,12 +46,14 @@ import androidx.navigation.fragment.navArgs
 import com.auth0.android.Auth0
 import com.kiral.charityapp.R
 import com.kiral.charityapp.domain.enums.DonationFrequency
+import com.kiral.charityapp.domain.fakeBadges
 import com.kiral.charityapp.domain.model.Badge
 import com.kiral.charityapp.domain.model.Profile
 import com.kiral.charityapp.ui.components.AlertDialogWithChoice
 import com.kiral.charityapp.ui.components.BadgeRow
 import com.kiral.charityapp.ui.components.BoxWithAdd
 import com.kiral.charityapp.ui.components.ClickableIcon
+import com.kiral.charityapp.ui.components.CountryDialog
 import com.kiral.charityapp.ui.components.Option
 import com.kiral.charityapp.ui.components.ProfileImageWithBorder
 import com.kiral.charityapp.ui.components.SingleChoicePicker
@@ -69,13 +71,15 @@ import com.kiral.charityapp.utils.DonationValues
 import com.kiral.charityapp.utils.loadPicture
 import com.kiral.charityapp.utils.makeGravatrLink
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
     @Inject
     lateinit var dataStore: DataStore<Preferences>
-    @Inject lateinit var account: Auth0
+    @Inject
+    lateinit var account: Auth0
 
     private val viewModel: ProfileViewModel by viewModels()
     private val args: ProfileFragmentArgs by navArgs()
@@ -157,7 +161,7 @@ class ProfileFragment : Fragment() {
                             }
                     )
                     Badges(
-                        badges = p.badges,
+                        badges = fakeBadges,
                         modifier = Modifier
                             .fillMaxWidth()
                             .constrainAs(badges) {
@@ -175,18 +179,26 @@ class ProfileFragment : Fragment() {
                         context = activity?.applicationContext!!
                     )
                     OptionsMenu(
+                        setDonationDialog = setDonationDialog,
+                        regularDonationValue = p.automaticDonationsValue,
+                        regularDonationFrequency = p.automaticDonationTimeFrequency,
+                        region = p.region,
+                        isSwitched = p.automaticDonations,
+                        switchFunction = { b ->
+                            viewModel.setActive(b)
+                        },
                         modifier = Modifier
                             .fillMaxWidth()
                             .constrainAs(optionsMenu) {
                                 top.linkTo(boxrow.bottom)
                             },
-                        setDonationDialog = setDonationDialog,
-                        regularDonationValue = p.automaticDonationsValue,
-                        regularDonationFrequency = p.automaticDonationTimeFrequency,
-                        isSwitched = p.automaticDonations,
-                        switchFunction = { b ->
-                            viewModel.setActive(b)
-                        }
+                    )
+                    CountryDialog(
+                        countries = viewModel.countries.value,
+                        isShown = viewModel.countryDialog.value,
+                        setDialog = { viewModel.setCountryDialog(it) },
+                        setCountryText = { /*TODO*/ },
+                        setCountry = { /*TODO*/ },
                     )
                     if (donationDialog) {
                         AlertDialogWithChoice(
@@ -347,6 +359,7 @@ class ProfileFragment : Fragment() {
         modifier: Modifier = Modifier,
         regularDonationValue: Double,
         regularDonationFrequency: String,
+        region: String,
         isSwitched: Boolean,
         switchFunction: (Boolean) -> Unit,
         setDonationDialog: (Boolean) -> Unit
@@ -366,17 +379,34 @@ class ProfileFragment : Fragment() {
                 }
             )
             Option(
+                title = "Select charity types",
+                description = "",
+                hasSwitch = false,
+                modifier = Modifier.fillMaxWidth(),
+                onClick = {}
+            )
+            Option(
+                title = "Select country",
+                description = Locale("", region).displayCountry,
+                hasSwitch = false,
+                modifier = Modifier.fillMaxWidth(),
+                onClick = {
+                    viewModel.setCountryDialog(true)
+                }
+            )
+            Option(
                 title = stringResource(R.string.ProfileFragment_Logout),
                 description = stringResource(R.string.ProfileFragment_LogoutDescription),
                 hasSwitch = false,
                 modifier = Modifier.fillMaxWidth(),
-                onClick = { Auth.logout(
-                    account,
-                    requireContext(),
-                    dataStore,
-                ){
-                    findNavController().navigate(R.id.action_profileFragment_to_welcomeFragment)
-                }
+                onClick = {
+                    Auth.logout(
+                        account,
+                        requireContext(),
+                        dataStore,
+                    ) {
+                        findNavController().navigate(R.id.action_profileFragment_to_welcomeFragment)
+                    }
                 }
             )
             Divider(

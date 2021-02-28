@@ -6,7 +6,6 @@ import com.kiral.charityapp.domain.model.Charity
 import com.kiral.charityapp.domain.model.CharityProject
 
 class CharitiesMapper: Mapper<FakeCharityResponse, Charity>{
-
     override fun mapToDomainModel(model: FakeCharityResponse): Charity {
         return Charity(
             id = model.id,
@@ -14,6 +13,8 @@ class CharitiesMapper: Mapper<FakeCharityResponse, Charity>{
             imgSrc = model.imgSrc,
             address = model.address,
             description = model.description,
+            howDonationHelps = model.description,
+            whyToDonate = model.description,
             raised = model.raised.toFloat(),
             peopleDonated = model.peopleDonated,
             donorDonated = model.donorDonated,

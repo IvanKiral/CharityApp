@@ -12,13 +12,17 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.preferredHeight
 import androidx.compose.foundation.layout.preferredSize
 import androidx.compose.foundation.lazy.GridCells
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyVerticalGrid
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
@@ -60,6 +64,9 @@ import com.auth0.android.callback.Callback
 import com.auth0.android.result.Credentials
 import com.kiral.charityapp.R
 import com.kiral.charityapp.domain.model.CharityListItem
+import com.kiral.charityapp.domain.model.LeaderBoardProfile
+import com.kiral.charityapp.ui.components.CharitiesSelector
+import com.kiral.charityapp.ui.components.LeaderBoardItem
 import com.kiral.charityapp.ui.theme.CharityTheme
 import com.kiral.charityapp.ui.theme.ProfileIconBorder
 import com.kiral.charityapp.ui.theme.cardTextStyle
@@ -151,28 +158,96 @@ class CharitiesFragment : Fragment() {
                     tabSelected = tabSelected,
                     modifier = Modifier.fillMaxWidth(),
                     onProfileClick = {
-                        val action = CharitiesFragmentDirections.actionCharitiesFragmentToProfileFragment(userId)
-                        findNavController().navigate(action)
+                        if(!viewModel.showFilter.value) {
+                            val action =
+                                CharitiesFragmentDirections.actionCharitiesFragmentToProfileFragment(
+                                    userId
+                                )
+                            findNavController().navigate(action)
+                        } else{
+                            viewModel.showFilter.value = false
+                        }
+                    },
+                    onProfileLongClick = {
+                        viewModel.showFilter.value = true
                     },
                     onTabSelected = { tabSelected = it }
                 )
-
-                when (tabSelected) {
-                    CharitiesScreen.Charities -> GridCharity(
+                if(!viewModel.showFilter.value) {
+                    when (tabSelected) {
+                        CharitiesScreen.Charities -> GridCharity(
                             lst = viewModel.charities.value,
                             modifier = Modifier
                                 .padding(top = 20.dp)
                                 .align(Alignment.CenterHorizontally)
-                    )
-                    CharitiesScreen.Ranking -> RankingScreen()
+                        )
+                        CharitiesScreen.Ranking -> RankingScreen()
+                    }
+                } else{
+                 FilterScreen()
                 }
             }
         }
     }
 
     @Composable
-    fun RankingScreen() {
+    fun FilterScreen(){
+        Column(
+            modifier = Modifier.fillMaxSize(),
+        ){
+            Spacer(modifier = Modifier.fillMaxHeight(0.05f))
+            Text(
+                text = "Select charities to show",
+                style = MaterialTheme.typography.h5,
+                modifier = Modifier.fillMaxWidth(),
+                //textAlign = TextAlign.Center
+            )
+            CharitiesSelector(
+                categories = viewModel.categories,
+                categoriesSelected = viewModel.selected,
+                modifier = Modifier.padding(top = 32.dp)
+            )
+        }
     }
+
+    @Composable
+    fun RankingScreen() {
+        val leaderboard = listOf<LeaderBoardProfile>(
+            LeaderBoardProfile(
+                id = 0,
+                order = 1,
+                name = "Ivan",
+                email = "fdsadfas",
+                donated = 150.0
+            ),
+            LeaderBoardProfile(
+                id = 0,
+                order = 2,
+                name = "Alžbeta",
+                email = "fdsadfas",
+                donated = 120.0
+            ),
+            LeaderBoardProfile(
+                id = 0,
+                order = 3,
+                name = "Michaela",
+                email = "fdsadfas",
+                donated = 90.0
+            ),
+            LeaderBoardProfile(
+                id = 0,
+                order = 4,
+                name = "Martin",
+                email = "fdsadfas",
+                donated = 60.0
+            ),
+        )
+        LazyColumn(){
+            itemsIndexed(leaderboard){ index, item ->
+                    LeaderBoardItem(item = item)
+                }
+            }
+        }
 
     @ExperimentalFoundationApi
     @Composable
@@ -184,12 +259,13 @@ class CharitiesFragment : Fragment() {
             GridCells.Fixed(2),
             modifier = modifier
         ) {
-            items(lst) {
+            itemsIndexed(lst) { index, item ->
+                Log.i("CharitiesFragment", "Index is $index")
                 CharityItem(
-                    charity = it,
+                    charity = item,
                     onClick = {
                         val action = CharitiesFragmentDirections
-                            .actionCharitiesFragmentToCharityDetailFragment(it.id, userId)
+                            .actionCharitiesFragmentToCharityDetailFragment(item.id, userId)
                         findNavController()
                             .navigate(action)
                     }
@@ -241,6 +317,7 @@ fun CharityAppBar(
     tabSelected: CharitiesScreen,
     modifier: Modifier = Modifier,
     onProfileClick: () -> Unit,
+    onProfileLongClick: () -> Unit,
     onTabSelected: (CharitiesScreen) -> Unit
 ) {
     Row(
@@ -265,7 +342,8 @@ fun CharityAppBar(
                 modifier = Modifier
                     .align(alignment = Alignment.CenterEnd),
                 imageVector = vectorResource(id = R.drawable.ic_profile),
-                onClick = onProfileClick
+                onClick = onProfileClick,
+                onLongClick = onProfileLongClick
             )
         }
     }
@@ -275,7 +353,8 @@ fun CharityAppBar(
 fun IconRoundCorner(
     modifier: Modifier = Modifier,
     imageVector: ImageVector,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onLongClick: () -> Unit = {}
 ) {
     Box(modifier = modifier) {
         Box(
@@ -284,7 +363,7 @@ fun IconRoundCorner(
                 .preferredSize(56.dp)
                 .border(width = 1.dp, color = ProfileIconBorder, shape = CircleShape)
                 .clip(shape = CircleShape)
-                .clickable(onClick = onClick)
+                .clickable(onClick = onClick, onLongClick = onLongClick)
         ) {
             Image(
                 imageVector = imageVector,

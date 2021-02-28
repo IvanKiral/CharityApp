@@ -1,7 +1,6 @@
 package com.kiral.charityapp.domain.util
 
 import com.kiral.charityapp.domain.fake.responses.FakeProfilePost
-import com.kiral.charityapp.domain.model.Badge
 import com.kiral.charityapp.domain.model.Profile
 
 class ProfileMapper: Mapper<FakeProfilePost, Profile>{
@@ -13,6 +12,7 @@ class ProfileMapper: Mapper<FakeProfilePost, Profile>{
             email = model.email,
             donations = model.donations?.let { model.donations } ?: 0,
             credit = model.credit,
+            region = model.region,
             charities = "",
             automaticDonations = model.donationRepeat,
             automaticDonationTimeFrequency = model.donationRepeatFrequency,
@@ -25,7 +25,7 @@ class ProfileMapper: Mapper<FakeProfilePost, Profile>{
         return FakeProfilePost(
             name = domainModel.name,
             email = domainModel.email,
-            region = "svk",
+            region = domainModel.region,
             credit = domainModel.credit,
             donationRepeat = domainModel.automaticDonations,
             donationRepeatFrequency = domainModel.automaticDonationTimeFrequency,

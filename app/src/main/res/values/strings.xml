@@ -14,7 +14,7 @@
     <string name="LoginFragment_OrLoginWith">Or login with</string>
     <string name="LoginFragment_DontHaveAnAccount">Don\'t have an account?</string>
     <string name="LoginFragment_Register">Register</string>
-    <string name="EditPersonalInformationFragment_Title">Edit Personal Information</string>
+    <string name="EditPersonalInformationFragment_Title">Edit personal information</string>
     <string name="SelectCharitiesTypesFragment_Title">Select charities types</string>
     <string name="SetupRegularPaymentsFragment_Title">Setup regular Payments</string>
     <string name="ProfileFragment_YourBadges">Your Badges</string>

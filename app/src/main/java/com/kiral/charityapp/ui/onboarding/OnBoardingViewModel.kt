@@ -1,31 +1,34 @@
 package com.kiral.charityapp.ui.onboarding
 
-import androidx.compose.foundation.ScrollState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.toMutableStateList
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 import com.kiral.charityapp.domain.enums.DonationFrequency
 import com.kiral.charityapp.domain.model.Profile
-import com.kiral.charityapp.domain.profiles
 import com.kiral.charityapp.repositories.charities.ProfileRepository
+import com.kiral.charityapp.ui.BaseApplication
 import com.kiral.charityapp.utils.DonationValues
+import com.kiral.charityapp.utils.getCountries
+import com.kiral.charityapp.utils.global_categories
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class OnBoardingViewModel
 @Inject
 constructor(
+    private val application: BaseApplication,
     private val profileRepository: ProfileRepository
-): ViewModel(){
-    val categories = listOf(
-        "Environment charity", "Animal charity",
-        "Health charity", "Education charity", "Art and culture charity"
-    )
+): AndroidViewModel(application){
+    val categories = global_categories
 
     lateinit var profile: Profile
 
     val name = mutableStateOf("")
+    val country = mutableStateOf("")
+    val selectedCountry = mutableStateOf("")
 
     val lst = MutableList(categories.size) { false }
     val selected = lst.toMutableStateList()
@@ -36,12 +39,23 @@ constructor(
     val amountItems = DonationValues
     val selectedAmount = mutableStateOf(0)
 
+    val countryDialog = mutableStateOf(false)
+
+    val countries = mutableStateOf(mapOf<String, String>())
+
+    init {
+        viewModelScope.launch {
+            countries.value = getCountries(application.baseContext)
+        }
+    }
+
     fun createNewProfile(email: String){
         profile = Profile(
             email = email,
             name = "",
             donations = 0,
             charities = "",
+            region = "",
             credit = 0.0,
             automaticDonations = false,
             automaticDonationsValue = 0.0,
@@ -51,6 +65,7 @@ constructor(
 
     fun addPersonalInformation(){
         profile.name = name.value
+        profile.region = selectedCountry.value
     }
 
     fun addCharitiesTypes(){
@@ -70,7 +85,6 @@ constructor(
     }
 
     fun register(){
-        profile.id = profiles.lastOrNull()?.id?.plus(1) ?: 0
         profileRepository.register(profile)
     }
 
@@ -84,5 +98,18 @@ constructor(
 
     fun setSelectedInterval(value: Int){
         selectedInterval.value = value
+    }
+
+    fun setCountryDialog(value: Boolean){
+        countryDialog.value = value
+    }
+
+    fun setCountry(value: String){
+        country.value = value
+    }
+
+    fun setSelectedCountry(value: String){
+        profile.region = value
+        selectedCountry.value = value
     }
 }

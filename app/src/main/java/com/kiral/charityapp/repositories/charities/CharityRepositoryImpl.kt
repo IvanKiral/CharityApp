@@ -4,15 +4,18 @@ import com.kiral.charityapp.domain.fake.FakeDatabase
 import com.kiral.charityapp.domain.fake.responses.FakeDonationPost
 import com.kiral.charityapp.domain.model.Charity
 import com.kiral.charityapp.domain.model.CharityListItem
+import com.kiral.charityapp.domain.model.Donor
 import com.kiral.charityapp.domain.model.Project
 import com.kiral.charityapp.domain.util.CharitiesMapper
 import com.kiral.charityapp.domain.util.CharityListItemMapper
+import com.kiral.charityapp.domain.util.DonorsMapper
 import com.kiral.charityapp.domain.util.ProjectMapper
 
 class CharityRepositoryImpl(
     private val charityMapper: CharitiesMapper,
     private val projectMapper: ProjectMapper,
     private val charityListMapper: CharityListItemMapper,
+    private val donorsMapper: DonorsMapper,
     private val fakeDatabse: FakeDatabase
 ) : CharityRepository {
 
@@ -39,5 +42,10 @@ class CharityRepositoryImpl(
                 sum = value,
             )
         )
+    }
+
+    override fun getCharityDonors(charityId: Int, page: Int): List<Donor> {
+        val x = fakeDatabse.getCharityDonors(charityId, page).donors
+        return donorsMapper.mapToDomainModelList(x)
     }
 }

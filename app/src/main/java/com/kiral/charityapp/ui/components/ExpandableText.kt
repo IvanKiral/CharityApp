@@ -26,7 +26,7 @@ private enum class TextState{
 
 @Composable
 fun ExpandableText(
-    text: String,
+    text: AnnotatedString,
     modifier: Modifier = Modifier,
     maxLines: Int = 5,
 ){

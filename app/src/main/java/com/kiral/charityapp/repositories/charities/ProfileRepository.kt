@@ -1,5 +1,6 @@
 package com.kiral.charityapp.repositories.charities
 
+import com.kiral.charityapp.domain.model.Badge
 import com.kiral.charityapp.domain.model.Profile
 
 interface ProfileRepository{
@@ -8,4 +9,6 @@ interface ProfileRepository{
     fun register(profile: Profile): Boolean
 
     fun getProfile(id: Int): Profile
+
+    fun getBadges(donorId: Int): List<Badge>
 }

@@ -2,6 +2,7 @@ package com.kiral.charityapp.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.preferredHeight
@@ -22,7 +23,8 @@ fun InformationBox(
     text: AnnotatedString,
     backgroundColor: Color,
     borderColor: Color,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {}
 ) {
     Box(
         contentAlignment = Alignment.Center,
@@ -31,6 +33,7 @@ fun InformationBox(
             .clip(RoundedCornerShape(6.dp))
             .background(backgroundColor)
             .border(width = 1.dp, color = borderColor)
+            .clickable(onClick = onClick)
     ) {
         Row() {
             Text(
