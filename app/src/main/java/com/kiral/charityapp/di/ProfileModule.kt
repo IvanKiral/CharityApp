@@ -1,8 +1,7 @@
 package com.kiral.charityapp.di
 
-import com.kiral.charityapp.domain.fake.FakeDatabase
-import com.kiral.charityapp.domain.util.CharitiesMapper
-import com.kiral.charityapp.domain.util.ProfileMapper
+import com.kiral.charityapp.network.Dto.ProfileMapper
+import com.kiral.charityapp.network.ProfileService
 import com.kiral.charityapp.repositories.charities.ProfileRepository
 import com.kiral.charityapp.repositories.charities.ProfileRepositoryImpl
 import dagger.Module
@@ -14,7 +13,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object ProfileModule{
+object ProfileModule {
 
     @Singleton
     @Provides
@@ -25,12 +24,24 @@ object ProfileModule{
     @Singleton
     @Provides
     fun provideProfileRepository(
+        profileService: ProfileService,
         profileMapper: ProfileMapper,
-        fakeDatabase: FakeDatabase
-    ): ProfileRepository{
+    ): ProfileRepository {
         return ProfileRepositoryImpl(
-            profileMapper = profileMapper,
-            fakeDatabase = fakeDatabase
+            profileService = profileService,
+            profileMapper = profileMapper
         )
     }
+
+/*@Singleton
+@Provides
+fun provideProfileRepository(
+    profileMapper: ProfileMapper,
+    fakeDatabase: FakeDatabase
+): ProfileRepository{
+    return FakeProfileRepositoryImpl(
+        profileMapper = profileMapper,
+        fakeDatabase = fakeDatabase
+    )
+}*/
 }

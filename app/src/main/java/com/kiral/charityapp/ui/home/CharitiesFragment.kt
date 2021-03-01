@@ -93,8 +93,6 @@ class CharitiesFragment : Fragment() {
     private val args: CharitiesFragmentArgs by navArgs()
     var email: String? = null
 
-    var userId: Int = -1
-
     val USER_ID = intPreferencesKey("user_id")
 
     suspend fun write_id(id: Int) {
@@ -121,14 +119,14 @@ class CharitiesFragment : Fragment() {
                 uId.asLiveData().observe(viewLifecycleOwner){
                     if(it != null){
                         if(it != -1){
-                            userId = it
+                            viewModel.userId = it
                             viewModel.getCharities(it, "svk")
                         }
                         else {
                             Auth.withUserEmail(account, result.accessToken){ email ->
-                                userId = viewModel.getId(email)
+                                viewModel.getId(email)
                                 Log.i("CharitiesFragment", "inShowUser")
-                                viewModel.getCharities(userId, "svk")
+
                             }
                         }
                     }
@@ -161,7 +159,7 @@ class CharitiesFragment : Fragment() {
                         if(!viewModel.showFilter.value) {
                             val action =
                                 CharitiesFragmentDirections.actionCharitiesFragmentToProfileFragment(
-                                    userId
+                                    viewModel.userId
                                 )
                             findNavController().navigate(action)
                         } else{
@@ -265,7 +263,7 @@ class CharitiesFragment : Fragment() {
                     charity = item,
                     onClick = {
                         val action = CharitiesFragmentDirections
-                            .actionCharitiesFragmentToCharityDetailFragment(item.id, userId)
+                            .actionCharitiesFragmentToCharityDetailFragment(item.id, viewModel.userId)
                         findNavController()
                             .navigate(action)
                     }

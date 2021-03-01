@@ -1,5 +1,6 @@
 package com.kiral.charityapp.ui.profile
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
@@ -30,7 +31,10 @@ constructor(
     val countryDialog = mutableStateOf(false)
 
     fun setProfile(id: Int){
-        _profile.value = profileRepository.getProfile(id)
+        viewModelScope.launch {
+            _profile.value = profileRepository.getProfile(id)
+            Log.i("ProfileFragment", "here is value of profile ${profile.value?.name}")
+        }
     }
 
     val countries = mutableStateOf(mapOf<String, String>())

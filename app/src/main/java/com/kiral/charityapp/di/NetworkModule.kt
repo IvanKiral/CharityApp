@@ -7,6 +7,7 @@ import com.kiral.charityapp.network.Dto.CharityListItemMapper
 import com.kiral.charityapp.network.Dto.CharityMapper
 import com.kiral.charityapp.network.Dto.DonorsMapper
 import com.kiral.charityapp.network.NetworkService
+import com.kiral.charityapp.network.ProfileService
 import com.kiral.charityapp.utils.PrivateConstants
 import dagger.Module
 import dagger.Provides
@@ -54,5 +55,15 @@ object NetworkModule{
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
             .build()
             .create(NetworkService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideProfileService(): ProfileService {
+        return Retrofit.Builder()
+            .baseUrl(address)
+            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
+            .build()
+            .create(ProfileService::class.java)
     }
 }

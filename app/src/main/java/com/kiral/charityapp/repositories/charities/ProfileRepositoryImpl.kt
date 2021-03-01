@@ -1,70 +1,56 @@
 package com.kiral.charityapp.repositories.charities
 
-import com.kiral.charityapp.domain.fake.FakeDatabase
+import android.util.Log
 import com.kiral.charityapp.domain.model.Badge
 import com.kiral.charityapp.domain.model.Profile
-import com.kiral.charityapp.domain.util.ProfileMapper
+import com.kiral.charityapp.network.Dto.LoginDto
+import com.kiral.charityapp.network.Dto.ProfileMapper
+import com.kiral.charityapp.network.ProfileService
 import com.kiral.charityapp.utils.badgesMap
 import kotlin.random.Random
 
 class ProfileRepositoryImpl(
-    private val profileMapper: ProfileMapper,
-    private val fakeDatabase: FakeDatabase
+    private val profileService: ProfileService,
+    private val profileMapper: ProfileMapper
 ): ProfileRepository {
-    override fun login(email: String): Profile? {
-        val x = fakeDatabase.login(email)
-        return  if(x == null) x
-            else profileMapper.mapToDomainModel(x)
+    override suspend fun login(email: String): Int? {
+        try{
+            val response = profileService.login(LoginDto(email = email))
+            if(response.code() == 200){
+                return response.body()!!.id
+            } else{
+                return null
+            }
+        } catch (e : Throwable){
+            return null
+        }
     }
 
-    override fun register(profile: Profile): Boolean {
-        val tmp = profileMapper.mapFromDomainModel(profile)
-        return fakeDatabase.registerUser(tmp)
-        /*val profileId = fakeProfiles.last().id + 1
-        fakeProfiles.add(
-            FakeProfile(
-                id = profileId,
-                name = profile.name,
-                region = "svk",
-                credit = 0.0,
-                email = profile.email
-            )
-        )
-        fakeDonationRepeats.add(
-            FakeDonationRepeat(
-                id = fakeDonationRepeats.last().id + 1,
-                donorId = profileId,
-                active = profile.automaticDonations,
-                sum = profile.automaticDonationsValue,
-                repeatingStatus = profile.automaticDonationTimeFrequency
-            )
-        )
-        return true*/
+    override suspend fun register(profile: Profile): Boolean {
+        try {
+            val profileDto = profileMapper.mapFromDomainModel(profile)
+            Log.i("beforeRegister", "here")
+            val response = profileService.register(profileDto)
+            Log.i("afterRegister", "here")
+            return response.code() == 201
+        } catch (e: Throwable) {
+            Log.i("RegisterTest", "error is $e")
+            return false
+        }
     }
 
-    override fun getProfile(id: Int): Profile {
-        val profile = fakeDatabase.getProfile(id)
-        return profileMapper.mapToDomainModel(profile)
-        /*val x = fakeProfiles.filter { p -> p.email == email }.first()
-        val donationRepeat = fakeDonationRepeats.filter { d -> d.donorId == x.id }.first()
-        return  if(x == null) x
-        else Profile(
-            id = x.id,
-            email = x.email,
-            name = x.name,
-            donations = fakeDonations.filter{ d -> d.donorId == x.id }.size,
-            credit = x.credit,
-            charities = "",
-            automaticDonationsValue = donationRepeat.sum,
-            automaticDonationTimeFrequency = donationRepeat.repeatingStatus,
-            automaticDonations = donationRepeat.active,
-            badges = badges
-        )*/
+    override suspend fun getProfile(id: Int): Profile {
+        try {
+            val profile = profileService.getProfile(id)
+            return profileMapper.mapToDomainModel(profile)
+        } catch (e: Throwable) {
+            throw e
+        }
     }
 
-    override fun getBadges(donorId: Int): List<Badge> {
+    override suspend fun getBadges(donorId: Int): List<Badge> {
         val lst = mutableListOf<Badge>()
-        badgesMap.forEach{(key, value) ->
+        badgesMap.forEach{(_, value) ->
             lst.add(
                 Badge(
                     id = 0,

@@ -4,11 +4,11 @@ import com.kiral.charityapp.domain.model.Badge
 import com.kiral.charityapp.domain.model.Profile
 
 interface ProfileRepository{
-    fun login(email: String): Profile?
+    suspend fun login(email: String): Int?
 
-    fun register(profile: Profile): Boolean
+    suspend fun register(profile: Profile): Boolean
 
-    fun getProfile(id: Int): Profile
+    suspend fun getProfile(id: Int): Profile
 
-    fun getBadges(donorId: Int): List<Badge>
+    suspend fun getBadges(donorId: Int): List<Badge>
 }

@@ -4,9 +4,11 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.kiral.charityapp.domain.model.Badge
 import com.kiral.charityapp.repositories.charities.ProfileRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,7 +22,9 @@ constructor(
         get() = _badges
 
     fun getBadges(donorId: Int) {
-        _badges.value = profileRepository.getBadges(donorId)
+        viewModelScope.launch {
+            _badges.value = profileRepository.getBadges(donorId)
+        }
     }
 
 }

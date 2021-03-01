@@ -1,53 +1,6 @@
 package com.kiral.charityapp.ui.login
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Toast
-import androidx.compose.foundation.ClickableText
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.preferredHeight
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.unit.dp
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import com.auth0.android.Auth0
-import com.auth0.android.authentication.AuthenticationAPIClient
-import com.auth0.android.authentication.AuthenticationException
-import com.auth0.android.authentication.storage.CredentialsManager
-import com.auth0.android.authentication.storage.SharedPreferencesStorage
-import com.auth0.android.callback.Callback
-import com.auth0.android.provider.WebAuthProvider
-import com.auth0.android.result.Credentials
-import com.kiral.charityapp.R
-import com.kiral.charityapp.ui.components.ClickableIcon
-import com.kiral.charityapp.ui.components.FormTextField
-import com.kiral.charityapp.ui.theme.CharityTheme
-import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
-
-@AndroidEntryPoint
+/*@AndroidEntryPoint
 class LoginFragment : Fragment() {
 
     @Inject
@@ -203,5 +156,5 @@ class LoginFragment : Fragment() {
                 }
             })
     }
-}
+}*/
 

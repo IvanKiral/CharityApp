@@ -20,7 +20,7 @@ class CharityRepositoryImpl(
 ): CharityRepository {
     override suspend fun search(id: Int, region: String): List<CharityListItem> {
         try {
-            val charitiesResponse = networkService.getCharities(1, id,)
+            val charitiesResponse = networkService.getCharities(1, id)
             return charityListMapper.mapToDomainModelList(charitiesResponse.charities)
         } catch (e: Throwable){
             throw e

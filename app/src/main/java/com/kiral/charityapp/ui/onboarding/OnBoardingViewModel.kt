@@ -1,5 +1,6 @@
 package com.kiral.charityapp.ui.onboarding
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.AndroidViewModel
@@ -22,6 +23,7 @@ constructor(
     private val application: BaseApplication,
     private val profileRepository: ProfileRepository
 ): AndroidViewModel(application){
+
     val categories = global_categories
 
     lateinit var profile: Profile
@@ -29,6 +31,7 @@ constructor(
     val name = mutableStateOf("")
     val country = mutableStateOf("")
     val selectedCountry = mutableStateOf("")
+    val navigateToCharityFragment = mutableStateOf(false)
 
     val lst = MutableList(categories.size) { false }
     val selected = lst.toMutableStateList()
@@ -51,6 +54,7 @@ constructor(
 
     fun createNewProfile(email: String){
         profile = Profile(
+            id = 0,
             email = email,
             name = "",
             donations = 0,
@@ -85,7 +89,13 @@ constructor(
     }
 
     fun register(){
-        profileRepository.register(profile)
+        viewModelScope.launch {
+            Log.i("onboardingview", "tu som")
+            if (profileRepository.register(profile)){
+                Log.i("onboardingview", "po registracii")
+                navigateToCharityFragment.value = true
+            }
+        }
     }
 
     fun setName(value: String){

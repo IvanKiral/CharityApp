@@ -2,6 +2,7 @@ package com.kiral.charityapp.ui.profile
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -78,6 +79,7 @@ import javax.inject.Inject
 class ProfileFragment : Fragment() {
     @Inject
     lateinit var dataStore: DataStore<Preferences>
+
     @Inject
     lateinit var account: Auth0
 
@@ -95,12 +97,12 @@ class ProfileFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        profile = viewModel.profile
         return ComposeView(requireContext()).apply {
-            if (profile.value != null) {
-                setContent {
-                    CharityTheme {
-                        ProfileScreen(profile)
+            Log.i("ProfileFragment", "OOOPS")
+            setContent {
+                CharityTheme {
+                    if (viewModel.profile.value != null) {
+                        ProfileScreen(viewModel.profile)
                     }
                 }
             }

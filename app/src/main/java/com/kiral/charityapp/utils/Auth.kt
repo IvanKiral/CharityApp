@@ -32,6 +32,7 @@ object Auth {
                 }
 
                 override fun onSuccess(result: UserProfile) {
+                    Log.i("emailtest", "email: ${result.email!!}")
                     onSuccessFunction(result.email!!)
                 }
             })

@@ -23,12 +23,16 @@ constructor(
 ) : ViewModel() {
     val categories = global_categories
 
+    var userId: Int = -1
+
     private val _charities = mutableStateOf<List<CharityListItem>>(ArrayList())
     val charities: State<List<CharityListItem>>
         get() = _charities
 
     val lst = MutableList(categories.size) { false }
     val selected = lst.toMutableStateList()
+
+
 
     val showFilter = mutableStateOf(false)
 
@@ -42,8 +46,10 @@ constructor(
         }
     }
 
-    fun getId(email: String): Int {
-        val x = profileRepository.login(email)
-        return if (x == null) 0 else x.id!!
+    fun getId(email: String){
+        viewModelScope.launch {
+            userId = profileRepository.login(email)!!
+            getCharities(userId, "svk")
+        }
     }
 }
