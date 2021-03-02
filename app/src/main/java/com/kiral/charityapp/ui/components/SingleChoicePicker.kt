@@ -1,6 +1,5 @@
 package com.kiral.charityapp.ui.components
 
-import androidx.compose.foundation.InteractionState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.MaterialTheme
@@ -30,8 +29,6 @@ fun SingleChoicePicker(
                     color = Color.Black.copy(alpha = 0.5f)
                 ),
                 modifier = Modifier.clickable(
-                    interactionState = InteractionState(),
-                    indication = null,
                     onClick = { setSelectedItem(index) }
                 )
                     .align(textAlignment)

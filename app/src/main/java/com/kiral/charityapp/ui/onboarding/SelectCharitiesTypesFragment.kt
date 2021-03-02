@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.preferredHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
@@ -76,7 +76,7 @@ class SelectCharitiesTypesFragment : Fragment() {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 32.dp)
-                        .preferredHeight(64.dp),
+                        .height(64.dp),
                     onClick = {
                         viewModel.addCharitiesTypes()
                         findNavController().navigate(R.id.action_selectCharitiesTypesFragment_to_setupRegularPaymentsFragment)

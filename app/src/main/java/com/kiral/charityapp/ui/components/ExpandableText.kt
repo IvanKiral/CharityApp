@@ -1,10 +1,9 @@
 package com.kiral.charityapp.ui.components
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.spring
-import androidx.compose.foundation.ClickableText
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -39,7 +38,7 @@ fun ExpandableText(
             maxLines = if (state.value == TextState.Collapsed) maxLines else Int.MAX_VALUE,
             style = MaterialTheme.typography.body1,
             overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.animateContentSize(animSpec = spring()),
+            modifier = Modifier.animateContentSize(),
             onTextLayout = {
 
                 showExpander.value = it.didOverflowHeight || it.lineCount > maxLines

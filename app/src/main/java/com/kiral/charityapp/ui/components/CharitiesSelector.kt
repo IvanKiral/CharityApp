@@ -1,7 +1,6 @@
 package com.kiral.charityapp.ui.components
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.InteractionState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
@@ -46,8 +46,6 @@ fun RowSelector(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(
-                indication = null,
-                interactionState = InteractionState(),
                 onClick = onRowClick
             )
             .padding(bottom = 24.dp)
@@ -61,7 +59,7 @@ fun RowSelector(
         )
         if (selected) {
             Image(
-                imageVector = vectorResource(id = R.drawable.ic_selected),
+                imageVector = ImageVector.vectorResource(id = R.drawable.ic_selected),
                 contentDescription = "",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.align(Alignment.CenterVertically)

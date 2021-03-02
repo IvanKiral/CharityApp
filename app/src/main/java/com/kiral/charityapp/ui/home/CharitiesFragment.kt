@@ -9,6 +9,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,9 +17,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.preferredHeight
-import androidx.compose.foundation.layout.preferredSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyVerticalGrid
@@ -298,7 +299,7 @@ class CharitiesFragment : Fragment() {
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .preferredHeight(110.dp)
+                            .height(110.dp)
                             .clip(RoundedCornerShape(5.dp))
                     )
                 }
@@ -315,6 +316,7 @@ class CharitiesFragment : Fragment() {
     }
 }
 
+@ExperimentalFoundationApi
 @Composable
 fun CharityAppBar(
     tabSelected: CharitiesScreen,
@@ -344,7 +346,7 @@ fun CharityAppBar(
             IconRoundCorner(
                 modifier = Modifier
                     .align(alignment = Alignment.CenterEnd),
-                imageVector = vectorResource(id = R.drawable.ic_profile),
+                imageVector = ImageVector.vectorResource(id = R.drawable.ic_profile),
                 onClick = onProfileClick,
                 onLongClick = onProfileLongClick
             )
@@ -352,6 +354,7 @@ fun CharityAppBar(
     }
 }
 
+@ExperimentalFoundationApi
 @Composable
 fun IconRoundCorner(
     modifier: Modifier = Modifier,
@@ -363,10 +366,10 @@ fun IconRoundCorner(
         Box(
             modifier = Modifier
                 .align(alignment = Alignment.CenterEnd)
-                .preferredSize(56.dp)
+                .size(56.dp)
                 .border(width = 1.dp, color = ProfileIconBorder, shape = CircleShape)
                 .clip(shape = CircleShape)
-                .clickable(onClick = onClick, onLongClick = onLongClick)
+                .combinedClickable(onClick = onClick, onLongClick = onLongClick)
         ) {
             Image(
                 imageVector = imageVector,

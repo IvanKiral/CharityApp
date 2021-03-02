@@ -7,16 +7,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.compose.foundation.ClickableText
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ConstraintLayout
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
@@ -30,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -38,6 +38,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.fragment.app.Fragment
@@ -119,6 +120,7 @@ class ProfileFragment : Fragment() {
             val (donationDialog, setDonationDialog) = remember { mutableStateOf(false) }
             Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                 ConstraintLayout(
+
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(horizontal = 32.dp),
@@ -127,7 +129,7 @@ class ProfileFragment : Fragment() {
                     val baseline = createGuidelineFromTop(300.dp)
 
                     ClickableIcon(
-                        icon = vectorResource(id = R.drawable.ic_back),
+                        icon = ImageVector.vectorResource(id = R.drawable.ic_back),
                         onIconClicked = { /*TODO*/ },
                         modifier = Modifier
                             .constrainAs(back) {

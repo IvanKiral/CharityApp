@@ -12,10 +12,10 @@ import androidx.compose.ui.unit.dp
 
 
 val BottomSheetShape = RoundedCornerShape(
-    topLeft = CornerSize(20.dp),
-    topRight = CornerSize(20.dp),
-    bottomLeft = ZeroCornerSize,
-    bottomRight = ZeroCornerSize
+    topStart = CornerSize(20.dp),
+    topEnd = CornerSize(20.dp),
+    bottomStart = ZeroCornerSize,
+    bottomEnd = ZeroCornerSize
 )
 
 private val LightThemeColors = lightColors(

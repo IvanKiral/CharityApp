@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.preferredHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
@@ -31,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringResource
@@ -118,7 +118,7 @@ class ProjectDetailFragment : Fragment() {
                         contentScale = ContentScale.FillWidth,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .preferredHeight(230.dp)
+                            .height(230.dp)
                     )
                 }
             }
@@ -134,7 +134,7 @@ class ProjectDetailFragment : Fragment() {
                     )
                 }
                 Image(
-                    imageVector = vectorResource(id = R.drawable.ic_close),
+                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_close),
                     contentDescription = "",
                     modifier = Modifier
                         .align(Alignment.CenterEnd)

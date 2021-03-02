@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.preferredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -35,7 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.AmbientConfiguration
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -91,7 +90,7 @@ fun BadgeRow(
             modifier = modifier
 
         ) {
-            val configuration = AmbientConfiguration.current
+            val configuration = LocalConfiguration.current
             val boxDifference  = when(configuration.orientation){
                 Configuration.ORIENTATION_LANDSCAPE -> 20.dp
                 else  -> 8.dp
@@ -112,7 +111,7 @@ fun BadgeRow(
                     listOf(3,1,0,2,4).forEachIndexed { index, i ->
                         val badgeSize = size + (boxDifference.times(lstMiddle - Math.abs(index - lstMiddle)))
                         Badge(
-                            icon = if (i < badges.size) vectorResource(id = badges[i].iconId) else null,
+                            icon = if (i < badges.size) ImageVector.vectorResource(id = badges[i].iconId) else null,
                             iconSize = (badgeSize.minus(imagePadding.times(4))) + ((lstMiddle - Math.abs(index - lstMiddle)) * 5).dp,
                             boxSize = badgeSize
                         )
@@ -134,7 +133,7 @@ fun Badge(
 ) {
     Surface(
         modifier = modifier
-            .preferredSize(boxSize),
+            .size(boxSize),
         shape = RoundedCornerShape(cornerRadius),
         elevation = 8.dp
     ) {

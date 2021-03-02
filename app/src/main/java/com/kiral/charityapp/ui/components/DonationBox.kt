@@ -3,8 +3,8 @@ package com.kiral.charityapp.ui.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.preferredHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -25,7 +25,7 @@ fun DonationBox(
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
-            .preferredHeight(24.dp)
+            .height(24.dp)
             .clip(RoundedCornerShape(3.dp))
             .background(backgroundColor)
     ) {

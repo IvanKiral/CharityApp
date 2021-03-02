@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
@@ -153,7 +154,7 @@ class DonorsFragment : Fragment() {
                     Row(modifier = Modifier.padding(top = 4.dp)) {
                         for (i in 0..2) {
                             Image(
-                                imageVector = vectorResource(id = R.drawable.ic_dog),
+                                imageVector = ImageVector.vectorResource(id = R.drawable.ic_dog),
                                 contentDescription = "",
                                 modifier = if (i != 0) Modifier.padding(start = 8.dp) else Modifier
                             )
@@ -175,7 +176,7 @@ class DonorsFragment : Fragment() {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Image(
-                        imageVector = vectorResource(id = R.drawable.ic_heart),
+                        imageVector = ImageVector.vectorResource(id = R.drawable.ic_heart),
                         contentDescription = "heart icon",
                         modifier = Modifier
                             .size(24.dp)
