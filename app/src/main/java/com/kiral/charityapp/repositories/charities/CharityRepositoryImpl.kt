@@ -4,12 +4,16 @@ import com.kiral.charityapp.domain.model.Charity
 import com.kiral.charityapp.domain.model.CharityListItem
 import com.kiral.charityapp.domain.model.Donor
 import com.kiral.charityapp.domain.model.Project
+import com.kiral.charityapp.network.DataState
 import com.kiral.charityapp.network.Dto.CharityGoalMapper
 import com.kiral.charityapp.network.Dto.CharityListItemMapper
 import com.kiral.charityapp.network.Dto.CharityMapper
 import com.kiral.charityapp.network.Dto.DonationDto
 import com.kiral.charityapp.network.Dto.DonorsMapper
 import com.kiral.charityapp.network.NetworkService
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import java.io.IOException
 
 class CharityRepositoryImpl(
     private val charityMapper: CharityMapper,
@@ -17,31 +21,37 @@ class CharityRepositoryImpl(
     private val charityListMapper: CharityListItemMapper,
     private val donorsMapper: DonorsMapper,
     private val networkService: NetworkService
-): CharityRepository {
-    override suspend fun search(id: Int, region: String): List<CharityListItem> {
-        try {
-            val charitiesResponse = networkService.getCharities(1, id)
-            return charityListMapper.mapToDomainModelList(charitiesResponse.charities)
-        } catch (e: Throwable){
-            throw e
+) : CharityRepository {
+    override fun search(id: Int, region: String): Flow<DataState<List<CharityListItem>>> =
+        flow {
+            try {
+                emit(DataState.Loading)
+                //only for showing loading state
+                kotlinx.coroutines.delay(5000)
+                val response = networkService.getCharities(1, id)
+                if(response.isSuccessful){
+                    emit(DataState.Success(charityListMapper.mapToDomainModelList(response.body()!!.charities)))
+                }
+            } catch (e: IOException) {
+
+                emit(DataState.Error("An error has occured! Please retry later"))
+            }
         }
-    }
 
     override suspend fun get(id: Int, donorId: Int): Charity {
-        try{
+        try {
             val charity = networkService.getCharity(id, donorId)
             return charityMapper.mapToDomainModel(charity)
-
-        } catch (e: Throwable){
+        } catch (e: Throwable) {
             throw e
         }
     }
 
     override suspend fun getProject(id: Int, donorId: Int): Project {
-        try{
-            val charityGoal = networkService.getCharityGoal(id,donorId)
+        try {
+            val charityGoal = networkService.getCharityGoal(id, donorId)
             return charityGoalMapper.mapToDomainModel(charityGoal)
-        } catch (e: Throwable){
+        } catch (e: Throwable) {
             throw e
         }
     }
@@ -53,14 +63,16 @@ class CharityRepositoryImpl(
         value: Double
     ): Boolean {
         try {
-            val result = networkService.donate(DonationDto(
-                donorId = donorId,
-                charityId = charityId,
-                charityGoalId = projectId,
-                sum = value
-            ))
+            val result = networkService.donate(
+                DonationDto(
+                    donorId = donorId,
+                    charityId = charityId,
+                    charityGoalId = projectId,
+                    sum = value
+                )
+            )
             return result.code() == 200
-        } catch (e: Throwable){
+        } catch (e: Throwable) {
             return false
         }
     }
@@ -69,7 +81,7 @@ class CharityRepositoryImpl(
         try {
             val donorsResponse = networkService.getCharityDonors(charityId, page)
             return donorsMapper.mapToDomainModelList(donorsResponse.donors)
-        } catch (e: Throwable){
+        } catch (e: Throwable) {
             throw e
         }
     }

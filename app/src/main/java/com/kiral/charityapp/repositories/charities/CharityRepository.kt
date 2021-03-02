@@ -4,9 +4,11 @@ import com.kiral.charityapp.domain.model.Charity
 import com.kiral.charityapp.domain.model.CharityListItem
 import com.kiral.charityapp.domain.model.Donor
 import com.kiral.charityapp.domain.model.Project
+import com.kiral.charityapp.network.DataState
+import kotlinx.coroutines.flow.Flow
 
 interface CharityRepository {
-    suspend fun search(id: Int, region: String): List<CharityListItem>
+    fun search(id: Int, region: String): Flow<DataState<List<CharityListItem>>>
 
     suspend fun get(id: Int, donorId: Int): Charity
 

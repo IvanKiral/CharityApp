@@ -139,7 +139,12 @@ class CharitiesFragment : Fragment() {
 
         return ComposeView(requireContext()).apply {
             setContent {
-                CharitiesScreen()
+                if(viewModel.error.value != null){
+                    Text(viewModel.error.value!!)
+                }
+                else {
+                    CharitiesScreen()
+                }
             }
         }
     }

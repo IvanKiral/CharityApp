@@ -18,7 +18,7 @@ interface NetworkService {
     suspend fun getCharities(
         @Query("page") page: Int,
         @Query("donorId") donorId: Int
-    ): CharityListResponse
+    ): Response<CharityListResponse>
 
     @GET("charity")
     suspend fun getCharity(
