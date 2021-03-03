@@ -67,7 +67,9 @@ import com.kiral.charityapp.R
 import com.kiral.charityapp.domain.model.CharityListItem
 import com.kiral.charityapp.domain.model.LeaderBoardProfile
 import com.kiral.charityapp.ui.components.CharitiesSelector
+import com.kiral.charityapp.ui.components.ErrorScreen
 import com.kiral.charityapp.ui.components.LeaderBoardItem
+import com.kiral.charityapp.ui.components.LoadingScreen
 import com.kiral.charityapp.ui.theme.CharityTheme
 import com.kiral.charityapp.ui.theme.ProfileIconBorder
 import com.kiral.charityapp.ui.theme.cardTextStyle
@@ -115,16 +117,15 @@ class CharitiesFragment : Fragment() {
                 preferences[USER_ID] ?: -1
             }
 
-        manager.getCredentials(object: Callback<Credentials, CredentialsManagerException> {
+        manager.getCredentials(object : Callback<Credentials, CredentialsManagerException> {
             override fun onSuccess(result: Credentials) {
-                uId.asLiveData().observe(viewLifecycleOwner){
-                    if(it != null){
-                        if(it != -1){
+                uId.asLiveData().observe(viewLifecycleOwner) {
+                    if (it != null) {
+                        if (it != -1) {
                             viewModel.userId = it
                             viewModel.getCharities(it, "svk")
-                        }
-                        else {
-                            Auth.withUserEmail(account, result.accessToken){ email ->
+                        } else {
+                            Auth.withUserEmail(account, result.accessToken) { email ->
                                 viewModel.getId(email)
                                 Log.i("CharitiesFragment", "inShowUser")
 
@@ -133,6 +134,7 @@ class CharitiesFragment : Fragment() {
                     }
                 }
             }
+
             override fun onFailure(error: CredentialsManagerException) {
                 // No credentials were previously saved or they couldn't be refreshed
             }
@@ -140,12 +142,7 @@ class CharitiesFragment : Fragment() {
 
         return ComposeView(requireContext()).apply {
             setContent {
-                if(viewModel.error.value != null){
-                    Text(viewModel.error.value!!)
-                }
-                else {
-                    CharitiesScreen()
-                }
+                CharitiesScreen()
             }
         }
     }
@@ -158,17 +155,18 @@ class CharitiesFragment : Fragment() {
             Column(
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)
             ) {
+
                 CharityAppBar(
                     tabSelected = tabSelected,
                     modifier = Modifier.fillMaxWidth(),
                     onProfileClick = {
-                        if(!viewModel.showFilter.value) {
+                        if (!viewModel.showFilter.value) {
                             val action =
                                 CharitiesFragmentDirections.actionCharitiesFragmentToProfileFragment(
                                     viewModel.userId
                                 )
                             findNavController().navigate(action)
-                        } else{
+                        } else {
                             viewModel.showFilter.value = false
                         }
                     },
@@ -177,40 +175,52 @@ class CharitiesFragment : Fragment() {
                     },
                     onTabSelected = { tabSelected = it }
                 )
-                if(!viewModel.showFilter.value) {
+                if (!viewModel.showFilter.value) {
                     when (tabSelected) {
-                        CharitiesScreen.Charities -> GridCharity(
-                            lst = viewModel.charities.value,
-                            modifier = Modifier
-                                .padding(top = 20.dp)
-                                .align(Alignment.CenterHorizontally)
-                        )
+                        CharitiesScreen.Charities -> CharityScreen()
                         CharitiesScreen.Ranking -> RankingScreen()
                     }
-                } else{
-                 FilterScreen()
+                } else {
+                    FilterScreen()
                 }
             }
         }
     }
 
     @Composable
-    fun FilterScreen(){
+    fun FilterScreen() {
         Column(
             modifier = Modifier.fillMaxSize(),
-        ){
+        ) {
             Spacer(modifier = Modifier.fillMaxHeight(0.05f))
             Text(
                 text = "Select charities to show",
                 style = MaterialTheme.typography.h5,
                 modifier = Modifier.fillMaxWidth(),
-                //textAlign = TextAlign.Center
             )
             CharitiesSelector(
                 categories = viewModel.categories,
                 categoriesSelected = viewModel.selected,
                 modifier = Modifier.padding(top = 32.dp)
             )
+        }
+    }
+
+    @ExperimentalFoundationApi
+    @Composable
+    fun CharityScreen() {
+        if (viewModel.error.value != null) {
+            ErrorScreen(text = viewModel.error.value!!)
+        } else {
+            if (viewModel.loading.value) {
+                LoadingScreen()
+            } else {
+                GridCharity(
+                    lst = viewModel.charities.value,
+                    modifier = Modifier
+                        .padding(top = 20.dp)
+                )
+            }
         }
     }
 
@@ -246,12 +256,12 @@ class CharitiesFragment : Fragment() {
                 donated = 60.0
             ),
         )
-        LazyColumn(){
-            itemsIndexed(leaderboard){ index, item ->
-                    LeaderBoardItem(item = item)
-                }
+        LazyColumn() {
+            itemsIndexed(leaderboard) { index, item ->
+                LeaderBoardItem(item = item)
             }
         }
+    }
 
     @ExperimentalFoundationApi
     @Composable
@@ -269,7 +279,10 @@ class CharitiesFragment : Fragment() {
                     charity = item,
                     onClick = {
                         val action = CharitiesFragmentDirections
-                            .actionCharitiesFragmentToCharityDetailFragment(item.id, viewModel.userId)
+                            .actionCharitiesFragmentToCharityDetailFragment(
+                                item.id,
+                                viewModel.userId
+                            )
                         findNavController()
                             .navigate(action)
                     }

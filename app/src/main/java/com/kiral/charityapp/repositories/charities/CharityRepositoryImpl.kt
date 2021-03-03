@@ -27,13 +27,12 @@ class CharityRepositoryImpl(
             try {
                 emit(DataState.Loading)
                 //only for showing loading state
-                kotlinx.coroutines.delay(5000)
+                kotlinx.coroutines.delay(2000)
                 val response = networkService.getCharities(1, id)
                 if(response.isSuccessful){
                     emit(DataState.Success(charityListMapper.mapToDomainModelList(response.body()!!.charities)))
                 }
             } catch (e: IOException) {
-
                 emit(DataState.Error("An error has occured! Please retry later"))
             }
         }
