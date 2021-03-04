@@ -39,6 +39,10 @@ constructor(
 
     val showFilter = mutableStateOf(false)
 
+    init{
+
+    }
+
     fun getCharities(id: Int, region: String) {
         charityRepository.search(id, region).onEach {
             when (it) {

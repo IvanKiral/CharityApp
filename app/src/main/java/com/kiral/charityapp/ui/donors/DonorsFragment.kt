@@ -1,14 +1,15 @@
 package com.kiral.charityapp.ui.donors
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -18,6 +19,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -37,6 +39,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.auth0.android.Auth0
 import com.kiral.charityapp.R
+import com.kiral.charityapp.ui.components.ErrorScreen
 import com.kiral.charityapp.ui.components.ProfileImageWithBorder
 import com.kiral.charityapp.ui.theme.CharityTheme
 import com.kiral.charityapp.ui.theme.TextOptionSubtitle
@@ -66,7 +69,11 @@ class DonorsFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 CharityTheme {
-                    DonorsScreen()
+                    if (viewModel.error.value == null) {
+                        DonorsScreen()
+                    } else {
+                        ErrorScreen(text = viewModel.error.value!!)
+                    }
                 }
             }
         }
@@ -75,14 +82,13 @@ class DonorsFragment : Fragment() {
     @Composable
     fun DonorsScreen() {
         val donorList = viewModel.charityDonors
-        Column(
-            modifier = Modifier
+        Box(
+            modifier = Modifier.fillMaxSize()
         ) {
-
             LazyColumn(
-                modifier = Modifier
+                modifier = Modifier.fillMaxSize()
             ) {
-                item{
+                item {
                     Text(
                         text = "Donors",
                         style = MaterialTheme.typography.h5,
@@ -100,7 +106,7 @@ class DonorsFragment : Fragment() {
                     if ((index + 1) >= (viewModel.page.value * DONORS_PAGE_SIZE) && !viewModel.loading.value) {
                         viewModel.nextPage(args.charityId)
                     }
-                    Log.i("LazyColumnIndex", "index is $index")
+                    val topPadding = if (index == 0) 16.dp else 8.dp
                     ProfileCard(
                         imageBitmap = donor.email.let { e ->
                             val img = loadPicture(
@@ -111,9 +117,22 @@ class DonorsFragment : Fragment() {
                         },
                         name = donor.name,
                         donated = donor.donated.Convert(),
-                        modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp)
+                        modifier = Modifier.padding(
+                            start = 16.dp,
+                            end = 16.dp,
+                            top = topPadding,
+                            bottom = 8.dp
+                        )
                     )
+
                 }
+            }
+            if (viewModel.loading.value) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .size(48.dp)
+                        .align(Alignment.BottomCenter)
+                )
             }
         }
     }

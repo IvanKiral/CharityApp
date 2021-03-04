@@ -10,11 +10,11 @@ import kotlinx.coroutines.flow.Flow
 interface CharityRepository {
     fun search(id: Int, region: String): Flow<DataState<List<CharityListItem>>>
 
-    suspend fun get(id: Int, donorId: Int): Charity
+    fun get(id: Int, donorId: Int): Flow<DataState<Charity>>
 
-    suspend fun getProject(id: Int, donorId: Int): Project
+    fun getProject(id: Int, donorId: Int): Flow<DataState<Project>>
 
-    suspend fun makeDonationToCharity(charityId: Int, donorId: Int, projectId:Int?, value: Double): Boolean
+    fun makeDonationToCharity(charityId: Int, donorId: Int, projectId:Int?, value: Double): Flow<DataState<Boolean>>
 
-    suspend fun getCharityDonors(charityId: Int, page: Int): List<Donor>
+    fun getCharityDonors(charityId: Int, page: Int): Flow<DataState<List<Donor>>>
 }

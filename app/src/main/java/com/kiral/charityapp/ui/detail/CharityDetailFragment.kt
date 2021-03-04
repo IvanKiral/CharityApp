@@ -52,9 +52,11 @@ import com.kiral.charityapp.domain.model.CharityProject
 import com.kiral.charityapp.ui.components.AlertDialogWithChoice
 import com.kiral.charityapp.ui.components.DonationBox
 import com.kiral.charityapp.ui.components.DonationRow
+import com.kiral.charityapp.ui.components.ErrorScreen
 import com.kiral.charityapp.ui.components.ExpandableText
 import com.kiral.charityapp.ui.components.InformationAlertDialog
 import com.kiral.charityapp.ui.components.InformationBox
+import com.kiral.charityapp.ui.components.LoadingScreen
 import com.kiral.charityapp.ui.components.SingleChoicePicker
 import com.kiral.charityapp.ui.theme.BottomSheetShape
 import com.kiral.charityapp.ui.theme.ButtonBlue
@@ -94,12 +96,20 @@ class CharityDetailFragment : Fragment() {
     @ExperimentalMaterialApi
     @Composable
     fun CharityDetailScreen(charity: androidx.compose.runtime.State<Charity?>) {
-        CharityTheme() {
-            Column {
-                charity.value?.let { c ->
-                    CharityDetailHeader(c.imgSrc, c.donorDonated)
-                    CharityDetailBody(c, modifier = Modifier.offset(y = -20.dp))
+        CharityTheme {
+            if (viewModel.error.value == null) {
+                if (viewModel.loading.value) {
+                    LoadingScreen()
+                } else {
+                    Column {
+                        charity.value?.let { c ->
+                            CharityDetailHeader(c.imgSrc, c.donorDonated)
+                            CharityDetailBody(c, modifier = Modifier.offset(y = -20.dp))
+                        }
+                    }
                 }
+            } else {
+                ErrorScreen(text = viewModel.error.value!!)
             }
         }
     }
@@ -183,16 +193,16 @@ class CharityDetailFragment : Fragment() {
                 )
 
                 ExpandableText(
-                    text = buildAnnotatedString{
-                        withStyle(SpanStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold)){
+                    text = buildAnnotatedString {
+                        withStyle(SpanStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold)) {
                             append("Our story\n")
                         }
                         append(charity.description + "\n\n")
-                        withStyle(SpanStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold)){
+                        withStyle(SpanStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold)) {
                             append("How donation helps\n")
                         }
                         append(charity.howDonationHelps + "\n\n")
-                        withStyle(SpanStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold)){
+                        withStyle(SpanStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold)) {
                             append("Why donate\n")
                         }
                         append(charity.whyToDonate)

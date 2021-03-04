@@ -24,20 +24,20 @@ interface NetworkService {
     suspend fun getCharity(
         @Query("charityId") charityId: Int,
         @Query("donorId") donorId: Int
-    ): CharityDto
+    ): Response<CharityDto?>
 
     @GET("charity_goal")
     suspend fun getCharityGoal(
         @Query("charity_goal_id") charityId: Int,
         @Query("donor_id") donorId: Int
-    ): CharityGoalDto
+    ): Response<CharityGoalDto>
 
     @GET("charity/{charityId}/donors/{page}")
     suspend fun getCharityDonors(
         @Path("charityId") charityId: Int,
         @Path("page") page: Int
-    ): DonorsResponse
+    ): Response<DonorsResponse>
 
     @PUT("/donate")
-    suspend fun donate(@Body donation: DonationDto):Response<DonorsResponse>
+    suspend fun donate(@Body donation: DonationDto): Response<DonorsResponse>
 }

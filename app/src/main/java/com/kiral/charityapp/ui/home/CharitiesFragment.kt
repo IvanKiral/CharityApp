@@ -128,7 +128,6 @@ class CharitiesFragment : Fragment() {
                             Auth.withUserEmail(account, result.accessToken) { email ->
                                 viewModel.getId(email)
                                 Log.i("CharitiesFragment", "inShowUser")
-
                             }
                         }
                     }

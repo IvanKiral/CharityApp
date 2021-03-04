@@ -31,37 +31,50 @@ class CharityRepositoryImpl(
                 val response = networkService.getCharities(1, id)
                 if(response.isSuccessful){
                     emit(DataState.Success(charityListMapper.mapToDomainModelList(response.body()!!.charities)))
+                } else {
+                    emit(DataState.Error("An error has occured! Please retry later."))
                 }
             } catch (e: IOException) {
-                emit(DataState.Error("An error has occured! Please retry later"))
+                emit(DataState.Error("An error has occured! Please retry later."))
             }
         }
 
-    override suspend fun get(id: Int, donorId: Int): Charity {
+    override fun get(id: Int, donorId: Int): Flow<DataState<Charity>> = flow {
         try {
-            val charity = networkService.getCharity(id, donorId)
-            return charityMapper.mapToDomainModel(charity)
-        } catch (e: Throwable) {
-            throw e
+            emit(DataState.Loading)
+            val response = networkService.getCharity(id, donorId)
+            if(response.isSuccessful) {
+                emit(DataState.Success(charityMapper.mapToDomainModel(response.body()!!)))
+            } else {
+                emit(DataState.Error("An error has occured! Please retry later."))
+            }
+        } catch (e: IOException) {
+            emit(DataState.Error("An error has occured! Please retry later."))
         }
     }
 
-    override suspend fun getProject(id: Int, donorId: Int): Project {
+    override fun getProject(id: Int, donorId: Int): Flow<DataState<Project>> = flow {
         try {
-            val charityGoal = networkService.getCharityGoal(id, donorId)
-            return charityGoalMapper.mapToDomainModel(charityGoal)
+            emit(DataState.Loading)
+            val response = networkService.getCharityGoal(id, donorId)
+            if(response.isSuccessful) {
+                emit(DataState.Success(charityGoalMapper.mapToDomainModel(response.body()!!)))
+            } else {
+                emit(DataState.Error("An error has occured! Please retry later."))
+            }
         } catch (e: Throwable) {
-            throw e
+            emit(DataState.Error("An error has occured! Please retry later."))
         }
     }
 
-    override suspend fun makeDonationToCharity(
+    override fun makeDonationToCharity(
         charityId: Int,
         donorId: Int,
         projectId: Int?,
         value: Double
-    ): Boolean {
+    ): Flow<DataState<Boolean>> = flow {
         try {
+            emit(DataState.Loading)
             val result = networkService.donate(
                 DonationDto(
                     donorId = donorId,
@@ -70,18 +83,28 @@ class CharityRepositoryImpl(
                     sum = value
                 )
             )
-            return result.code() == 200
+            if(result.isSuccessful){
+                emit(DataState.Success(true))
+            }
+            else{
+             emit(DataState.Error("Ooops! Something went wrong! Please try your payment later"))
+            }
         } catch (e: Throwable) {
-            return false
+            emit(DataState.Error("Ooops! Something went wrong! Please try your payment later"))
         }
     }
 
-    override suspend fun getCharityDonors(charityId: Int, page: Int): List<Donor> {
+    override fun getCharityDonors(charityId: Int, page: Int): Flow<DataState<List<Donor>>> =  flow {
         try {
-            val donorsResponse = networkService.getCharityDonors(charityId, page)
-            return donorsMapper.mapToDomainModelList(donorsResponse.donors)
+            emit(DataState.Loading)
+            val response = networkService.getCharityDonors(charityId, page)
+            if(response.isSuccessful){
+                emit(DataState.Success(donorsMapper.mapToDomainModelList(response.body()!!.donors)))
+            } else {
+                emit(DataState.Error("An error has occured! Please retry later."))
+            }
         } catch (e: Throwable) {
-            throw e
+            emit(DataState.Error("An error has occured! Please retry later."))
         }
     }
 }

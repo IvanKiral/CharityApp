@@ -93,8 +93,7 @@ class ProjectDetailFragment : Fragment() {
     fun CharityDetailScreen() {
         CharityTheme() {
             Column {
-                val project = viewModel.project
-                project.value?.let { p ->
+                viewModel.project.value?.let { p ->
                     CharityDetailHeader(p.charityImage, p.donorDonated)
                     CharityDetailBody(p, modifier = Modifier.offset(y = -20.dp))
                 }
