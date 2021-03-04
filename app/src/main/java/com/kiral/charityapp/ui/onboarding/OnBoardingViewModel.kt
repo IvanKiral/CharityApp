@@ -1,18 +1,20 @@
 package com.kiral.charityapp.ui.onboarding
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.kiral.charityapp.domain.enums.DonationFrequency
 import com.kiral.charityapp.domain.model.Profile
+import com.kiral.charityapp.network.DataState
 import com.kiral.charityapp.repositories.charities.ProfileRepository
 import com.kiral.charityapp.ui.BaseApplication
 import com.kiral.charityapp.utils.DonationValues
 import com.kiral.charityapp.utils.getCountries
 import com.kiral.charityapp.utils.global_categories
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,6 +27,9 @@ constructor(
 ): AndroidViewModel(application){
 
     val categories = global_categories
+
+    val loading = mutableStateOf(false)
+    val error = mutableStateOf<String?>(null)
 
     lateinit var profile: Profile
 
@@ -58,11 +63,12 @@ constructor(
             email = email,
             name = "",
             donations = 0,
-            charities = "",
+            categories = listOf(),
             region = "",
             credit = 0.0,
-            automaticDonations = false,
-            automaticDonationsValue = 0.0,
+            regularDonationActive = false,
+            regularDonationValue = 0.0,
+            regularDonationFrequency = 1,
             badges = listOf()
         )
     }
@@ -73,29 +79,36 @@ constructor(
     }
 
     fun addCharitiesTypes(){
-        profile.charities = selected.foldIndexed(
+        /*profile.categories = selected.foldIndexed(
             "",
             { index, result, sel ->
                 if(sel) result + categories[index] + (if(index != selected.filter { it == true }.size - 1) ";" else "")
                 else result + ""
             }
-        )
+        )*/
     }
 
     fun addRegularPayments(){
-        profile.automaticDonations = if (amountItems.get(selectedAmount.value) > 0) true else false
-        profile.automaticDonationTimeFrequency = intervalItems.get(selectedInterval.value)
-        profile.automaticDonationsValue = amountItems.get(selectedAmount.value)
+        profile.regularDonationActive = if (amountItems.get(selectedAmount.value) > 0) true else false
+        profile.regularDonationFrequency = selectedInterval.value
+        profile.regularDonationValue = amountItems.get(selectedAmount.value)
     }
 
     fun register(){
-        viewModelScope.launch {
-            Log.i("onboardingview", "tu som")
-            if (profileRepository.register(profile)){
-                Log.i("onboardingview", "po registracii")
-                navigateToCharityFragment.value = true
+        profileRepository.register(profile).onEach { state ->
+            when(state){
+                is DataState.Loading -> {
+                    loading.value = true
+                }
+                is DataState.Success -> {
+                    loading.value = false
+                    navigateToCharityFragment.value = true
+                }
+                is DataState.Error -> {
+                    error.value = state.error
+                }
             }
-        }
+        }.launchIn(viewModelScope)
     }
 
     fun setName(value: String){

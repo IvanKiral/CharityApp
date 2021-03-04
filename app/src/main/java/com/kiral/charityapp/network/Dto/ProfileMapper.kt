@@ -12,25 +12,27 @@ class ProfileMapper: Mapper<ProfileDto, Profile>{
             donations = model.donations,
             credit = model.credit,
             region = model.region,
-            charities = "",
-            automaticDonations = model.repeatActive,
-            automaticDonationTimeFrequency = model.repeatFrequency,
-            automaticDonationsValue = model.repeatValue,
+            categories = model.categories ,
+            regularDonationActive = model.repeatActive,
+            regularDonationFrequency = model.repeatFrequency,
+            regularDonationValue = model.repeatValue,
             badges = listOf()
         )
     }
 
     override fun mapFromDomainModel(domainModel: Profile): ProfileDto {
         return ProfileDto(
-            id = domainModel.id!!,
+            id = domainModel.id,
             name = domainModel.name,
             email = domainModel.email,
             donations = domainModel.donations,
             region = domainModel.region,
             credit = domainModel.credit,
-            repeatActive = domainModel.automaticDonations,
-            repeatFrequency = domainModel.automaticDonationTimeFrequency,
-            repeatValue = domainModel.automaticDonationsValue,
+            categories = domainModel.categories,
+            repeatActive = domainModel.regularDonationActive,
+            repeatFrequency = domainModel.regularDonationFrequency,
+            repeatValue = domainModel.regularDonationValue,
         )
     }
+
 }

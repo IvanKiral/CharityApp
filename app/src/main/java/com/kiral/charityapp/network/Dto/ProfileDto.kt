@@ -18,6 +18,9 @@ data class ProfileDto(
     @SerializedName("region")
     val region: String,
 
+    @SerializedName("categories")
+    val categories: List<Int>,
+
     @SerializedName("donations")
     val donations: Int,
 
@@ -28,5 +31,5 @@ data class ProfileDto(
     val repeatValue: Double,
 
     @SerializedName("repeat_frequency")
-    val repeatFrequency: String
+    val repeatFrequency: Int
 )

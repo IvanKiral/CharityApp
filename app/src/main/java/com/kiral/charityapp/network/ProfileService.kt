@@ -2,6 +2,7 @@ package com.kiral.charityapp.network
 
 import com.kiral.charityapp.network.Dto.LoginDto
 import com.kiral.charityapp.network.Dto.ProfileDto
+import com.kiral.charityapp.network.Dto.ProfilePostDto
 import com.kiral.charityapp.network.Responses.LoginResponse
 import retrofit2.Response
 import retrofit2.http.Body
@@ -19,5 +20,8 @@ interface ProfileService {
     suspend fun register(@Body loginDto: ProfileDto): Response<LoginResponse>
 
     @GET("donor/{donorId}")
-    suspend fun getProfile(@Path("donorId") donorId: Int): ProfileDto
+    suspend fun getProfile(@Path("donorId") donorId: Int): Response<ProfileDto>
+
+    @PUT("user")
+    suspend fun updateProfile(@Body profileDto: ProfilePostDto): Response<Unit>
 }

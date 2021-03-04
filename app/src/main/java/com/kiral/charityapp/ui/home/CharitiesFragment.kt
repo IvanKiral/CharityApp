@@ -122,6 +122,7 @@ class CharitiesFragment : Fragment() {
                 uId.asLiveData().observe(viewLifecycleOwner) {
                     if (it != null) {
                         if (it != -1) {
+                            Log.i("CharitiesFragment", "$it")
                             viewModel.userId = it
                             viewModel.getCharities(it, "svk")
                         } else {

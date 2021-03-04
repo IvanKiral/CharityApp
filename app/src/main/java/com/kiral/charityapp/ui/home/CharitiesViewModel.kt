@@ -13,7 +13,6 @@ import com.kiral.charityapp.utils.global_categories
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -62,9 +61,13 @@ constructor(
     }
 
     fun getId(email: String) {
-        viewModelScope.launch {
-            userId = profileRepository.login(email)!!
-            getCharities(userId, "svk")
-        }
+        profileRepository.login(email).onEach { state ->
+            when(state){
+                is DataState.Success -> {
+                    userId = state.data
+                    getCharities(userId, "svk")
+                }
+            }
+        }.launchIn(viewModelScope)
     }
 }

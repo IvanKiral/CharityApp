@@ -2,7 +2,6 @@ package com.kiral.charityapp.ui.profile
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -99,7 +98,6 @@ class ProfileFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         return ComposeView(requireContext()).apply {
-            Log.i("ProfileFragment", "OOOPS")
             setContent {
                 CharityTheme {
                     if (viewModel.profile.value != null) {
@@ -184,10 +182,10 @@ class ProfileFragment : Fragment() {
                     )
                     OptionsMenu(
                         setDonationDialog = setDonationDialog,
-                        regularDonationValue = p.automaticDonationsValue,
-                        regularDonationFrequency = p.automaticDonationTimeFrequency,
+                        regularDonationValue = p.regularDonationValue,
+                        regularDonationFrequency = p.regularDonationFrequency,
                         region = p.region,
-                        isSwitched = p.automaticDonations,
+                        isSwitched = p.regularDonationActive,
                         switchFunction = { b ->
                             viewModel.setActive(b)
                         },
@@ -210,8 +208,8 @@ class ProfileFragment : Fragment() {
                             setShowDialog = setDonationDialog,
                             onConfirmButton = {
                                 viewModel.setRegularPayment(
-                                    moneyValues.get(selectedMoney),
-                                    frequencyValues.get(selectedFrequency)
+                                    args.id,
+                                    moneyValues.get(selectedMoney)
                                 )
                                 setDonationDialog(false)
                             }
@@ -362,7 +360,7 @@ class ProfileFragment : Fragment() {
     fun OptionsMenu(
         modifier: Modifier = Modifier,
         regularDonationValue: Double,
-        regularDonationFrequency: String,
+        regularDonationFrequency: Int,
         region: String,
         isSwitched: Boolean,
         switchFunction: (Boolean) -> Unit,
@@ -373,7 +371,7 @@ class ProfileFragment : Fragment() {
         ) {
             Option(
                 title = stringResource(R.string.ProfileFragment_RegularDonations),
-                description = "${regularDonationValue.Convert()} €/${regularDonationFrequency}",
+                description = "${regularDonationValue.Convert()} €/${DonationFrequency.values()[regularDonationFrequency - 1]}",
                 hasSwitch = true,
                 isSwitched = isSwitched,
                 switchFunction = switchFunction,

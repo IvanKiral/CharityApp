@@ -2,13 +2,22 @@ package com.kiral.charityapp.repositories.charities
 
 import com.kiral.charityapp.domain.model.Badge
 import com.kiral.charityapp.domain.model.Profile
+import com.kiral.charityapp.network.DataState
+import kotlinx.coroutines.flow.Flow
 
 interface ProfileRepository{
-    suspend fun login(email: String): Int?
+    fun login(email: String): Flow<DataState<Int>>
 
-    suspend fun register(profile: Profile): Boolean
+    fun register(profile: Profile): Flow<DataState<Boolean>>
 
-    suspend fun getProfile(id: Int): Profile
+    fun getProfile(id: Int): Flow<DataState<Profile>>
 
-    suspend fun getBadges(donorId: Int): List<Badge>
+    fun updateRegularDonation(
+        id: Int,
+        regularDonationActive: Boolean,
+        regularDonationValue: Double?,
+        regularDonationFrequency: Int?
+    ): Flow<DataState<Boolean>>
+
+    fun getBadges(donorId: Int): List<Badge>
 }
