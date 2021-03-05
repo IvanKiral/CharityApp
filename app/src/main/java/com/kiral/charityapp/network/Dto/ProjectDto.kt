@@ -2,11 +2,11 @@ package com.kiral.charityapp.network.Dto
 
 import com.google.gson.annotations.SerializedName
 
-data class CharityGoalDto(
+data class ProjectDto(
     @SerializedName("id")
     val id: Int,
 
-    @SerializedName("charity_id")
+    @SerializedName("charityId")
     val charityId: Int,
 
     @SerializedName("imgSrc")
@@ -21,10 +21,10 @@ data class CharityGoalDto(
     @SerializedName("description")
     val description: String,
 
-    @SerializedName("actual_sum")
+    @SerializedName("actualSum")
     val actualSum: Double,
 
-    @SerializedName("goal_sum")
+    @SerializedName("goalSum")
     val goalSum: Double,
 
     @SerializedName("donorDonated")

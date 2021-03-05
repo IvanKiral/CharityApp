@@ -1,11 +1,10 @@
 package com.kiral.charityapp.di
 
 import com.google.gson.GsonBuilder
-import com.kiral.charityapp.network.Dto.CharityGoalMapper
-
 import com.kiral.charityapp.network.Dto.CharityListItemMapper
 import com.kiral.charityapp.network.Dto.CharityMapper
 import com.kiral.charityapp.network.Dto.DonorsMapper
+import com.kiral.charityapp.network.Dto.ProjectMapper
 import com.kiral.charityapp.network.NetworkService
 import com.kiral.charityapp.network.ProfileService
 import com.kiral.charityapp.utils.PrivateConstants
@@ -37,8 +36,8 @@ object NetworkModule{
 
     @Singleton
     @Provides
-    fun provideCharityGoalMapper(): CharityGoalMapper {
-        return CharityGoalMapper()
+    fun provideCharityGoalMapper(): ProjectMapper {
+        return ProjectMapper()
     }
 
     @Singleton

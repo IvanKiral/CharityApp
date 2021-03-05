@@ -41,6 +41,6 @@ data class CharityDto(
     @SerializedName("peopleDonated")
     val peopleDonated: Int,
 
-    @SerializedName("charity_goals")
+    @SerializedName("projects")
     val projects: List<ProjectListItemDto>
 )

@@ -21,8 +21,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -68,7 +66,6 @@ import com.kiral.charityapp.ui.theme.TextBoxBlackTitle
 import com.kiral.charityapp.ui.theme.TextShowBadges
 import com.kiral.charityapp.utils.Auth
 import com.kiral.charityapp.utils.Convert
-import com.kiral.charityapp.utils.DonationValues
 import com.kiral.charityapp.utils.loadPicture
 import com.kiral.charityapp.utils.makeGravatrLink
 import dagger.hilt.android.AndroidEntryPoint
@@ -111,14 +108,8 @@ class ProfileFragment : Fragment() {
     @Composable
     fun ProfileScreen(profile: State<Profile?>) {
         profile.value?.let { p ->
-            val moneyValues = DonationValues
-            val (selectedMoney, setSelectedMoney) = remember { mutableStateOf(0) }
-            val frequencyValues = DonationFrequency.values().map { it.name }
-            val (selectedFrequency, setSelectedFreuency) = remember { mutableStateOf(0) }
-            val (donationDialog, setDonationDialog) = remember { mutableStateOf(false) }
             Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                 ConstraintLayout(
-
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(horizontal = 32.dp),
@@ -171,7 +162,7 @@ class ProfileFragment : Fragment() {
                             }
                     )
                     BoxRow(
-                        credit = "${p.credit.Convert()} €",
+                        credit = "${ p.credit.Convert() } €",
                         donations = p.donations.toString(),
                         modifier = Modifier
                             .fillMaxWidth()
@@ -181,7 +172,7 @@ class ProfileFragment : Fragment() {
                         context = activity?.applicationContext!!
                     )
                     OptionsMenu(
-                        setDonationDialog = setDonationDialog,
+                        setDonationDialog = { viewModel.setRegularDonationDialog(it) },
                         regularDonationValue = p.regularDonationValue,
                         regularDonationFrequency = p.regularDonationFrequency,
                         region = p.region,
@@ -200,31 +191,27 @@ class ProfileFragment : Fragment() {
                         isShown = viewModel.countryDialog.value,
                         setDialog = { viewModel.setCountryDialog(it) },
                         setCountryText = { /*TODO*/ },
-                        setCountry = { /*TODO*/ },
+                        setCountry = { viewModel.setRegion(it) },
                     )
-                    if (donationDialog) {
+                    if (viewModel.regularDonationDialog.value) {
                         AlertDialogWithChoice(
                             title = "Choose value and frequency of regular donations",
-                            setShowDialog = setDonationDialog,
+                            setShowDialog = { viewModel.setRegularDonationDialog(it) },
                             onConfirmButton = {
-                                viewModel.setRegularPayment(
-                                    args.id,
-                                    moneyValues.get(selectedMoney)
-                                )
-                                setDonationDialog(false)
+                                viewModel.setRegularPayment(args.id)
                             }
                         ) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 SingleChoicePicker(
-                                    items = moneyValues.map { v -> v.Convert() + " €" },
-                                    selectedItem = selectedMoney,
-                                    setSelectedItem = setSelectedMoney,
+                                    items = viewModel.moneyValues.map { v -> v.Convert() + " €" },
+                                    selectedItem = viewModel.selectedMoney.value,
+                                    setSelectedItem = { viewModel.setSelectedMoney(it) },
                                     textAlignment = Alignment.End
                                 )
                                 SingleChoicePicker(
-                                    items = frequencyValues,
-                                    selectedItem = selectedFrequency,
-                                    setSelectedItem = setSelectedFreuency,
+                                    items = viewModel.frequencyValues,
+                                    selectedItem = viewModel.selectedFrequency.value,
+                                    setSelectedItem = { viewModel.setSelectedFrequency(it) },
                                     textAlignment = Alignment.Start,
                                     modifier = Modifier.padding(start = 8.dp)
                                 )
@@ -369,9 +356,10 @@ class ProfileFragment : Fragment() {
         Column(
             modifier = modifier
         ) {
+
             Option(
                 title = stringResource(R.string.ProfileFragment_RegularDonations),
-                description = "${regularDonationValue.Convert()} €/${DonationFrequency.values()[regularDonationFrequency - 1]}",
+                description = "${regularDonationValue.Convert()} €/${DonationFrequency.values()[regularDonationFrequency]}",
                 hasSwitch = true,
                 isSwitched = isSwitched,
                 switchFunction = switchFunction,

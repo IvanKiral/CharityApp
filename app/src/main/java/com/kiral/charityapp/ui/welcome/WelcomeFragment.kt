@@ -125,6 +125,7 @@ class WelcomeFragment : Fragment() {
                     val accessToken = result.accessToken
                     manager.saveCredentials(result)
                     Auth.withUserEmail(account, accessToken) { email ->
+                        Log.i("AppDebug", "in success")
                         viewModel.getProfileId(email)
                     }
                 }

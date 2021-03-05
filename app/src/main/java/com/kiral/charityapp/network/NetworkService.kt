@@ -1,8 +1,8 @@
 package com.kiral.charityapp.network
 
 import com.kiral.charityapp.network.Dto.CharityDto
-import com.kiral.charityapp.network.Dto.CharityGoalDto
 import com.kiral.charityapp.network.Dto.DonationDto
+import com.kiral.charityapp.network.Dto.ProjectDto
 import com.kiral.charityapp.network.Responses.CharityListResponse
 import com.kiral.charityapp.network.Responses.DonorsResponse
 import retrofit2.Response
@@ -17,7 +17,8 @@ interface NetworkService {
     @GET("charities")
     suspend fun getCharities(
         @Query("page") page: Int,
-        @Query("donorId") donorId: Int
+        @Query("donorId") donorId: Int,
+        @Query("categories") categories: List<Int>
     ): Response<CharityListResponse>
 
     @GET("charity")
@@ -26,11 +27,11 @@ interface NetworkService {
         @Query("donorId") donorId: Int
     ): Response<CharityDto?>
 
-    @GET("charity_goal")
+    @GET("project")
     suspend fun getCharityGoal(
-        @Query("charity_goal_id") charityId: Int,
-        @Query("donor_id") donorId: Int
-    ): Response<CharityGoalDto>
+        @Query("projectId") charityId: Int,
+        @Query("donorId") donorId: Int
+    ): Response<ProjectDto>
 
     @GET("charity/{charityId}/donors/{page}")
     suspend fun getCharityDonors(

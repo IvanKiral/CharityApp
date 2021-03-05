@@ -5,11 +5,11 @@ import com.kiral.charityapp.domain.model.CharityListItem
 import com.kiral.charityapp.domain.model.Donor
 import com.kiral.charityapp.domain.model.Project
 import com.kiral.charityapp.network.DataState
-import com.kiral.charityapp.network.Dto.CharityGoalMapper
 import com.kiral.charityapp.network.Dto.CharityListItemMapper
 import com.kiral.charityapp.network.Dto.CharityMapper
 import com.kiral.charityapp.network.Dto.DonationDto
 import com.kiral.charityapp.network.Dto.DonorsMapper
+import com.kiral.charityapp.network.Dto.ProjectMapper
 import com.kiral.charityapp.network.NetworkService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -17,7 +17,7 @@ import java.io.IOException
 
 class CharityRepositoryImpl(
     private val charityMapper: CharityMapper,
-    private val charityGoalMapper: CharityGoalMapper,
+    private val charityGoalMapper: ProjectMapper,
     private val charityListMapper: CharityListItemMapper,
     private val donorsMapper: DonorsMapper,
     private val networkService: NetworkService
@@ -28,7 +28,7 @@ class CharityRepositoryImpl(
                 emit(DataState.Loading)
                 //only for showing loading state
                 kotlinx.coroutines.delay(2000)
-                val response = networkService.getCharities(1, id)
+                val response = networkService.getCharities(1, id, listOf(1,2,3))
                 if(response.isSuccessful){
                     emit(DataState.Success(charityListMapper.mapToDomainModelList(response.body()!!.charities)))
                 } else {

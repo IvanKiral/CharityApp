@@ -2,19 +2,25 @@ package com.kiral.charityapp.network.Dto
 
 import com.google.gson.annotations.SerializedName
 
-data class ProfilePostDto (
+data class ProfilePostDto(
     @SerializedName("userId")
     val userId: Int,
 
     @SerializedName("regularDonationActive")
-    val regularDonationActive: Boolean?,
+    val regularDonationActive: Boolean? = null,
 
     @SerializedName("regularDonationValue")
-    val regularDonationValue: Double?,
+    val regularDonationValue: Double? = null,
 
     @SerializedName("regularDonationFrequency")
-    val regularDonationFrequency: Int?,
+    val regularDonationFrequency: Int? = null,
 
     @SerializedName("categories")
-    val categories: List<Int>?
+    val categories: List<Int>? = null,
+
+    @SerializedName("credit")
+    val credit: Double? = null,
+
+    @SerializedName("region")
+    val region: String? = null
 )

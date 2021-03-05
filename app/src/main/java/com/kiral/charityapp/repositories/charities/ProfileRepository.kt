@@ -19,5 +19,25 @@ interface ProfileRepository{
         regularDonationFrequency: Int?
     ): Flow<DataState<Boolean>>
 
+    fun updateRegularDonationActive(
+        id: Int,
+        regularDonationActive: Boolean,
+    ): Flow<DataState<Boolean>>
+
+    fun updateCategories(
+        id: Int,
+        categories: List<Int>,
+    ): Flow<DataState<Boolean>>
+
+    fun updateRegion(
+        id: Int,
+        region: String,
+    ): Flow<DataState<Boolean>>
+
+    fun addCredit(
+        id: Int,
+        credit: Double,
+    ): Flow<DataState<Boolean>>
+
     fun getBadges(donorId: Int): List<Badge>
 }

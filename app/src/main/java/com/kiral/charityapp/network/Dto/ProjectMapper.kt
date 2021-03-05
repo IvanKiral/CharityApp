@@ -3,8 +3,8 @@ package com.kiral.charityapp.network.Dto
 import com.kiral.charityapp.domain.model.Project
 import com.kiral.charityapp.domain.util.Mapper
 
-class CharityGoalMapper:Mapper<CharityGoalDto, Project> {
-    override fun mapToDomainModel(model: CharityGoalDto): Project {
+class ProjectMapper: Mapper<ProjectDto, Project> {
+    override fun mapToDomainModel(model: ProjectDto): Project {
         return Project(
             id = model.id,
             charityId =  model.charityId,
@@ -20,7 +20,7 @@ class CharityGoalMapper:Mapper<CharityGoalDto, Project> {
         )
     }
 
-    override fun mapFromDomainModel(domainModel: Project): CharityGoalDto {
+    override fun mapFromDomainModel(domainModel: Project): ProjectDto {
         TODO("Not yet implemented")
     }
 

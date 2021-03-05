@@ -1,5 +1,6 @@
 package com.kiral.charityapp.ui.welcome
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -33,17 +34,16 @@ constructor(
 
     fun getProfileId(email: String) {
         this.email = email
+        Log.i("AppDebug", "in viewModel")
         profileRepository.login(email).onEach { state ->
             when (state) {
                 is DataState.Success -> {
                     donor_id = state.data
-                    if (donor_id != null) {
-                        shouldNavigateToHomeFragment.value = true
-                        write_id(donor_id!!)
-                    } else {
-                        shouldNavigateToHomeFragment.value = false
-                    }
-
+                    shouldNavigateToHomeFragment.value = true
+                    write_id(donor_id!!)
+                }
+                is DataState.HttpsErrorCode -> {
+                    shouldNavigateToHomeFragment.value = false
                 }
             }
         }.launchIn(viewModelScope)
