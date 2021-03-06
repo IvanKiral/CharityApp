@@ -4,6 +4,7 @@ import com.google.gson.GsonBuilder
 import com.kiral.charityapp.network.Dto.CharityListItemMapper
 import com.kiral.charityapp.network.Dto.CharityMapper
 import com.kiral.charityapp.network.Dto.DonorsMapper
+import com.kiral.charityapp.network.Dto.LeaderboardMapper
 import com.kiral.charityapp.network.Dto.ProjectMapper
 import com.kiral.charityapp.network.NetworkService
 import com.kiral.charityapp.network.ProfileService
@@ -28,6 +29,7 @@ object NetworkModule{
         return CharityListItemMapper()
     }
 
+
     @Singleton
     @Provides
     fun provideCharityMapper(): CharityMapper {
@@ -44,6 +46,12 @@ object NetworkModule{
     @Provides
     fun provideDonorsMapper(): DonorsMapper {
         return DonorsMapper()
+    }
+
+    @Singleton
+    @Provides
+    fun provideLeaderboardMapper(): LeaderboardMapper {
+        return LeaderboardMapper()
     }
 
     @Singleton

@@ -2,7 +2,7 @@ package com.kiral.charityapp.network.Dto
 
 import com.google.gson.annotations.SerializedName
 
-data class DonorDto(
+data class LeaderboardDto(
     @SerializedName("name")
     val name: String,
 
@@ -10,8 +10,5 @@ data class DonorDto(
     val email: String,
 
     @SerializedName("sum")
-    val sum: Double,
-
-    @SerializedName("badges")
-    val badges: List<Int>
+    val sum: Double
 )

@@ -65,7 +65,6 @@ import com.auth0.android.callback.Callback
 import com.auth0.android.result.Credentials
 import com.kiral.charityapp.R
 import com.kiral.charityapp.domain.model.CharityListItem
-import com.kiral.charityapp.domain.model.LeaderBoardProfile
 import com.kiral.charityapp.ui.components.CharitiesSelector
 import com.kiral.charityapp.ui.components.ErrorScreen
 import com.kiral.charityapp.ui.components.LeaderBoardItem
@@ -104,6 +103,7 @@ class CharitiesFragment : Fragment() {
         }
     }
 
+
     @ExperimentalFoundationApi
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -125,6 +125,7 @@ class CharitiesFragment : Fragment() {
                             Log.i("CharitiesFragment", "$it")
                             viewModel.userId = it
                             viewModel.getCharities(it)
+                            viewModel.getLeaderboard()
                         } else {
                             Auth.withUserEmail(account, result.accessToken) { email ->
                                 viewModel.getId(email)
@@ -210,10 +211,10 @@ class CharitiesFragment : Fragment() {
     @ExperimentalFoundationApi
     @Composable
     fun CharityScreen() {
-        if (viewModel.error.value != null) {
-            ErrorScreen(text = viewModel.error.value!!)
+        if (viewModel.charitiesError.value != null) {
+            ErrorScreen(text = viewModel.charitiesError.value!!)
         } else {
-            if (viewModel.loading.value) {
+            if (viewModel.charitiesLoading.value) {
                 LoadingScreen()
             } else {
                 GridCharity(
@@ -227,40 +228,22 @@ class CharitiesFragment : Fragment() {
 
     @Composable
     fun RankingScreen() {
-        val leaderboard = listOf<LeaderBoardProfile>(
-            LeaderBoardProfile(
-                id = 0,
-                order = 1,
-                name = "Ivan",
-                email = "fdsadfas",
-                donated = 150.0
-            ),
-            LeaderBoardProfile(
-                id = 0,
-                order = 2,
-                name = "Alžbeta",
-                email = "fdsadfas",
-                donated = 120.0
-            ),
-            LeaderBoardProfile(
-                id = 0,
-                order = 3,
-                name = "Michaela",
-                email = "fdsadfas",
-                donated = 90.0
-            ),
-            LeaderBoardProfile(
-                id = 0,
-                order = 4,
-                name = "Martin",
-                email = "fdsadfas",
-                donated = 60.0
-            ),
-        )
-        LazyColumn() {
-            itemsIndexed(leaderboard) { index, item ->
-                LeaderBoardItem(item = item)
+        if(viewModel.leaderboardError.value == null) {
+            if(viewModel.leaderboardLoading.value){
+                LoadingScreen()
+            }else {
+                LazyColumn() {
+                    itemsIndexed(viewModel.leaderboard.value) { index, item ->
+                        LeaderBoardItem(
+                            item = item,
+                            index = index + 1
+                        )
+                    }
+                }
             }
+        }
+        else{
+            ErrorScreen(text = viewModel.leaderboardError.value!!)
         }
     }
 

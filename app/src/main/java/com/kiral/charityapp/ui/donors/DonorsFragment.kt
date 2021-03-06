@@ -30,6 +30,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
@@ -39,6 +40,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.auth0.android.Auth0
 import com.kiral.charityapp.R
+import com.kiral.charityapp.domain.model.Badge
 import com.kiral.charityapp.ui.components.ErrorScreen
 import com.kiral.charityapp.ui.components.ProfileImageWithBorder
 import com.kiral.charityapp.ui.theme.CharityTheme
@@ -116,6 +118,7 @@ class DonorsFragment : Fragment() {
                             img.value?.asImageBitmap()
                         },
                         name = donor.name,
+                        badges= donor.badges,
                         donated = donor.donated.Convert(),
                         modifier = Modifier.padding(
                             start = 16.dp,
@@ -141,6 +144,7 @@ class DonorsFragment : Fragment() {
     fun ProfileCard(
         imageBitmap: ImageBitmap?,
         name: String,
+        badges: List<Badge>,
         donated: String,
         modifier: Modifier = Modifier
     ) {
@@ -171,18 +175,22 @@ class DonorsFragment : Fragment() {
                         style = MaterialTheme.typography.body2
                     )
                     Row(modifier = Modifier.padding(top = 4.dp)) {
-                        for (i in 0..2) {
+                        badges.take(3).forEachIndexed { i, b ->
                             Image(
-                                imageVector = ImageVector.vectorResource(id = R.drawable.ic_dog),
-                                contentDescription = "",
-                                modifier = if (i != 0) Modifier.padding(start = 8.dp) else Modifier
+                                imageVector = ImageVector.vectorResource(id = b.iconId),
+                                contentDescription = "Donor badge icon",
+                                contentScale = ContentScale.FillHeight,
+                                modifier = if (i != 0) Modifier.height(18.dp).padding(start = 8.dp)
+                                else Modifier.height(18.dp)
                             )
                         }
-                        Text(
-                            text = "+5",
-                            style = MaterialTheme.typography.body1.copy(color = TextOptionSubtitle),
-                            modifier = Modifier.padding(start = 8.dp)
-                        )
+                        if(badges.size > 3) {
+                            Text(
+                                text = "+ ${(badges.size - 3)}",
+                                style = MaterialTheme.typography.body1.copy(color = TextOptionSubtitle),
+                                modifier = Modifier.padding(start = 8.dp)
+                            )
+                        }
                     }
                 }
                 Divider(

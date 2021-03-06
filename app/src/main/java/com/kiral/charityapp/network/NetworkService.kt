@@ -5,6 +5,7 @@ import com.kiral.charityapp.network.Dto.DonationDto
 import com.kiral.charityapp.network.Dto.ProjectDto
 import com.kiral.charityapp.network.Responses.CharityListResponse
 import com.kiral.charityapp.network.Responses.DonorsResponse
+import com.kiral.charityapp.network.Responses.LeaderboardResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -39,6 +40,12 @@ interface NetworkService {
         @Path("page") page: Int
     ): Response<DonorsResponse>
 
-    @PUT("/donate")
+    @PUT("donate")
     suspend fun donate(@Body donation: DonationDto): Response<DonorsResponse>
+
+    @GET("leaderboard/{userId}")
+    suspend fun getLeaderboard(
+        @Path("userId") userId: Int,
+    ): Response<LeaderboardResponse>
+
 }

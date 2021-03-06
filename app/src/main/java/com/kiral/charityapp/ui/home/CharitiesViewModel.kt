@@ -6,6 +6,7 @@ import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kiral.charityapp.domain.model.CharityListItem
+import com.kiral.charityapp.domain.model.LeaderBoardProfile
 import com.kiral.charityapp.network.DataState
 import com.kiral.charityapp.repositories.charities.CharityRepository
 import com.kiral.charityapp.repositories.charities.ProfileRepository
@@ -23,35 +24,41 @@ constructor(
     private val charityRepository: CharityRepository
 ) : ViewModel() {
     val categories = global_categories
-
     var userId: Int = -1
 
     private val _charities = mutableStateOf<List<CharityListItem>>(ArrayList())
     val charities: State<List<CharityListItem>>
         get() = _charities
 
-    val error = mutableStateOf<String?>(null)
-    val loading = mutableStateOf(false)
+    val charitiesError = mutableStateOf<String?>(null)
+    val charitiesLoading = mutableStateOf(false)
 
     val lst = MutableList(categories.size) { true }
     val selectedCategories = lst.toMutableStateList()
 
     val showFilter = mutableStateOf(false)
 
+    val leaderboard = mutableStateOf<List<LeaderBoardProfile>>(ArrayList())
+
+    val leaderboardError = mutableStateOf<String?>(null)
+    val leaderboardLoading = mutableStateOf(false)
+
+
+
     fun getCharities(id: Int) {
-        error.value = null
+        charitiesError.value = null
         charityRepository.search(id, selectedCategories.mapIndexed { index, v -> if(v) index + 1 else -1}.filter { it > -1 }).onEach {
             when (it) {
                 is DataState.Success<List<CharityListItem>> -> {
-                    loading.value = false
+                    charitiesLoading.value = false
                     _charities.value = it.data
                 }
                 is DataState.Error -> {
-                    loading.value = false
-                    error.value = it.error
+                    charitiesLoading.value = false
+                    charitiesError.value = it.error
                 }
                 is DataState.Loading -> {
-                    loading.value = true
+                    charitiesLoading.value = true
                 }
             }
         }.launchIn(viewModelScope)
@@ -63,6 +70,26 @@ constructor(
                 is DataState.Success -> {
                     userId = state.data
                     getCharities(userId)
+                    getLeaderboard()
+                }
+            }
+        }.launchIn(viewModelScope)
+    }
+
+    fun getLeaderboard() {
+        leaderboardError.value = null
+        charityRepository.getLeaderboard(userId).onEach { state ->
+            when(state){
+                is DataState.Success -> {
+                    leaderboardLoading.value = false
+                    leaderboard.value = state.data
+                }
+                is DataState.Loading -> {
+                    leaderboardLoading.value = true
+                }
+                is DataState.Error -> {
+                    leaderboardLoading.value = false
+                    leaderboardError.value = state.error
                 }
             }
         }.launchIn(viewModelScope)

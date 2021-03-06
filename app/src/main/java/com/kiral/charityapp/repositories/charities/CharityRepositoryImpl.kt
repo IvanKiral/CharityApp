@@ -3,12 +3,14 @@ package com.kiral.charityapp.repositories.charities
 import com.kiral.charityapp.domain.model.Charity
 import com.kiral.charityapp.domain.model.CharityListItem
 import com.kiral.charityapp.domain.model.Donor
+import com.kiral.charityapp.domain.model.LeaderBoardProfile
 import com.kiral.charityapp.domain.model.Project
 import com.kiral.charityapp.network.DataState
 import com.kiral.charityapp.network.Dto.CharityListItemMapper
 import com.kiral.charityapp.network.Dto.CharityMapper
 import com.kiral.charityapp.network.Dto.DonationDto
 import com.kiral.charityapp.network.Dto.DonorsMapper
+import com.kiral.charityapp.network.Dto.LeaderboardMapper
 import com.kiral.charityapp.network.Dto.ProjectMapper
 import com.kiral.charityapp.network.NetworkService
 import kotlinx.coroutines.flow.Flow
@@ -20,6 +22,7 @@ class CharityRepositoryImpl(
     private val charityGoalMapper: ProjectMapper,
     private val charityListMapper: CharityListItemMapper,
     private val donorsMapper: DonorsMapper,
+    private val leaderboardMapper: LeaderboardMapper,
     private val networkService: NetworkService
 ) : CharityRepository {
     override fun search(id: Int, categories: List<Int>): Flow<DataState<List<CharityListItem>>> =
@@ -100,6 +103,20 @@ class CharityRepositoryImpl(
             val response = networkService.getCharityDonors(charityId, page)
             if(response.isSuccessful){
                 emit(DataState.Success(donorsMapper.mapToDomainModelList(response.body()!!.donors)))
+            } else {
+                emit(DataState.Error("An error has occured! Please retry later."))
+            }
+        } catch (e: Throwable) {
+            emit(DataState.Error("An error has occured! Please retry later."))
+        }
+    }
+
+    override fun getLeaderboard(userId: Int): Flow<DataState<List<LeaderBoardProfile>>> = flow {
+        try {
+            emit(DataState.Loading)
+            val response = networkService.getLeaderboard(userId)
+            if(response.isSuccessful){
+                emit(DataState.Success(leaderboardMapper.mapFromDomainModelList(response.body()!!.donors)))
             } else {
                 emit(DataState.Error("An error has occured! Please retry later."))
             }

@@ -3,6 +3,7 @@ package com.kiral.charityapp.di
 import com.kiral.charityapp.network.Dto.CharityListItemMapper
 import com.kiral.charityapp.network.Dto.CharityMapper
 import com.kiral.charityapp.network.Dto.DonorsMapper
+import com.kiral.charityapp.network.Dto.LeaderboardMapper
 import com.kiral.charityapp.network.Dto.ProjectMapper
 import com.kiral.charityapp.network.NetworkService
 import com.kiral.charityapp.repositories.charities.CharityRepository
@@ -25,6 +26,7 @@ class RepositoryModule {
         charityGoalMapper: ProjectMapper,
         charityListItemMapper: CharityListItemMapper,
         donorsMapper: DonorsMapper,
+        leaderboardMapper: LeaderboardMapper,
         networkService: NetworkService
     ): CharityRepository {
         return CharityRepositoryImpl(
@@ -32,6 +34,7 @@ class RepositoryModule {
             charityGoalMapper = charityGoalMapper,
             charityListMapper = charityListItemMapper,
             donorsMapper = donorsMapper,
+            leaderboardMapper = leaderboardMapper,
             networkService = networkService
         )
     }
