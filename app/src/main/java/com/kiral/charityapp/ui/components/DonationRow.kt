@@ -1,6 +1,12 @@
 package com.kiral.charityapp.ui.components
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -20,7 +26,7 @@ fun DonationRow(
     onButtonClick: () -> Unit = {}
 ) {
     Row(
-        modifier = modifier.preferredHeight(58.dp)
+        modifier = modifier.height(58.dp)
     ) {
         Column(
             modifier = Modifier.fillMaxHeight(),

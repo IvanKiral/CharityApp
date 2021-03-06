@@ -8,7 +8,7 @@ class ProjectMapper: Mapper<FakeDonationGoalReponse, Project>{
         return Project(
             id = model.id,
             charityId =  model.charityId,
-            donorId = model.donorId,
+            //donorId = model.donorId,
             name = model.name,
             description = model.description,
             goalSum = model.goalSum,
@@ -25,7 +25,7 @@ class ProjectMapper: Mapper<FakeDonationGoalReponse, Project>{
         return FakeDonationGoalReponse(
             id = domainModel.id,
             charityId =  domainModel.charityId,
-            donorId = domainModel.donorId,
+            //donorId = domainModel.donorId,
             name = domainModel.name,
             description = domainModel.description,
             goalSum = domainModel.goalSum,

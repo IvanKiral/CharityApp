@@ -1,14 +1,15 @@
 package com.kiral.charityapp.ui.donors
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -18,6 +19,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -27,6 +29,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
@@ -36,6 +40,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.auth0.android.Auth0
 import com.kiral.charityapp.R
+import com.kiral.charityapp.domain.model.Badge
+import com.kiral.charityapp.ui.components.ErrorScreen
 import com.kiral.charityapp.ui.components.ProfileImageWithBorder
 import com.kiral.charityapp.ui.theme.CharityTheme
 import com.kiral.charityapp.ui.theme.TextOptionSubtitle
@@ -65,7 +71,11 @@ class DonorsFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 CharityTheme {
-                    DonorsScreen()
+                    if (viewModel.error.value == null) {
+                        DonorsScreen()
+                    } else {
+                        ErrorScreen(text = viewModel.error.value!!)
+                    }
                 }
             }
         }
@@ -74,14 +84,13 @@ class DonorsFragment : Fragment() {
     @Composable
     fun DonorsScreen() {
         val donorList = viewModel.charityDonors
-        Column(
-            modifier = Modifier
+        Box(
+            modifier = Modifier.fillMaxSize()
         ) {
-
             LazyColumn(
-                modifier = Modifier
+                modifier = Modifier.fillMaxSize()
             ) {
-                item{
+                item {
                     Text(
                         text = "Donors",
                         style = MaterialTheme.typography.h5,
@@ -99,7 +108,7 @@ class DonorsFragment : Fragment() {
                     if ((index + 1) >= (viewModel.page.value * DONORS_PAGE_SIZE) && !viewModel.loading.value) {
                         viewModel.nextPage(args.charityId)
                     }
-                    Log.i("LazyColumnIndex", "index is $index")
+                    val topPadding = if (index == 0) 16.dp else 8.dp
                     ProfileCard(
                         imageBitmap = donor.email.let { e ->
                             val img = loadPicture(
@@ -109,10 +118,24 @@ class DonorsFragment : Fragment() {
                             img.value?.asImageBitmap()
                         },
                         name = donor.name,
+                        badges= donor.badges,
                         donated = donor.donated.Convert(),
-                        modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp)
+                        modifier = Modifier.padding(
+                            start = 16.dp,
+                            end = 16.dp,
+                            top = topPadding,
+                            bottom = 8.dp
+                        )
                     )
+
                 }
+            }
+            if (viewModel.loading.value) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .size(48.dp)
+                        .align(Alignment.BottomCenter)
+                )
             }
         }
     }
@@ -121,6 +144,7 @@ class DonorsFragment : Fragment() {
     fun ProfileCard(
         imageBitmap: ImageBitmap?,
         name: String,
+        badges: List<Badge>,
         donated: String,
         modifier: Modifier = Modifier
     ) {
@@ -151,18 +175,22 @@ class DonorsFragment : Fragment() {
                         style = MaterialTheme.typography.body2
                     )
                     Row(modifier = Modifier.padding(top = 4.dp)) {
-                        for (i in 0..2) {
+                        badges.take(3).forEachIndexed { i, b ->
                             Image(
-                                imageVector = vectorResource(id = R.drawable.ic_dog),
-                                contentDescription = "",
-                                modifier = if (i != 0) Modifier.padding(start = 8.dp) else Modifier
+                                imageVector = ImageVector.vectorResource(id = b.iconId),
+                                contentDescription = "Donor badge icon",
+                                contentScale = ContentScale.FillHeight,
+                                modifier = if (i != 0) Modifier.height(18.dp).padding(start = 8.dp)
+                                else Modifier.height(18.dp)
                             )
                         }
-                        Text(
-                            text = "+5",
-                            style = MaterialTheme.typography.body1.copy(color = TextOptionSubtitle),
-                            modifier = Modifier.padding(start = 8.dp)
-                        )
+                        if(badges.size > 3) {
+                            Text(
+                                text = "+ ${(badges.size - 3)}",
+                                style = MaterialTheme.typography.body1.copy(color = TextOptionSubtitle),
+                                modifier = Modifier.padding(start = 8.dp)
+                            )
+                        }
                     }
                 }
                 Divider(
@@ -175,7 +203,7 @@ class DonorsFragment : Fragment() {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Image(
-                        imageVector = vectorResource(id = R.drawable.ic_heart),
+                        imageVector = ImageVector.vectorResource(id = R.drawable.ic_heart),
                         contentDescription = "heart icon",
                         modifier = Modifier
                             .size(24.dp)

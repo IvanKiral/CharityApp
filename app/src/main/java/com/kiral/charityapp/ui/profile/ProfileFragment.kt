@@ -6,29 +6,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.compose.foundation.ClickableText
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ConstraintLayout
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -37,6 +35,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.fragment.app.Fragment
@@ -46,7 +45,6 @@ import androidx.navigation.fragment.navArgs
 import com.auth0.android.Auth0
 import com.kiral.charityapp.R
 import com.kiral.charityapp.domain.enums.DonationFrequency
-import com.kiral.charityapp.domain.fakeBadges
 import com.kiral.charityapp.domain.model.Badge
 import com.kiral.charityapp.domain.model.Profile
 import com.kiral.charityapp.ui.components.AlertDialogWithChoice
@@ -67,7 +65,6 @@ import com.kiral.charityapp.ui.theme.TextBoxBlackTitle
 import com.kiral.charityapp.ui.theme.TextShowBadges
 import com.kiral.charityapp.utils.Auth
 import com.kiral.charityapp.utils.Convert
-import com.kiral.charityapp.utils.DonationValues
 import com.kiral.charityapp.utils.loadPicture
 import com.kiral.charityapp.utils.makeGravatrLink
 import dagger.hilt.android.AndroidEntryPoint
@@ -78,6 +75,7 @@ import javax.inject.Inject
 class ProfileFragment : Fragment() {
     @Inject
     lateinit var dataStore: DataStore<Preferences>
+
     @Inject
     lateinit var account: Auth0
 
@@ -95,12 +93,11 @@ class ProfileFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        profile = viewModel.profile
         return ComposeView(requireContext()).apply {
-            if (profile.value != null) {
-                setContent {
-                    CharityTheme {
-                        ProfileScreen(profile)
+            setContent {
+                CharityTheme {
+                    if (viewModel.profile.value != null) {
+                        ProfileScreen(viewModel.profile)
                     }
                 }
             }
@@ -110,11 +107,6 @@ class ProfileFragment : Fragment() {
     @Composable
     fun ProfileScreen(profile: State<Profile?>) {
         profile.value?.let { p ->
-            val moneyValues = DonationValues
-            val (selectedMoney, setSelectedMoney) = remember { mutableStateOf(0) }
-            val frequencyValues = DonationFrequency.values().map { it.name }
-            val (selectedFrequency, setSelectedFreuency) = remember { mutableStateOf(0) }
-            val (donationDialog, setDonationDialog) = remember { mutableStateOf(false) }
             Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                 ConstraintLayout(
                     modifier = Modifier
@@ -125,7 +117,7 @@ class ProfileFragment : Fragment() {
                     val baseline = createGuidelineFromTop(300.dp)
 
                     ClickableIcon(
-                        icon = vectorResource(id = R.drawable.ic_back),
+                        icon = ImageVector.vectorResource(id = R.drawable.ic_back),
                         onIconClicked = { /*TODO*/ },
                         modifier = Modifier
                             .constrainAs(back) {
@@ -161,7 +153,7 @@ class ProfileFragment : Fragment() {
                             }
                     )
                     Badges(
-                        badges = fakeBadges,
+                        badges = viewModel.badges,
                         modifier = Modifier
                             .fillMaxWidth()
                             .constrainAs(badges) {
@@ -169,7 +161,7 @@ class ProfileFragment : Fragment() {
                             }
                     )
                     BoxRow(
-                        credit = "${p.credit.Convert()} €",
+                        credit = "${ p.credit.Convert() } €",
                         donations = p.donations.toString(),
                         modifier = Modifier
                             .fillMaxWidth()
@@ -179,11 +171,11 @@ class ProfileFragment : Fragment() {
                         context = activity?.applicationContext!!
                     )
                     OptionsMenu(
-                        setDonationDialog = setDonationDialog,
-                        regularDonationValue = p.automaticDonationsValue,
-                        regularDonationFrequency = p.automaticDonationTimeFrequency,
+                        setDonationDialog = { viewModel.setRegularDonationDialog(it) },
+                        regularDonationValue = p.regularDonationValue,
+                        regularDonationFrequency = p.regularDonationFrequency,
                         region = p.region,
-                        isSwitched = p.automaticDonations,
+                        isSwitched = p.regularDonationActive,
                         switchFunction = { b ->
                             viewModel.setActive(b)
                         },
@@ -198,31 +190,27 @@ class ProfileFragment : Fragment() {
                         isShown = viewModel.countryDialog.value,
                         setDialog = { viewModel.setCountryDialog(it) },
                         setCountryText = { /*TODO*/ },
-                        setCountry = { /*TODO*/ },
+                        setCountry = { viewModel.setRegion(it) },
                     )
-                    if (donationDialog) {
+                    if (viewModel.regularDonationDialog.value) {
                         AlertDialogWithChoice(
                             title = "Choose value and frequency of regular donations",
-                            setShowDialog = setDonationDialog,
+                            setShowDialog = { viewModel.setRegularDonationDialog(it) },
                             onConfirmButton = {
-                                viewModel.setRegularPayment(
-                                    moneyValues.get(selectedMoney),
-                                    frequencyValues.get(selectedFrequency)
-                                )
-                                setDonationDialog(false)
+                                viewModel.setRegularPayment(args.id)
                             }
                         ) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 SingleChoicePicker(
-                                    items = moneyValues.map { v -> v.Convert() + " €" },
-                                    selectedItem = selectedMoney,
-                                    setSelectedItem = setSelectedMoney,
+                                    items = viewModel.moneyValues.map { v -> v.Convert() + " €" },
+                                    selectedItem = viewModel.selectedMoney.value,
+                                    setSelectedItem = { viewModel.setSelectedMoney(it) },
                                     textAlignment = Alignment.End
                                 )
                                 SingleChoicePicker(
-                                    items = frequencyValues,
-                                    selectedItem = selectedFrequency,
-                                    setSelectedItem = setSelectedFreuency,
+                                    items = viewModel.frequencyValues,
+                                    selectedItem = viewModel.selectedFrequency.value,
+                                    setSelectedItem = { viewModel.setSelectedFrequency(it) },
                                     textAlignment = Alignment.Start,
                                     modifier = Modifier.padding(start = 8.dp)
                                 )
@@ -286,7 +274,12 @@ class ProfileFragment : Fragment() {
                 text = AnnotatedString(stringResource(R.string.ProfileFragment_ShowBadges)),
                 style = MaterialTheme.typography.body1.copy(color = TextShowBadges),
                 modifier = Modifier.padding(top = 24.dp),
-                onClick = { findNavController().navigate(R.id.action_profileFragment_to_badgesFragment) }
+                onClick = {
+                    viewModel.profile.value?.let{ p ->
+                    val action = ProfileFragmentDirections.actionProfileFragmentToBadgesFragment(p.badges.toIntArray())
+                    findNavController().navigate(action)
+                    }
+                }
             )
         }
     }
@@ -358,7 +351,7 @@ class ProfileFragment : Fragment() {
     fun OptionsMenu(
         modifier: Modifier = Modifier,
         regularDonationValue: Double,
-        regularDonationFrequency: String,
+        regularDonationFrequency: Int,
         region: String,
         isSwitched: Boolean,
         switchFunction: (Boolean) -> Unit,
@@ -367,9 +360,10 @@ class ProfileFragment : Fragment() {
         Column(
             modifier = modifier
         ) {
+
             Option(
                 title = stringResource(R.string.ProfileFragment_RegularDonations),
-                description = "${regularDonationValue.Convert()} €/${regularDonationFrequency}",
+                description = "${regularDonationValue.Convert()} €/${DonationFrequency.values()[regularDonationFrequency]}",
                 hasSwitch = true,
                 isSwitched = isSwitched,
                 switchFunction = switchFunction,

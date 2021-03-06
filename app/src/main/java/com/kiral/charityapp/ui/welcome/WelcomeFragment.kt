@@ -1,6 +1,7 @@
 package com.kiral.charityapp.ui.welcome
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,13 +21,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.auth0.android.Auth0
 import com.auth0.android.authentication.AuthenticationAPIClient
@@ -40,15 +37,13 @@ import com.kiral.charityapp.R
 import com.kiral.charityapp.ui.theme.CharityTheme
 import com.kiral.charityapp.utils.Auth
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class WelcomeFragment : Fragment() {
-    @Inject
-    lateinit var dataStore: DataStore<Preferences>
 
     private val viewModel: WelcomeViewModel by viewModels()
+
     @Inject
     lateinit var account: Auth0
 
@@ -61,6 +56,18 @@ class WelcomeFragment : Fragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
+                viewModel.shouldNavigateToHomeFragment.value?.let {
+                    Log.i("WelcomeFragment", "value of navigation is $it")
+                    if (it) {
+                        findNavController().navigate(R.id.action_welcomeFragment_to_charitiesFragment)
+                    } else {
+                        val action =
+                            WelcomeFragmentDirections.actionWelcomeFragmentToEditPersonalInformationFragment(
+                                viewModel.email!!
+                            )
+                        findNavController().navigate(action)
+                    }
+                }
                 CharityTheme {
                     WelcomeScreen()
                 }
@@ -82,7 +89,7 @@ class WelcomeFragment : Fragment() {
                 style = MaterialTheme.typography.h4
             )
             Text(
-                text="It's good to have you here! Start donating to charities by login into the app \u2665",
+                text = "It's good to have you here! Start donating to charities by login into the app \u2665",
                 style = MaterialTheme.typography.body2.copy(color = Color.Black.copy(alpha = 0.75f)),
                 textAlign = TextAlign.Justify,
                 modifier = Modifier.padding(top = 32.dp)
@@ -101,11 +108,6 @@ class WelcomeFragment : Fragment() {
         }
     }
 
-    suspend fun write_id(id: Int) {
-        dataStore.edit { settings ->
-            settings[USER_ID] = id
-        }
-    }
 
     private fun loginWithBrowser() {
         val apiClient = AuthenticationAPIClient(account)
@@ -123,22 +125,9 @@ class WelcomeFragment : Fragment() {
                     val accessToken = result.accessToken
                     manager.saveCredentials(result)
                     Auth.withUserEmail(account, accessToken) { email ->
-                        val id = viewModel.getProfileId(email)
-                        id?.let { userId ->
-                            lifecycleScope.launch {
-                                write_id(userId)
-                            }
-                            findNavController().navigate(R.id.action_welcomeFragment_to_charitiesFragment)
-                        }
-                        if (id == null) {
-                            val action =
-                                WelcomeFragmentDirections.actionWelcomeFragmentToEditPersonalInformationFragment(
-                                    email
-                                )
-                            findNavController().navigate(action)
-                        }
+                        Log.i("AppDebug", "in success")
+                        viewModel.getProfileId(email)
                     }
-
                 }
             })
     }

@@ -15,43 +15,47 @@ val global_categories = listOf(
 )
 
 val badgesMap = mapOf<Int, BadgeData>(
-    0 to BadgeData(
+    1 to BadgeData(
         "You have donated 1",
         R.drawable.ic_badge_donation_one
     ),
-    1 to BadgeData(
+    2 to BadgeData(
         "You have donated 10",
         R.drawable.ic_badge_donation_ten
     ),
-    2 to BadgeData(
+    3 to BadgeData(
         "You have donated 100",
         R.drawable.ic_badge_donation_hundred
     ),
-    3 to BadgeData(
+    4 to BadgeData(
         "You have donated 1000",
         R.drawable.ic_badge_donation_thousand
     ),
-    4 to BadgeData(
+    5 to BadgeData(
         "You have donated to all charities",
         R.drawable.ic_badge_charity_all
     ),
-    5 to BadgeData(
-        "You have donated to animal charity",
-        R.drawable.ic_badge_charity_animal
-    ),
     6 to BadgeData(
-        "You have donated educational charity",
-        R.drawable.ic_badge_charity_scholarship
-    ),
-    7 to BadgeData(
-        "You have donated arts and culture charity",
-        R.drawable.ic_badge_charity_art
-    ),
-    8 to BadgeData(
         "You have donated enviromental charity",
         R.drawable.ic_badge_charity_enviroment
     ),
+    7 to BadgeData(
+        "You have donated to animal charity",
+        R.drawable.ic_badge_charity_animal
+    ),
+    8 to BadgeData(
+        "You have health charity",
+        R.drawable.ic_badge_charity_art
+    ),
     9 to BadgeData(
+        "You have donated educational charity",
+        R.drawable.ic_badge_charity_scholarship
+    ),
+    10 to BadgeData(
+        "You have donated arts and culture charity",
+        R.drawable.ic_badge_charity_art
+    ),
+    11 to BadgeData(
         "You have reached one month streak",
         R.drawable.ic_badge_date_month
     ),

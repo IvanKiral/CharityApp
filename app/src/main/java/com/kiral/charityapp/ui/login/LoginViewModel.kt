@@ -1,18 +1,13 @@
 package com.kiral.charityapp.ui.login
 
-import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.ViewModel
-import com.kiral.charityapp.repositories.charities.ProfileRepository
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
-
-
-@HiltViewModel
+/*@HiltViewModel
 class LoginViewModel
 @Inject
 constructor(
     val profileRepository: ProfileRepository
 ): ViewModel() {
+
+    val profileExis
 
     val loginText = mutableStateOf("")
 
@@ -20,7 +15,9 @@ constructor(
 
 
     fun profileExists(email: String): Boolean {
-        return profileRepository.login(email) != null
+        viewModelScope.launch {
+            return profileRepository.login(email) != null
+        }
     }
 
     fun setLoginText(value: String){
@@ -30,4 +27,4 @@ constructor(
     fun setPasswordText(value: String){
         passwordText.value = value
     }
-}
+}*/

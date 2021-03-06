@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.preferredHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
@@ -31,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringResource
@@ -93,8 +93,7 @@ class ProjectDetailFragment : Fragment() {
     fun CharityDetailScreen() {
         CharityTheme() {
             Column {
-                val project = viewModel.project
-                project.value?.let { p ->
+                viewModel.project.value?.let { p ->
                     CharityDetailHeader(p.charityImage, p.donorDonated)
                     CharityDetailBody(p, modifier = Modifier.offset(y = -20.dp))
                 }
@@ -118,7 +117,7 @@ class ProjectDetailFragment : Fragment() {
                         contentScale = ContentScale.FillWidth,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .preferredHeight(230.dp)
+                            .height(230.dp)
                     )
                 }
             }
@@ -134,7 +133,7 @@ class ProjectDetailFragment : Fragment() {
                     )
                 }
                 Image(
-                    imageVector = vectorResource(id = R.drawable.ic_close),
+                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_close),
                     contentDescription = "",
                     modifier = Modifier
                         .align(Alignment.CenterEnd)
@@ -213,13 +212,7 @@ class ProjectDetailFragment : Fragment() {
                 AlertDialogWithChoice(
                     setShowDialog = { viewModel.setShowDialog(it) },
                     title = "Select value to donate",
-                    onConfirmButton = {
-                        if (viewModel.makeDonation()
-                        ) {
-                            viewModel.setDonationSuccessDialog(true)
-                        }
-                        viewModel.setShowDialog(false)
-                    }
+                    onConfirmButton = { viewModel.makeDonation(args.donorId) }
                 ) {
                     SingleChoicePicker(
                         items = viewModel.values.map { v -> v.Convert() + " €" },

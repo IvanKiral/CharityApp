@@ -9,11 +9,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.kiral.charityapp.ui.theme.TextFieldBorder
@@ -39,11 +38,9 @@ fun FormTextField(
             )
     ) {
         TextField(
-            textStyle = labelTextStyle,
-            backgroundColor = Color.Transparent,
             value = text,
-            inactiveColor = Color.Transparent,
             onValueChange = onChange,
+            textStyle = labelTextStyle,
             visualTransformation = visualTransformation,
             keyboardOptions = keyboardOptions,
             placeholder = {
@@ -52,6 +49,10 @@ fun FormTextField(
                     style = labelTextStyle
                 )
             },
+            colors = TextFieldDefaults.textFieldColors(
+                backgroundColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent
+            ),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)

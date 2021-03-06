@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.kiral.charityapp.R
 import com.kiral.charityapp.domain.model.LeaderBoardProfile
 import com.kiral.charityapp.utils.Convert
@@ -23,6 +24,7 @@ import com.kiral.charityapp.utils.makeGravatrLink
 @Composable
 fun LeaderBoardItem(
     item: LeaderBoardProfile,
+    index: Int,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -37,7 +39,7 @@ fun LeaderBoardItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                item.order.toString(),
+                index.toString(),
                 style = MaterialTheme.typography.body2
             )
             ProfileImageWithBorder(
@@ -54,14 +56,14 @@ fun LeaderBoardItem(
             )
             Text(
                 item.name,
-                style = MaterialTheme.typography.body2,
+                style = MaterialTheme.typography.body2.copy(fontSize = 16.sp),
                 modifier = Modifier
-                    .fillMaxWidth(0.7f)
+                    .fillMaxWidth(0.6f)
                     .padding(start = 16.dp)
             )
             Text(
                 text = item.donated.Convert(),
-                style = MaterialTheme.typography.body2,
+                style = MaterialTheme.typography.body1,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 16.dp),

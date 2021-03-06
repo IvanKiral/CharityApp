@@ -16,6 +16,6 @@ data class Charity(
     var raised: Float,
     val peopleDonated: Int,
     var donorDonated: Double,
-    val donorId: Int,
+    //val donorId: Int,
     val projects: List<CharityProject> = listOf()
 )

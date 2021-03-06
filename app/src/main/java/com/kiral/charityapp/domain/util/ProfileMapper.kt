@@ -7,16 +7,16 @@ class ProfileMapper: Mapper<FakeProfilePost, Profile>{
 
     override fun mapToDomainModel(model: FakeProfilePost): Profile {
         return Profile(
-            id = model.id,
+            id = model.id!!,
             name = model.name,
             email = model.email,
             donations = model.donations?.let { model.donations } ?: 0,
             credit = model.credit,
             region = model.region,
-            charities = "",
-            automaticDonations = model.donationRepeat,
-            automaticDonationTimeFrequency = model.donationRepeatFrequency,
-            automaticDonationsValue = model.donationRepeatValue,
+            categories = listOf(),
+            regularDonationActive = model.donationRepeat,
+            regularDonationFrequency = model.donationRepeatFrequency,
+            regularDonationValue = model.donationRepeatValue,
             badges = listOf()
         )
     }
@@ -27,9 +27,9 @@ class ProfileMapper: Mapper<FakeProfilePost, Profile>{
             email = domainModel.email,
             region = domainModel.region,
             credit = domainModel.credit,
-            donationRepeat = domainModel.automaticDonations,
-            donationRepeatFrequency = domainModel.automaticDonationTimeFrequency,
-            donationRepeatValue = domainModel.automaticDonationsValue,
+            donationRepeat = domainModel.regularDonationActive,
+            donationRepeatFrequency = domainModel.regularDonationFrequency,
+            donationRepeatValue = domainModel.regularDonationValue,
             badges = listOf()
         )
     }

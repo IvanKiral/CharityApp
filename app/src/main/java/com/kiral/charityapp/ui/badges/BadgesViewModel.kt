@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.kiral.charityapp.domain.model.Badge
 import com.kiral.charityapp.repositories.charities.ProfileRepository
+import com.kiral.charityapp.utils.badgesMap
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -19,8 +20,19 @@ constructor(
     val badges: State<List<Badge>>
         get() = _badges
 
-    fun getBadges(donorId: Int) {
-        _badges.value = profileRepository.getBadges(donorId)
+    fun getBadges(badgesId: IntArray) {
+        val lst = mutableListOf<Badge>()
+        badgesMap.forEach { (id, value) ->
+            lst.add(
+                Badge(
+                    id = id,
+                    title = value.title,
+                    active = !badgesId.contains(id),
+                    iconId = value.icon
+                )
+            )
+        }
+        lst.sortBy { it.active }
+        _badges.value = lst
     }
-
 }

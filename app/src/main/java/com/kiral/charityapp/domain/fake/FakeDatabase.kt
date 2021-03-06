@@ -48,7 +48,7 @@ class FakeDatabase {
                     description = c.description,
                     raised = fakeDonations.filter { d -> d.charityId == c.id }
                         .sumByDouble { s -> s.sum },
-                    donorId = donorId,
+                    //donorId = donorId,
                     peopleDonated = fakeDonations.filter { d -> d.charityId == c.id }.size,
                     donorDonated = fakeDonations.filter { d -> d.donorId == donorId && d.charityId == charityId }
                         .sumByDouble { s -> s.sum },
@@ -76,7 +76,7 @@ class FakeDatabase {
                 donorId = profileId,
                 active = profile.donationRepeat,
                 sum = profile.donationRepeatValue,
-                repeatingStatus = profile.donationRepeatFrequency
+                repeatingStatus = "1"
             )
         )
         return true
@@ -94,7 +94,7 @@ class FakeDatabase {
             credit = x.credit,
             charities = "",
             donationRepeat = donationRepeat.active,
-            donationRepeatFrequency = donationRepeat.repeatingStatus,
+            donationRepeatFrequency = 1,
             donationRepeatValue = donationRepeat.sum,
             badges = listOf()
         )
@@ -113,7 +113,7 @@ class FakeDatabase {
                 credit = x.credit,
                 charities = "",
                 donationRepeat = donationRepeat.active,
-                donationRepeatFrequency = donationRepeat.repeatingStatus,
+                donationRepeatFrequency = 1,
                 donationRepeatValue = donationRepeat.sum,
                 badges = listOf()
             )
@@ -127,7 +127,7 @@ class FakeDatabase {
         return FakeDonationGoalReponse(
             id = donationGoal.id,
             charityId = donationGoal.charityId,
-            donorId = donorId,
+            //donorId = donorId,
             name = donationGoal.name,
             goalSum = donationGoal.goalSum,
             actualSum = fakeDonations
@@ -195,6 +195,7 @@ class FakeDatabase {
         val values = listOf<Double>(0.5, 1.0, 2.0, 5.0, 10.0, 20.0, 50.0, 100.0, 500.0, 1000.0)
         var lastUserId = fakeProfiles.lastOrNull()?.id?.plus(1) ?: 0
         var lastDonationRepeatId = fakeDonationRepeats.lastOrNull()?.id?.plus(1) ?: 0
+
         names.forEachIndexed { index, n ->
             fakeProfiles.add(
                 FakeProfile(

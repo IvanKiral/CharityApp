@@ -5,7 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.preferredHeight
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -29,7 +29,7 @@ fun InformationBox(
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
-            .preferredHeight(58.dp)
+            .height(58.dp)
             .clip(RoundedCornerShape(6.dp))
             .background(backgroundColor)
             .border(width = 1.dp, color = borderColor)

@@ -25,8 +25,8 @@
         <action
             android:id="@+id/action_selectCharitiesTypesFragment_to_setupRegularPaymentsFragment"
             app:destination="@id/setupRegularPaymentsFragment"
-            app:enterAnim="@anim/fragment_fade_enter"
-            app:exitAnim="@anim/fragment_fade_exit" />
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
     </fragment>
     <fragment
         android:id="@+id/setupRegularPaymentsFragment"
@@ -47,16 +47,14 @@
         <action
             android:id="@+id/action_charitiesFragment_to_charityDetailFragment"
             app:destination="@id/charityDetailFragment"
-            app:enterAnim="@anim/fragment_fade_enter"
-            app:exitAnim="@anim/fragment_fade_exit"
-            app:popEnterAnim="@anim/fragment_fade_enter"
-            app:popExitAnim="@anim/fragment_fade_exit">
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out">
         </action>
         <action
             android:id="@+id/action_charitiesFragment_to_profileFragment"
             app:destination="@id/profileFragment"
-            app:enterAnim="@anim/fragment_fade_enter"
-            app:exitAnim="@anim/fragment_fade_exit" />
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
         <argument
             android:name="email"
             app:argType="string" />
@@ -86,8 +84,8 @@
         <action
             android:id="@+id/action_profileFragment_to_badgesFragment"
             app:destination="@id/badgesFragment"
-            app:enterAnim="@anim/fragment_fade_enter"
-            app:exitAnim="@anim/fragment_fade_exit" />
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
         <argument
             android:name="id"
             app:argType="integer" />
@@ -100,7 +98,11 @@
     <fragment
         android:id="@+id/badgesFragment"
         android:name="com.kiral.charityapp.ui.badges.BadgesFragment"
-        android:label="BadgesFragment" />
+        android:label="BadgesFragment" >
+        <argument
+            android:name="badges"
+            app:argType="integer[]" />
+    </fragment>
     <fragment
         android:id="@+id/projectDetailFragment"
         android:name="com.kiral.charityapp.ui.detail.ProjectDetailFragment"

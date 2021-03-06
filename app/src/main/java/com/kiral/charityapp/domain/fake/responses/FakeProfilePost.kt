@@ -12,6 +12,6 @@ data class FakeProfilePost(
     val email: String,
     val donationRepeat: Boolean,
     val donationRepeatValue: Double,
-    val donationRepeatFrequency: String,
+    val donationRepeatFrequency: Int,
     val badges: List<Badge> = listOf()
 )

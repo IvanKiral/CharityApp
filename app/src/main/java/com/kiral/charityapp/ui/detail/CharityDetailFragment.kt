@@ -5,17 +5,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.ClickableText
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.preferredHeight
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.vectorResource
@@ -51,9 +52,11 @@ import com.kiral.charityapp.domain.model.CharityProject
 import com.kiral.charityapp.ui.components.AlertDialogWithChoice
 import com.kiral.charityapp.ui.components.DonationBox
 import com.kiral.charityapp.ui.components.DonationRow
+import com.kiral.charityapp.ui.components.ErrorScreen
 import com.kiral.charityapp.ui.components.ExpandableText
 import com.kiral.charityapp.ui.components.InformationAlertDialog
 import com.kiral.charityapp.ui.components.InformationBox
+import com.kiral.charityapp.ui.components.LoadingScreen
 import com.kiral.charityapp.ui.components.SingleChoicePicker
 import com.kiral.charityapp.ui.theme.BottomSheetShape
 import com.kiral.charityapp.ui.theme.ButtonBlue
@@ -93,12 +96,20 @@ class CharityDetailFragment : Fragment() {
     @ExperimentalMaterialApi
     @Composable
     fun CharityDetailScreen(charity: androidx.compose.runtime.State<Charity?>) {
-        CharityTheme() {
-            Column {
-                charity.value?.let { c ->
-                    CharityDetailHeader(c.imgSrc, c.donorDonated)
-                    CharityDetailBody(c, modifier = Modifier.offset(y = -20.dp))
+        CharityTheme {
+            if (viewModel.error.value == null) {
+                if (viewModel.loading.value) {
+                    LoadingScreen()
+                } else {
+                    Column {
+                        charity.value?.let { c ->
+                            CharityDetailHeader(c.imgSrc, c.donorDonated)
+                            CharityDetailBody(c, modifier = Modifier.offset(y = -20.dp))
+                        }
+                    }
                 }
+            } else {
+                ErrorScreen(text = viewModel.error.value!!)
             }
         }
     }
@@ -118,7 +129,7 @@ class CharityDetailFragment : Fragment() {
                         contentScale = ContentScale.FillWidth,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .preferredHeight(230.dp)
+                            .height(230.dp)
                     )
                 }
             }
@@ -134,7 +145,7 @@ class CharityDetailFragment : Fragment() {
                     )
                 }
                 Image(
-                    imageVector = vectorResource(id = R.drawable.ic_close),
+                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_close),
                     contentDescription = "",
                     modifier = Modifier
                         .align(Alignment.CenterEnd)
@@ -182,16 +193,16 @@ class CharityDetailFragment : Fragment() {
                 )
 
                 ExpandableText(
-                    text = buildAnnotatedString{
-                        withStyle(SpanStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold)){
+                    text = buildAnnotatedString {
+                        withStyle(SpanStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold)) {
                             append("Our story\n")
                         }
                         append(charity.description + "\n\n")
-                        withStyle(SpanStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold)){
+                        withStyle(SpanStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold)) {
                             append("How donation helps\n")
                         }
                         append(charity.howDonationHelps + "\n\n")
-                        withStyle(SpanStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold)){
+                        withStyle(SpanStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold)) {
                             append("Why donate\n")
                         }
                         append(charity.whyToDonate)
@@ -238,12 +249,7 @@ class CharityDetailFragment : Fragment() {
                     AlertDialogWithChoice(
                         setShowDialog = { viewModel.setShowDialog(it) },
                         title = "Select value to donate",
-                        onConfirmButton = {
-                            if (viewModel.makeDonation()) {
-                                viewModel.setDonationSuccessDialog(true)
-                            }
-                            viewModel.setShowDialog(false)
-                        }
+                        onConfirmButton = { viewModel.makeDonation(args.donorId) }
                     ) {
                         SingleChoicePicker(
                             items = viewModel.values.map { v -> v.Convert() + " €" },
