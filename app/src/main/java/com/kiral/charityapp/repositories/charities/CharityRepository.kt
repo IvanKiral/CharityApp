@@ -8,7 +8,7 @@ import com.kiral.charityapp.network.DataState
 import kotlinx.coroutines.flow.Flow
 
 interface CharityRepository {
-    fun search(id: Int, region: String): Flow<DataState<List<CharityListItem>>>
+    fun search(id: Int, categories: List<Int>): Flow<DataState<List<CharityListItem>>>
 
     fun get(id: Int, donorId: Int): Flow<DataState<Charity>>
 

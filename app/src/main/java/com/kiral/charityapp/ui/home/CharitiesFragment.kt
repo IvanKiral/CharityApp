@@ -124,7 +124,7 @@ class CharitiesFragment : Fragment() {
                         if (it != -1) {
                             Log.i("CharitiesFragment", "$it")
                             viewModel.userId = it
-                            viewModel.getCharities(it, "svk")
+                            viewModel.getCharities(it)
                         } else {
                             Auth.withUserEmail(account, result.accessToken) { email ->
                                 viewModel.getId(email)
@@ -167,6 +167,7 @@ class CharitiesFragment : Fragment() {
                                 )
                             findNavController().navigate(action)
                         } else {
+                            viewModel.getCharities(viewModel.userId)
                             viewModel.showFilter.value = false
                         }
                     },
@@ -200,7 +201,7 @@ class CharitiesFragment : Fragment() {
             )
             CharitiesSelector(
                 categories = viewModel.categories,
-                categoriesSelected = viewModel.selected,
+                categoriesSelected = viewModel.selectedCategories,
                 modifier = Modifier.padding(top = 32.dp)
             )
         }

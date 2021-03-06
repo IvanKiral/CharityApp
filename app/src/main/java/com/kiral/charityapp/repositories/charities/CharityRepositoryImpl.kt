@@ -22,13 +22,13 @@ class CharityRepositoryImpl(
     private val donorsMapper: DonorsMapper,
     private val networkService: NetworkService
 ) : CharityRepository {
-    override fun search(id: Int, region: String): Flow<DataState<List<CharityListItem>>> =
+    override fun search(id: Int, categories: List<Int>): Flow<DataState<List<CharityListItem>>> =
         flow {
             try {
                 emit(DataState.Loading)
                 //only for showing loading state
                 kotlinx.coroutines.delay(2000)
-                val response = networkService.getCharities(1, id, listOf(1,2,3))
+                val response = networkService.getCharities(1, id, categories)
                 if(response.isSuccessful){
                     emit(DataState.Success(charityListMapper.mapToDomainModelList(response.body()!!.charities)))
                 } else {

@@ -10,6 +10,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -25,7 +26,8 @@ fun ErrorScreen(
     ){
         Text(
             text = text,
-            style = MaterialTheme.typography.body2
+            style = MaterialTheme.typography.body1,
+            textAlign = TextAlign.Center
         )
         Button(
             modifier = Modifier.padding(top = 16.dp),

@@ -1,18 +1,15 @@
 package com.kiral.charityapp.repositories.charities
 
 import android.util.Log
-import com.kiral.charityapp.domain.model.Badge
 import com.kiral.charityapp.domain.model.Profile
 import com.kiral.charityapp.network.DataState
 import com.kiral.charityapp.network.Dto.LoginDto
 import com.kiral.charityapp.network.Dto.ProfileMapper
 import com.kiral.charityapp.network.Dto.ProfilePostDto
 import com.kiral.charityapp.network.ProfileService
-import com.kiral.charityapp.utils.badgesMap
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.io.IOException
-import kotlin.random.Random
 
 class ProfileRepositoryImpl(
     private val profileService: ProfileService,
@@ -182,21 +179,5 @@ class ProfileRepositoryImpl(
         catch (e: IOException){
             emit(DataState.Error("An error has ocurred! Please retry later"))
         }
-    }
-
-
-    override fun getBadges(donorId: Int): List<Badge> {
-        val lst = mutableListOf<Badge>()
-        badgesMap.forEach{(_, value) ->
-            lst.add(
-                Badge(
-                    id = 0,
-                    title = value.title,
-                    active = Random.nextBoolean(),
-                    iconId = value.icon
-                )
-            )
-        }
-        return lst.sortedBy { b -> b.active }
     }
 }

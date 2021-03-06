@@ -1,6 +1,5 @@
 package com.kiral.charityapp.repositories.charities
 
-import com.kiral.charityapp.domain.model.Badge
 import com.kiral.charityapp.domain.model.Profile
 import com.kiral.charityapp.network.DataState
 import kotlinx.coroutines.flow.Flow
@@ -38,6 +37,4 @@ interface ProfileRepository{
         id: Int,
         credit: Double,
     ): Flow<DataState<Boolean>>
-
-    fun getBadges(donorId: Int): List<Badge>
 }

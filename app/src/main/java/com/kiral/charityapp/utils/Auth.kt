@@ -22,6 +22,7 @@ object Auth {
     fun withUserEmail(
         account: Auth0,
         accessToken: String,
+        onFailFunction: () -> Unit = {},
         onSuccessFunction: (String) -> Unit,
     ) {
         val client = AuthenticationAPIClient(account)
@@ -29,6 +30,7 @@ object Auth {
             .start(object : Callback<UserProfile, AuthenticationException> {
                 override fun onFailure(error: AuthenticationException) {
                     Log.i("AuthNavigate", "An error has occured: $error")
+                    onFailFunction()
                 }
 
                 override fun onSuccess(result: UserProfile) {

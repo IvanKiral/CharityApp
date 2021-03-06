@@ -33,17 +33,14 @@ constructor(
     val error = mutableStateOf<String?>(null)
     val loading = mutableStateOf(false)
 
-    val lst = MutableList(categories.size) { false }
-    val selected = lst.toMutableStateList()
+    val lst = MutableList(categories.size) { true }
+    val selectedCategories = lst.toMutableStateList()
 
     val showFilter = mutableStateOf(false)
 
-    init{
-
-    }
-
-    fun getCharities(id: Int, region: String) {
-        charityRepository.search(id, region).onEach {
+    fun getCharities(id: Int) {
+        error.value = null
+        charityRepository.search(id, selectedCategories.mapIndexed { index, v -> if(v) index + 1 else -1}.filter { it > -1 }).onEach {
             when (it) {
                 is DataState.Success<List<CharityListItem>> -> {
                     loading.value = false
@@ -65,7 +62,7 @@ constructor(
             when(state){
                 is DataState.Success -> {
                     userId = state.data
-                    getCharities(userId, "svk")
+                    getCharities(userId)
                 }
             }
         }.launchIn(viewModelScope)
