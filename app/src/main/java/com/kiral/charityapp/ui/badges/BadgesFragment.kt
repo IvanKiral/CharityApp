@@ -27,6 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.navArgs
 import com.kiral.charityapp.domain.model.Badge
 import com.kiral.charityapp.ui.theme.CharityTheme
 import com.kiral.charityapp.utils.loadPictureFromDrawable
@@ -36,6 +37,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class BadgesFragment : Fragment() {
     private val viewModel: BadgesViewModel by viewModels()
+    private val args: BadgesFragmentArgs by navArgs()
 
     @ExperimentalFoundationApi
     override fun onCreateView(
@@ -43,8 +45,8 @@ class BadgesFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewModel.getBadges(0)
         return ComposeView(requireContext()).apply {
+            viewModel.getBadges(args.badges)
             setContent {
                 BadgeScreen()
             }

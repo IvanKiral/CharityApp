@@ -31,5 +31,8 @@ data class ProfileDto(
     val repeatValue: Double,
 
     @SerializedName("repeat_frequency")
-    val repeatFrequency: Int
+    val repeatFrequency: Int,
+
+    @SerializedName("badges")
+    val badges: List<Int>
 )

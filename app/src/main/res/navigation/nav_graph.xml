@@ -98,7 +98,11 @@
     <fragment
         android:id="@+id/badgesFragment"
         android:name="com.kiral.charityapp.ui.badges.BadgesFragment"
-        android:label="BadgesFragment" />
+        android:label="BadgesFragment" >
+        <argument
+            android:name="badges"
+            app:argType="integer[]" />
+    </fragment>
     <fragment
         android:id="@+id/projectDetailFragment"
         android:name="com.kiral.charityapp.ui.detail.ProjectDetailFragment"

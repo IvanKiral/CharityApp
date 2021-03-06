@@ -11,5 +11,5 @@ data class Profile(
     var regularDonationActive: Boolean,
     var regularDonationValue: Double,
     var regularDonationFrequency: Int,
-    val badges: List<Badge>
+    val badges: List<Int>
 )

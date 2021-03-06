@@ -52,9 +52,10 @@ constructor(
 
     fun makeDonation(donorId: Int) {
         val value = values.get(selectedValue.value)
-        _charity.value?.let { currentProject ->
+        _charity.value?.let { currentCharity ->
+            val donorDonated = currentCharity.donorDonated
             charityRepository.makeDonationToCharity(
-                charityId = currentProject.id,
+                charityId = currentCharity.id,
                 donorId = donorId,
                 projectId = null,
                 value = value
@@ -65,6 +66,9 @@ constructor(
                     is DataState.Success -> {
                         setShowDialog(false)
                         setDonationSuccessDialog(true)
+                        _charity.value = _charity.value?.copy(
+                            donorDonated = donorDonated + value
+                        )
                     }
                     is DataState.Error -> {
                     }

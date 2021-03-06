@@ -45,7 +45,6 @@ import androidx.navigation.fragment.navArgs
 import com.auth0.android.Auth0
 import com.kiral.charityapp.R
 import com.kiral.charityapp.domain.enums.DonationFrequency
-import com.kiral.charityapp.domain.fakeBadges
 import com.kiral.charityapp.domain.model.Badge
 import com.kiral.charityapp.domain.model.Profile
 import com.kiral.charityapp.ui.components.AlertDialogWithChoice
@@ -154,7 +153,7 @@ class ProfileFragment : Fragment() {
                             }
                     )
                     Badges(
-                        badges = fakeBadges,
+                        badges = viewModel.badges,
                         modifier = Modifier
                             .fillMaxWidth()
                             .constrainAs(badges) {
@@ -275,7 +274,12 @@ class ProfileFragment : Fragment() {
                 text = AnnotatedString(stringResource(R.string.ProfileFragment_ShowBadges)),
                 style = MaterialTheme.typography.body1.copy(color = TextShowBadges),
                 modifier = Modifier.padding(top = 24.dp),
-                onClick = { findNavController().navigate(R.id.action_profileFragment_to_badgesFragment) }
+                onClick = {
+                    viewModel.profile.value?.let{ p ->
+                    val action = ProfileFragmentDirections.actionProfileFragmentToBadgesFragment(p.badges.toIntArray())
+                    findNavController().navigate(action)
+                    }
+                }
             )
         }
     }

@@ -16,7 +16,7 @@ class ProfileMapper: Mapper<ProfileDto, Profile>{
             regularDonationActive = model.repeatActive,
             regularDonationFrequency = model.repeatFrequency,
             regularDonationValue = model.repeatValue,
-            badges = listOf()
+            badges = model.badges
         )
     }
 
@@ -32,6 +32,7 @@ class ProfileMapper: Mapper<ProfileDto, Profile>{
             repeatActive = domainModel.regularDonationActive,
             repeatFrequency = domainModel.regularDonationFrequency,
             repeatValue = domainModel.regularDonationValue,
+            badges = domainModel.badges
         )
     }
 

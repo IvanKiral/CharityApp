@@ -5,11 +5,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.kiral.charityapp.domain.enums.DonationFrequency
+import com.kiral.charityapp.domain.model.Badge
 import com.kiral.charityapp.domain.model.Profile
 import com.kiral.charityapp.network.DataState
 import com.kiral.charityapp.repositories.charities.ProfileRepository
 import com.kiral.charityapp.ui.BaseApplication
 import com.kiral.charityapp.utils.DonationValues
+import com.kiral.charityapp.utils.badgesMap
 import com.kiral.charityapp.utils.getCountries
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
@@ -27,6 +29,8 @@ constructor(
     private val _profile = mutableStateOf<Profile?>(null)
     val profile: State<Profile?>
         get() = _profile
+
+    var badges = mutableListOf<Badge>()
 
     val loading = mutableStateOf(false)
     val error = mutableStateOf<String?>(null)
@@ -54,6 +58,20 @@ constructor(
                 is DataState.Success -> {
                     loading.value = false
                     _profile.value = state.data
+                    _profile.value?.let { p ->
+                        badgesMap.forEach { (id, value) ->
+                            if(p.badges.contains(id)) {
+                                badges.add(
+                                    Badge(
+                                        id = id,
+                                        title = value.title,
+                                        active = true,
+                                        iconId = value.icon
+                                    )
+                                )
+                            }
+                        }
+                    }
                 }
                 is DataState.Error -> {
                     loading.value = false
