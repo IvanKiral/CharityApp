@@ -39,12 +39,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.kiral.charityapp.domain.model.Charity
 import com.kiral.charityapp.ui.components.AlertDialogWithChoice
+import com.kiral.charityapp.ui.components.BaseScreen
 import com.kiral.charityapp.ui.components.DonationRow
-import com.kiral.charityapp.ui.components.ErrorScreen
 import com.kiral.charityapp.ui.components.ExpandableText
 import com.kiral.charityapp.ui.components.InformationAlertDialog
 import com.kiral.charityapp.ui.components.InformationBox
-import com.kiral.charityapp.ui.components.LoadingScreen
 import com.kiral.charityapp.ui.components.SingleChoicePicker
 import com.kiral.charityapp.ui.detail.components.DetailHeader
 import com.kiral.charityapp.ui.detail.components.ProjectsList
@@ -86,47 +85,49 @@ class CharityDetailFragment : Fragment() {
     @Composable
     fun CharityDetailScreen(charity: Charity?) {
         CharityTheme {
-            if (viewModel.error == null) {
-                if (viewModel.loading) {
-                    LoadingScreen()
-                } else {
-                    Column {
-                        charity?.let { c ->
-                            DetailHeader(
-                                imgSrc = c.imgSrc,
-                                donorDonated = c.donorDonated,
-                                onBackPressed = requireActivity()::onBackPressed
-                            )
-                            CharityDetailBody(
-                                charity = c,
-                                donorId = args.donorId,
-                                viewModel = viewModel,
-                                navController = findNavController(),
-                                sharePhotoButtonClick = {
-                                    Utils.sharePhoto(
-                                        activity?.applicationContext!!,
-                                        c.imgSrc
-                                    )
-                                },
-                                shareLinkButtonClick = {
-                                    val share = Intent.createChooser(Intent().apply {
-                                        action = Intent.ACTION_SEND
-                                        type = "text/plain"
-                                        putExtra(Intent.EXTRA_TEXT, "https://cherrities.app")
-                                    }, null)
-                                    startActivity(share)
-                                },
-                                modifier = Modifier.offset(y = (-20).dp)
-                            )
-                        }
+            BaseScreen(
+                error = viewModel.error,
+                loading = viewModel.loading,
+                onRetryClicked = {
+                    viewModel.getCharity(args.charityId, args.donorId)
+                }
+            ) {
+                Column {
+                    charity?.let { c ->
+                        DetailHeader(
+                            imgSrc = c.imgSrc,
+                            donorDonated = c.donorDonated,
+                            onBackPressed = requireActivity()::onBackPressed
+                        )
+                        CharityDetailBody(
+                            charity = c,
+                            donorId = args.donorId,
+                            viewModel = viewModel,
+                            navController = findNavController(),
+                            sharePhotoButtonClick = {
+                                Utils.sharePhoto(
+                                    activity?.applicationContext!!,
+                                    c.imgSrc
+                                )
+                            },
+                            shareLinkButtonClick = {
+                                val share = Intent.createChooser(Intent().apply {
+                                    action = Intent.ACTION_SEND
+                                    type = "text/plain"
+                                    putExtra(Intent.EXTRA_TEXT, "https://cherrities.app")
+                                }, null)
+                                startActivity(share)
+                            },
+                            modifier = Modifier.offset(y = (-20).dp)
+                        )
                     }
                 }
-            } else {
-                ErrorScreen(text = viewModel.error!!)
             }
         }
+
     }
 }
+
 
 @Composable
 fun CharityDetailBody(
@@ -220,7 +221,7 @@ fun CharityDetailBody(
             )
             ProjectsList(
                 projects = charity.projects,
-                donorId =  donorId,
+                donorId = donorId,
                 navController = navController,
                 modifier = Modifier.padding(top = 16.dp)
             )

@@ -89,7 +89,7 @@ constructor(
         }.launchIn(viewModelScope)
     }
 
-    private fun getLeaderboard() {
+    fun getLeaderboard() {
         leaderboardError = null
         charityRepository.getLeaderboard(userId).onEach { state ->
             when(state){

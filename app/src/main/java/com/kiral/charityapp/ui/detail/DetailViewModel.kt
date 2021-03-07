@@ -34,6 +34,7 @@ constructor(
     var showDonationSuccessDialog by mutableStateOf(false)
 
     fun getCharity(id: Int, donorId: Int) {
+        error = null
         charityRepository.get(id, donorId).onEach { state ->
             when (state) {
                 is DataState.Loading -> {

@@ -27,10 +27,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import com.kiral.charityapp.ui.components.BaseScreen
 import com.kiral.charityapp.ui.components.CharitiesSelector
-import com.kiral.charityapp.ui.components.ErrorScreen
 import com.kiral.charityapp.ui.components.LeaderBoardItem
-import com.kiral.charityapp.ui.components.LoadingScreen
 import com.kiral.charityapp.ui.home.components.CharityAppBar
 import com.kiral.charityapp.ui.home.components.CharityGrid
 import com.kiral.charityapp.ui.theme.CharityTheme
@@ -64,7 +63,7 @@ class CharitiesFragment : Fragment() {
 @ExperimentalFoundationApi
 @Composable
 fun CharitiesScreen(
-    viewModel:CharitiesViewModel,
+    viewModel: CharitiesViewModel,
     navController: NavController
 ) {
     CharityTheme {
@@ -83,7 +82,7 @@ fun CharitiesScreen(
                             )
                         navController.navigate(action)
                     } else {
-                        viewModel.apply{
+                        viewModel.apply {
                             getCharities()
                             showFilter = false
                         }
@@ -115,22 +114,22 @@ fun CharityScreen(
     viewModel: CharitiesViewModel,
     navController: NavController,
 ) {
-    if (viewModel.charitiesError != null) {
-        ErrorScreen(text = viewModel.charitiesError!!)
-    } else {
-        if (viewModel.charitiesLoading) {
-            LoadingScreen()
-        } else {
-            CharityGrid(
-                lst = viewModel.charities,
-                modifier = Modifier
-                    .padding(top = 20.dp)
-            ){ itemId ->
-                val action = CharitiesFragmentDirections
-                    .actionCharitiesFragmentToCharityDetailFragment(itemId, viewModel.userId)
-                navController
-                    .navigate(action)
-            }
+    BaseScreen(
+        loading = viewModel.charitiesLoading,
+        error = viewModel.charitiesError,
+        onRetryClicked = {
+            viewModel.getCharities()
+        }
+    ) {
+        CharityGrid(
+            lst = viewModel.charities,
+            modifier = Modifier
+                .padding(top = 20.dp)
+        ) { itemId ->
+            val action = CharitiesFragmentDirections
+                .actionCharitiesFragmentToCharityDetailFragment(itemId, viewModel.userId)
+            navController
+                .navigate(action)
         }
     }
 }
@@ -139,25 +138,23 @@ fun CharityScreen(
 fun RankingScreen(
     viewModel: CharitiesViewModel
 ) {
-    if(viewModel.leaderboardError == null) {
-        if(viewModel.leaderboardLoading){
-            LoadingScreen()
-        }else {
-            LazyColumn {
-                itemsIndexed(viewModel.leaderboard) { index, item ->
-                    LeaderBoardItem(
-                        item = item,
-                        index = index + 1
-                    )
-                }
+    BaseScreen(
+        loading = viewModel.leaderboardLoading,
+        error = viewModel.leaderboardError,
+        onRetryClicked = {
+            viewModel.getLeaderboard()
+        }
+    ) {
+        LazyColumn {
+            itemsIndexed(viewModel.leaderboard) { index, item ->
+                LeaderBoardItem(
+                    item = item,
+                    index = index + 1
+                )
             }
         }
     }
-    else{
-        ErrorScreen(text = viewModel.leaderboardError!!)
-    }
 }
-
 
 @Composable
 fun FilterScreen(

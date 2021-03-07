@@ -20,7 +20,6 @@ class ProjectDetailViewModel
 constructor(
     private val charityRepository: CharityRepository
 ) : ViewModel() {
-
     var project by mutableStateOf<Project?>(null)
         private set
 
@@ -34,8 +33,9 @@ constructor(
     var showDialog by mutableStateOf(false)
     var showDonationSuccessDialog by mutableStateOf(false)
 
-    fun getProject(id: Int, donorId: Int) {
-        charityRepository.getProject(id, donorId).onEach { state ->
+    fun getProject(id: Int, userId: Int) {
+        error = null
+        charityRepository.getProject(id, userId).onEach { state ->
             when (state) {
                 is DataState.Loading -> {
                     loading = true

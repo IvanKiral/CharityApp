@@ -33,6 +33,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.kiral.charityapp.domain.model.Project
 import com.kiral.charityapp.ui.components.AlertDialogWithChoice
+import com.kiral.charityapp.ui.components.BaseScreen
 import com.kiral.charityapp.ui.components.ExpandableText
 import com.kiral.charityapp.ui.components.InformationAlertDialog
 import com.kiral.charityapp.ui.components.InformationBox
@@ -68,14 +69,22 @@ class ProjectDetailFragment : Fragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                CharityDetailScreen()
+                BaseScreen(
+                    error = viewModel.error,
+                    loading = viewModel.loading,
+                    onRetryClicked = {
+                        viewModel.getProject(args.projectId, args.donorId)
+                    }
+                ) {
+                    ProjectDetailScreen()
+                }
             }
         }
     }
 
     @ExperimentalMaterialApi
     @Composable
-    fun CharityDetailScreen() {
+    fun ProjectDetailScreen() {
         CharityTheme {
             Column {
                 viewModel.project?.let { p ->

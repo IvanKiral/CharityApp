@@ -13,6 +13,7 @@ import com.kiral.charityapp.network.mappers.CharityMapper
 import com.kiral.charityapp.network.mappers.DonorsMapper
 import com.kiral.charityapp.network.mappers.LeaderboardMapper
 import com.kiral.charityapp.network.mappers.ProjectMapper
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.io.IOException
@@ -30,7 +31,7 @@ class CharityRepositoryImpl(
             try {
                 emit(DataState.Loading)
                 //only for showing loading state
-                kotlinx.coroutines.delay(2000)
+                delay(2000)
                 val response = networkService.getCharities(1, id, categories)
                 if(response.isSuccessful){
                     emit(DataState.Success(charityListMapper.mapToDomainModelList(response.body()!!.charities)))
@@ -59,6 +60,7 @@ class CharityRepositoryImpl(
     override fun getProject(id: Int, donorId: Int): Flow<DataState<Project>> = flow {
         try {
             emit(DataState.Loading)
+            delay(2000)
             val response = networkService.getCharityGoal(id, donorId)
             if(response.isSuccessful) {
                 emit(DataState.Success(charityGoalMapper.mapToDomainModel(response.body()!!)))
