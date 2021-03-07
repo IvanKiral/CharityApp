@@ -8,7 +8,7 @@ import com.kiral.charityapp.domain.enums.DonationFrequency
 import com.kiral.charityapp.domain.model.Badge
 import com.kiral.charityapp.domain.model.Profile
 import com.kiral.charityapp.network.DataState
-import com.kiral.charityapp.repositories.charities.ProfileRepository
+import com.kiral.charityapp.repositories.profile.ProfileRepository
 import com.kiral.charityapp.ui.BaseApplication
 import com.kiral.charityapp.utils.Constants.BADGES
 import com.kiral.charityapp.utils.Constants.DONATION_VALUES

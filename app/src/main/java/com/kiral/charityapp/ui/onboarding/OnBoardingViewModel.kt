@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.kiral.charityapp.domain.enums.DonationFrequency
 import com.kiral.charityapp.domain.model.Profile
 import com.kiral.charityapp.network.DataState
-import com.kiral.charityapp.repositories.charities.ProfileRepository
+import com.kiral.charityapp.repositories.profile.ProfileRepository
 import com.kiral.charityapp.ui.BaseApplication
 import com.kiral.charityapp.utils.Constants.CATEGORIES
 import com.kiral.charityapp.utils.Constants.DONATION_VALUES

@@ -1,11 +1,11 @@
 package com.kiral.charityapp.di
 
-import com.kiral.charityapp.network.Dto.CharityListItemMapper
-import com.kiral.charityapp.network.Dto.CharityMapper
-import com.kiral.charityapp.network.Dto.DonorsMapper
-import com.kiral.charityapp.network.Dto.LeaderboardMapper
-import com.kiral.charityapp.network.Dto.ProjectMapper
 import com.kiral.charityapp.network.NetworkService
+import com.kiral.charityapp.network.mappers.CharityListItemMapper
+import com.kiral.charityapp.network.mappers.CharityMapper
+import com.kiral.charityapp.network.mappers.DonorsMapper
+import com.kiral.charityapp.network.mappers.LeaderboardMapper
+import com.kiral.charityapp.network.mappers.ProjectMapper
 import com.kiral.charityapp.repositories.charities.CharityRepository
 import com.kiral.charityapp.repositories.charities.CharityRepositoryImpl
 import dagger.Module

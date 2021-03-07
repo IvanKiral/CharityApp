@@ -1,9 +1,9 @@
 package com.kiral.charityapp.di
 
-import com.kiral.charityapp.network.Dto.ProfileMapper
 import com.kiral.charityapp.network.ProfileService
-import com.kiral.charityapp.repositories.charities.ProfileRepository
-import com.kiral.charityapp.repositories.charities.ProfileRepositoryImpl
+import com.kiral.charityapp.network.mappers.ProfileMapper
+import com.kiral.charityapp.repositories.profile.ProfileRepository
+import com.kiral.charityapp.repositories.profile.ProfileRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -16,7 +16,7 @@ import com.auth0.android.authentication.storage.SharedPreferencesStorage
 import com.auth0.android.callback.Callback
 import com.auth0.android.result.Credentials
 import com.kiral.charityapp.network.DataState
-import com.kiral.charityapp.repositories.charities.ProfileRepository
+import com.kiral.charityapp.repositories.profile.ProfileRepository
 import com.kiral.charityapp.utils.Auth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow

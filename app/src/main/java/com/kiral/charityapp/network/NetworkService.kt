@@ -1,11 +1,11 @@
 package com.kiral.charityapp.network
 
-import com.kiral.charityapp.network.Dto.CharityDto
-import com.kiral.charityapp.network.Dto.DonationDto
-import com.kiral.charityapp.network.Dto.ProjectDto
-import com.kiral.charityapp.network.Responses.CharityListResponse
-import com.kiral.charityapp.network.Responses.DonorsResponse
-import com.kiral.charityapp.network.Responses.LeaderboardResponse
+import com.kiral.charityapp.network.dtos.CharityDto
+import com.kiral.charityapp.network.dtos.DonationDto
+import com.kiral.charityapp.network.dtos.ProjectDto
+import com.kiral.charityapp.network.responses.CharityListResponse
+import com.kiral.charityapp.network.responses.DonorsResponse
+import com.kiral.charityapp.network.responses.LeaderboardResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET

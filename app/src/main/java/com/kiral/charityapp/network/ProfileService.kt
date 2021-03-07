@@ -1,9 +1,9 @@
 package com.kiral.charityapp.network
 
-import com.kiral.charityapp.network.Dto.LoginDto
-import com.kiral.charityapp.network.Dto.ProfileDto
-import com.kiral.charityapp.network.Dto.ProfilePostDto
-import com.kiral.charityapp.network.Responses.LoginResponse
+import com.kiral.charityapp.network.dtos.LoginDto
+import com.kiral.charityapp.network.dtos.ProfileDto
+import com.kiral.charityapp.network.dtos.ProfilePostDto
+import com.kiral.charityapp.network.responses.LoginResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
