@@ -30,7 +30,17 @@ fun CharitiesSelector(
             RowSelector(
                 text = categories[i],
                 selected = categoriesSelected[i],
-                onRowClick = { categoriesSelected[i] = !categoriesSelected[i] }
+                onRowClick = {
+                    val selectedSize = categoriesSelected.filter { b -> b == true }.size
+                    if (selectedSize > 0) {
+                        if (selectedSize > 1) {
+                            categoriesSelected[i] = !categoriesSelected[i]
+                        } else if (selectedSize == 1) {
+                            if (!categoriesSelected[i])
+                                categoriesSelected[i] = !categoriesSelected[i]
+                        }
+                    }
+                }
             )
         }
     }

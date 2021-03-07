@@ -1,7 +1,7 @@
 package com.kiral.charityapp.ui.home.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import com.kiral.charityapp.R
+import com.kiral.charityapp.ui.components.ClickableIcon
 import com.kiral.charityapp.ui.home.TabsNames
 
 @ExperimentalFoundationApi
@@ -18,8 +19,9 @@ import com.kiral.charityapp.ui.home.TabsNames
 fun CharityAppBar(
     tabSelected: TabsNames,
     modifier: Modifier = Modifier,
+    filterOn: Boolean,
     onProfileClick: () -> Unit,
-    onProfileLongClick: () -> Unit,
+    onFilterClicked: () -> Unit,
     onTabSelected: (TabsNames) -> Unit
 ) {
     Row(
@@ -35,17 +37,22 @@ fun CharityAppBar(
             tabSelected = tabSelected,
             onTabSelected = onTabSelected
         )
-        Box(
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(0.3f)
+                .weight(0.3f),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
         ) {
+            ClickableIcon(
+                icon = ImageVector.vectorResource(id = R.drawable.ic_filter),
+                alpha = if(filterOn) 1f else 0.6f,
+                onIconClicked = onFilterClicked
+            )
             IconRoundCorner(
-                modifier = Modifier
-                    .align(alignment = Alignment.CenterEnd),
                 imageVector = ImageVector.vectorResource(id = R.drawable.ic_profile),
                 onClick = onProfileClick,
-                onLongClick = onProfileLongClick
+                onLongClick = onFilterClicked
             )
         }
     }

@@ -5,12 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.MaterialTheme
@@ -20,15 +23,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import com.kiral.charityapp.R
 import com.kiral.charityapp.ui.components.BaseScreen
 import com.kiral.charityapp.ui.components.CharitiesSelector
+import com.kiral.charityapp.ui.components.ClickableIcon
 import com.kiral.charityapp.ui.components.LeaderBoardItem
 import com.kiral.charityapp.ui.home.components.CharityAppBar
 import com.kiral.charityapp.ui.home.components.CharityGrid
@@ -74,23 +82,15 @@ fun CharitiesScreen(
             CharityAppBar(
                 tabSelected = tabSelected,
                 modifier = Modifier.fillMaxWidth(),
+                filterOn = viewModel.showFilter,
                 onProfileClick = {
-                    if (!viewModel.showFilter) {
-                        val action =
-                            CharitiesFragmentDirections.actionCharitiesFragmentToProfileFragment(
-                                viewModel.userId
-                            )
-                        navController.navigate(action)
-                    } else {
-                        viewModel.apply {
-                            getCharities()
-                            showFilter = false
-                        }
-                    }
+                    val action =
+                        CharitiesFragmentDirections.actionCharitiesFragmentToProfileFragment(
+                            viewModel.userId
+                        )
+                    navController.navigate(action)
                 },
-                onProfileLongClick = {
-                    viewModel.showFilter = true
-                },
+                onFilterClicked = { viewModel.onFilterChange() },
                 onTabSelected = { tabSelected = it }
             )
             if (!viewModel.showFilter) {
@@ -164,11 +164,23 @@ fun FilterScreen(
         modifier = Modifier.fillMaxSize(),
     ) {
         Spacer(modifier = Modifier.fillMaxHeight(0.05f))
-        Text(
-            text = "Select charities to show",
-            style = MaterialTheme.typography.h5,
+        Row(
             modifier = Modifier.fillMaxWidth(),
-        )
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Select charities to Show",
+                style = MaterialTheme.typography.h5,
+            )
+            ClickableIcon(
+                icon = ImageVector.vectorResource(id = R.drawable.ic_close_black),
+                onIconClicked = {
+                    viewModel.onFilterChange()
+                },
+                modifier = Modifier.size(24.dp)
+            )
+        }
         CharitiesSelector(
             categories = viewModel.categories,
             categoriesSelected = viewModel.selectedCategories,

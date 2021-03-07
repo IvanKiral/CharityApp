@@ -40,7 +40,7 @@ constructor(
     lateinit var profile: Profile
         private set
 
-    var loading by mutableStateOf(false)
+    var loading by mutableStateOf(true)
         private set
 
     var error by mutableStateOf<String?>(null)
@@ -93,7 +93,7 @@ constructor(
     }
 
     fun addCategories() {
-        profile.categories = selected.mapIndexedNotNull { index, v -> if(v) index + 1 else null }
+        profile.categories = selected.mapIndexedNotNull { index, v -> if (v) index + 1 else null }
     }
 
     fun addRegularPayments() {

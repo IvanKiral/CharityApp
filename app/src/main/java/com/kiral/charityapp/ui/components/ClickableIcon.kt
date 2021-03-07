@@ -11,12 +11,14 @@ import androidx.compose.ui.layout.ContentScale
 fun ClickableIcon(
     icon: ImageVector,
     onIconClicked: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    alpha: Float = 1f
 ) {
     Image(
         imageVector = icon,
         contentDescription = "",
         contentScale = ContentScale.Crop,
+        alpha = alpha,
         modifier = modifier.clickable(onClick = onIconClicked)
     )
 }

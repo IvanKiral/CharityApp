@@ -107,4 +107,10 @@ constructor(
             }
         }.launchIn(viewModelScope)
     }
+
+    fun onFilterChange(){
+        showFilter = !showFilter
+        if(!showFilter)
+            getCharities()
+    }
 }
