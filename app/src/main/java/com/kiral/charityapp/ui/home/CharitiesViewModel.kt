@@ -1,18 +1,23 @@
 package com.kiral.charityapp.ui.home
 
-import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toMutableStateList
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kiral.charityapp.domain.model.CharityListItem
 import com.kiral.charityapp.domain.model.LeaderBoardProfile
 import com.kiral.charityapp.network.DataState
 import com.kiral.charityapp.repositories.charities.CharityRepository
-import com.kiral.charityapp.repositories.profile.ProfileRepository
 import com.kiral.charityapp.utils.Constants.CATEGORIES
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
@@ -20,76 +25,84 @@ import javax.inject.Inject
 class CharitiesViewModel
 @Inject
 constructor(
-    private val profileRepository: ProfileRepository,
-    private val charityRepository: CharityRepository
+    private val charityRepository: CharityRepository,
+    dataStore: DataStore<Preferences>
 ) : ViewModel() {
     val categories = CATEGORIES
+    val USER_ID = intPreferencesKey("user_id")
     var userId: Int = -1
 
-    private val _charities = mutableStateOf<List<CharityListItem>>(ArrayList())
-    val charities: State<List<CharityListItem>>
-        get() = _charities
+    var charities by mutableStateOf<List<CharityListItem>>(ArrayList())
+        private set
 
-    val charitiesError = mutableStateOf<String?>(null)
-    val charitiesLoading = mutableStateOf(false)
+    var charitiesError by mutableStateOf<String?>(null)
+        private set
+    var charitiesLoading by mutableStateOf(false)
+        private set
 
-    val lst = MutableList(categories.size) { true }
-    val selectedCategories = lst.toMutableStateList()
+    private var categoriesList = MutableList(categories.size) { true }
+    var selectedCategories = categoriesList.toMutableStateList()
 
-    val showFilter = mutableStateOf(false)
+    var showFilter by mutableStateOf(false)
 
-    val leaderboard = mutableStateOf<List<LeaderBoardProfile>>(ArrayList())
+    var leaderboard by mutableStateOf<List<LeaderBoardProfile>>(ArrayList())
+        private set
 
-    val leaderboardError = mutableStateOf<String?>(null)
-    val leaderboardLoading = mutableStateOf(false)
+    var leaderboardError by mutableStateOf<String?>(null)
+        private set
+    var leaderboardLoading by mutableStateOf(false)
+        private set
 
+    init {
+        val uId: Flow<Int> = dataStore.data
+            .map { preferences ->
+                preferences[USER_ID] ?: -1
+            }
+        uId.onEach { id ->
+            if(id != -1){
+                userId = id
+                getCharities()
+                getLeaderboard()
+            }
+        }.launchIn(viewModelScope)
+    }
 
-
-    fun getCharities(id: Int) {
-        charitiesError.value = null
-        charityRepository.search(id, selectedCategories.mapIndexed { index, v -> if(v) index + 1 else -1}.filter { it > -1 }).onEach {
+    fun getCharities() {
+        charitiesError = null
+        charityRepository.search(
+            userId,
+            selectedCategories.mapIndexed { index, v -> if(v) index + 1 else -1}.filter { it > -1 }
+        ).onEach {
             when (it) {
                 is DataState.Success<List<CharityListItem>> -> {
-                    charitiesLoading.value = false
-                    _charities.value = it.data
+                    charitiesLoading = false
+                    charities = it.data
                 }
                 is DataState.Error -> {
-                    charitiesLoading.value = false
-                    charitiesError.value = it.error
+                    charitiesLoading = false
+                    charitiesError = it.error
                 }
                 is DataState.Loading -> {
-                    charitiesLoading.value = true
+                    charitiesLoading = true
                 }
             }
         }.launchIn(viewModelScope)
     }
 
-    fun getId(email: String) {
-        profileRepository.login(email).onEach { state ->
-            when(state){
-                is DataState.Success -> {
-                    userId = state.data
-                    getCharities(userId)
-                    getLeaderboard()
-                }
-            }
-        }.launchIn(viewModelScope)
-    }
-
-    fun getLeaderboard() {
-        leaderboardError.value = null
+    private fun getLeaderboard() {
+        leaderboardError = null
         charityRepository.getLeaderboard(userId).onEach { state ->
             when(state){
                 is DataState.Success -> {
-                    leaderboardLoading.value = false
-                    leaderboard.value = state.data
+                    leaderboardLoading = false
+                    leaderboard = state.data
                 }
                 is DataState.Loading -> {
-                    leaderboardLoading.value = true
+                    leaderboardLoading = true
                 }
                 is DataState.Error -> {
-                    leaderboardLoading.value = false
-                    leaderboardError.value = state.error
+                    leaderboardLoading = false
+                    leaderboardError = state.error
                 }
             }
         }.launchIn(viewModelScope)
