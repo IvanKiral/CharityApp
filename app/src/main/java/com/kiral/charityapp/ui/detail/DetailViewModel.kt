@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.kiral.charityapp.domain.model.Charity
 import com.kiral.charityapp.network.DataState
 import com.kiral.charityapp.repositories.charities.CharityRepository
-import com.kiral.charityapp.utils.DonationValues
+import com.kiral.charityapp.utils.Constants.DONATION_VALUES
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -27,7 +27,7 @@ constructor(
     val loading = mutableStateOf(false)
     val error = mutableStateOf<String?>(null)
 
-    val values = DonationValues
+    val values = DONATION_VALUES
     val selectedValue = mutableStateOf(0)
     val showDialog = mutableStateOf(false)
     val showDonationSuccessDialog = mutableStateOf(false)

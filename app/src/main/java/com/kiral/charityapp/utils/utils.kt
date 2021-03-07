@@ -26,129 +26,127 @@ import java.io.FileOutputStream
 import java.text.Collator
 import java.util.*
 
-@Composable
-fun loadPicture(
-    url: String,
-    @DrawableRes defaultImage: Int
-): MutableState<Bitmap?> {
-    val state: MutableState<Bitmap?> = mutableStateOf(null)
+object Utils {
+    @Composable
+    fun loadPicture(
+        url: String,
+        @DrawableRes defaultImage: Int
+    ): MutableState<Bitmap?> {
+        val state: MutableState<Bitmap?> = mutableStateOf(null)
+        // show some image when loading is long
+        Glide.with(LocalContext.current)
+            .asBitmap()
+            .load(defaultImage)
+            .into(object : CustomTarget<Bitmap>() {
+                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                    state.value = resource
+                }
 
-    Glide.with(LocalContext.current)
-        .asBitmap()
-        .load(defaultImage)
-        .into(object : CustomTarget<Bitmap>() {
-            override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                state.value = resource
-            }
+                override fun onLoadCleared(placeholder: Drawable?) {}
+            })
+        // getting actual photo
+        Glide.with(LocalContext.current)
+            .asBitmap()
+            .load(url)
+            .into(object : CustomTarget<Bitmap>() {
+                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                    state.value = resource
+                }
 
-            override fun onLoadCleared(placeholder: Drawable?) {}
-        })
+                override fun onLoadCleared(placeholder: Drawable?) {}
+            })
+        return state
+    }
 
-    Glide.with(LocalContext.current)
-        .asBitmap()
-        .load(url)
-        .into(object : CustomTarget<Bitmap>() {
-            override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                state.value = resource
-            }
+    @Composable
+    fun loadPicture(
+        @DrawableRes drawable: Int
+    ): MutableState<Bitmap?> {
+        val state: MutableState<Bitmap?> = mutableStateOf(null)
+        Glide.with(LocalContext.current)
+            .asBitmap()
+            .load(drawable)
+            .into(object : CustomTarget<Bitmap>() {
+                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                    state.value = resource
+                }
 
-            override fun onLoadCleared(placeholder: Drawable?) {}
-        })
-    return state
-}
+                override fun onLoadCleared(placeholder: Drawable?) {}
+            })
+        return state
+    }
 
+    fun sharePhoto(context: Context, url: String) {
+        Glide.with(context).asBitmap().load(url)
+            .into(object : CustomTarget<Bitmap>() {
+                override fun onLoadCleared(placeholder: Drawable?) {}
 
-@Composable
-fun loadPictureFromDrawable(
-    @DrawableRes drawable: Int
-): MutableState<Bitmap?> {
-    val state: MutableState<Bitmap?> = mutableStateOf(null)
+                override fun onResourceReady(
+                    resource: Bitmap,
+                    transition: Transition<in Bitmap>?
+                ) {
+                    val cachePath = File(context.cacheDir, "images")
+                    CoroutineScope(Dispatchers.IO).launch {
+                        // storing image into cache to be able to share it
+                        try {
+                            cachePath.mkdirs()
+                            val stream = FileOutputStream(cachePath.toString() + "/image.png")
+                            resource.compress(
+                                Bitmap.CompressFormat.PNG,
+                                100,
+                                stream
+                            )
+                            val imagePath = File(context.cacheDir, "images")
+                            val newFile = File(imagePath, "image.png")
 
-    Glide.with(LocalContext.current)
-        .asBitmap()
-        .load(drawable)
-        .into(object : CustomTarget<Bitmap>() {
-            override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                state.value = resource
-            }
-
-            override fun onLoadCleared(placeholder: Drawable?) {}
-        })
-    return state
-}
-
-fun sharePhoto(context: Context, url: String) {
-    Glide.with(context).asBitmap().load(url)
-        .into(object : CustomTarget<Bitmap>() {
-            override fun onLoadCleared(placeholder: Drawable?) {
-                Log.i("fds", "fds")
-            }
-
-            override fun onResourceReady(
-                resource: Bitmap,
-                transition: Transition<in Bitmap>?
-            ) {
-
-                val cachePath = File(context.cacheDir, "images")
-                CoroutineScope(Dispatchers.IO).launch {
-                    cachePath.mkdirs() // don't forget to make the directory
-                    try {
-                        val stream =
-                            FileOutputStream(cachePath.toString() + "/image.png") // overwrites this image every time
-                        resource.compress(
-                            Bitmap.CompressFormat.PNG,
-                            100,
-                            stream
-                        )
-                        val imagePath = File(context.cacheDir, "images")
-                        val newFile = File(imagePath, "image.png")
-
-                        val uri: Uri =
-                            FileProvider.getUriForFile(
+                            val uri: Uri = FileProvider.getUriForFile(
                                 context,
                                 "${BuildConfig.APPLICATION_ID}.provider",
                                 newFile
                             )
-                        startSharingIntentWithImage(context, uri)
-                    } catch (e: Exception) {
-
+                            startSharingIntentWithImage(context, uri)
+                        } catch (e: Exception) {
+                            Log.i("AppDebug", "Error: ${e.message}")
+                        }
                     }
                 }
             }
-        }
-        )
-}
-
-
-fun startSharingIntentWithImage(context: Context, uri: Uri) {
-    val share = Intent.createChooser(Intent().apply {
-        action = Intent.ACTION_SEND
-        type = "image/*"
-        putExtra(Intent.EXTRA_STREAM, uri)
-        flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-    }, null)
-    share.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-    context.startActivity(share)
-}
-
-suspend fun getCountries(context: Context): Map<String, String> {
-    return withContext(Dispatchers.IO) {
-        val currentLocale = getCurrentLocale(context)
-        Locale.getISOCountries()
-            .map {
-                val locale = Locale("", it)
-                it.toLowerCase(Locale.ROOT) to locale.getDisplayCountry()
-            }.sortedWith { s1, s2 ->
-                Collator.getInstance(currentLocale).compare(s1.second, s2.second)
-            }
-            .toMap()
+            )
     }
-}
 
-fun getCurrentLocale(context: Context): Locale {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        return context.getResources().getConfiguration().getLocales().get(0)
-    } else {
-        return context.getResources().getConfiguration().locale
+
+    fun startSharingIntentWithImage(context: Context, uri: Uri) {
+        val share = Intent.createChooser(Intent().apply {
+            action = Intent.ACTION_SEND
+            type = "image/*"
+            putExtra(Intent.EXTRA_STREAM, uri)
+            flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+        }, null)
+        share.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        context.startActivity(share)
+    }
+
+    suspend fun getCountries(context: Context): Map<String, String> {
+        return withContext(Dispatchers.IO) {
+            val currentLocale = getCurrentLocale(context)
+            Locale.getISOCountries()
+                .map {
+                    val locale = Locale("", it)
+                    it.toLowerCase(Locale.ROOT) to locale.getDisplayCountry()
+                }.sortedWith { s1, s2 ->
+                    // sort also uses special chars in different languages
+                    Collator.getInstance(currentLocale).compare(s1.second, s2.second)
+                }
+                .toMap()
+        }
+    }
+
+    @Suppress("DEPRECATION")
+    fun getCurrentLocale(context: Context): Locale {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            return context.getResources().getConfiguration().getLocales().get(0)
+        } else {
+            return context.getResources().getConfiguration().locale
+        }
     }
 }

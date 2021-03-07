@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.kiral.charityapp.domain.model.Donor
 import com.kiral.charityapp.network.DataState
 import com.kiral.charityapp.repositories.charities.CharityRepository
-import com.kiral.charityapp.utils.DONORS_PAGE_SIZE
+import com.kiral.charityapp.utils.Constants.DONORS_PAGE_SIZE
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach

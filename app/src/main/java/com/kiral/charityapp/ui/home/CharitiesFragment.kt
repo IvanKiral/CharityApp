@@ -73,7 +73,7 @@ import com.kiral.charityapp.ui.theme.CharityTheme
 import com.kiral.charityapp.ui.theme.ProfileIconBorder
 import com.kiral.charityapp.ui.theme.cardTextStyle
 import com.kiral.charityapp.utils.Auth
-import com.kiral.charityapp.utils.loadPicture
+import com.kiral.charityapp.utils.Utils.loadPicture
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

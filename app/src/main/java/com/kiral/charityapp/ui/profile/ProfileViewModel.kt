@@ -10,9 +10,9 @@ import com.kiral.charityapp.domain.model.Profile
 import com.kiral.charityapp.network.DataState
 import com.kiral.charityapp.repositories.charities.ProfileRepository
 import com.kiral.charityapp.ui.BaseApplication
-import com.kiral.charityapp.utils.DonationValues
-import com.kiral.charityapp.utils.badgesMap
-import com.kiral.charityapp.utils.getCountries
+import com.kiral.charityapp.utils.Constants.BADGES
+import com.kiral.charityapp.utils.Constants.DONATION_VALUES
+import com.kiral.charityapp.utils.Utils.getCountries
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -35,7 +35,7 @@ constructor(
     val loading = mutableStateOf(false)
     val error = mutableStateOf<String?>(null)
 
-    val moneyValues = DonationValues
+    val moneyValues = DONATION_VALUES
     val selectedMoney =  mutableStateOf(0)
     val frequencyValues = DonationFrequency.values().map { it.name }
     val selectedFrequency = mutableStateOf(0)
@@ -59,7 +59,7 @@ constructor(
                     loading.value = false
                     _profile.value = state.data
                     _profile.value?.let { p ->
-                        badgesMap.forEach { (id, value) ->
+                        BADGES.forEach { (id, value) ->
                             if(p.badges.contains(id)) {
                                 badges.add(
                                     Badge(

@@ -30,7 +30,7 @@ import com.kiral.charityapp.ui.components.BoxedText
 import com.kiral.charityapp.ui.components.CountryDialog
 import com.kiral.charityapp.ui.components.FormTextField
 import com.kiral.charityapp.ui.theme.CharityTheme
-import com.kiral.charityapp.utils.getCurrentLocale
+import com.kiral.charityapp.utils.Utils.getCurrentLocale
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

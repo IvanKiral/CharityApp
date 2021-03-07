@@ -10,7 +10,7 @@ import com.kiral.charityapp.domain.model.LeaderBoardProfile
 import com.kiral.charityapp.network.DataState
 import com.kiral.charityapp.repositories.charities.CharityRepository
 import com.kiral.charityapp.repositories.charities.ProfileRepository
-import com.kiral.charityapp.utils.global_categories
+import com.kiral.charityapp.utils.Constants.CATEGORIES
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -23,7 +23,7 @@ constructor(
     private val profileRepository: ProfileRepository,
     private val charityRepository: CharityRepository
 ) : ViewModel() {
-    val categories = global_categories
+    val categories = CATEGORIES
     var userId: Int = -1
 
     private val _charities = mutableStateOf<List<CharityListItem>>(ArrayList())

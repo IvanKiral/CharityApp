@@ -60,8 +60,8 @@ import com.kiral.charityapp.ui.theme.InformationBoxBlueBorder
 import com.kiral.charityapp.ui.theme.TextDonationGray
 import com.kiral.charityapp.ui.utils.buildInformationText
 import com.kiral.charityapp.utils.Convert
-import com.kiral.charityapp.utils.loadPicture
-import com.kiral.charityapp.utils.sharePhoto
+import com.kiral.charityapp.utils.Utils.loadPicture
+import com.kiral.charityapp.utils.Utils.sharePhoto
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

@@ -8,8 +8,8 @@ import com.kiral.charityapp.domain.fake.responses.FakeDonationPost
 import com.kiral.charityapp.domain.fake.responses.FakeDonorDonation
 import com.kiral.charityapp.domain.fake.responses.FakeProfilePost
 import com.kiral.charityapp.domain.fake.responses.FakeProjectList
-import com.kiral.charityapp.utils.DONORS_PAGE_SIZE
-import com.kiral.charityapp.utils.DonationValues
+import com.kiral.charityapp.utils.Constants.DONATION_VALUES
+import com.kiral.charityapp.utils.Constants.DONORS_PAGE_SIZE
 import kotlin.random.Random
 
 class FakeDatabase {
@@ -240,7 +240,7 @@ class FakeDatabase {
     }
 
     private fun MakeFakeDonations(number: Int = 50) {
-        val values = DonationValues
+        val values = DONATION_VALUES
         val donatorsIdList = fakeProfiles.map { p -> p.id }
         val charitiesIdList = fakeCharities.map { c -> c.id }
         var lastDonationId = fakeDonations.lastOrNull()?.id?.plus(1) ?: 0
@@ -258,7 +258,7 @@ class FakeDatabase {
     }
 
     private fun MakeFakeDonationsForDonationGoals(number: Int = 20) {
-        val values = DonationValues
+        val values = DONATION_VALUES
         val donatorsIdList = fakeProfiles.map { p -> p.id }
         val donationGoalsIdList = fakeDonationGoals.map { c -> Pair(c.id, c.charityId) }
         var lastDonationId = fakeDonations.lastOrNull()?.id?.plus(1) ?: 0

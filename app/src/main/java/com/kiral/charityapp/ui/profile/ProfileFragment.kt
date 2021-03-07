@@ -65,8 +65,8 @@ import com.kiral.charityapp.ui.theme.TextBoxBlackTitle
 import com.kiral.charityapp.ui.theme.TextShowBadges
 import com.kiral.charityapp.utils.Auth
 import com.kiral.charityapp.utils.Convert
-import com.kiral.charityapp.utils.loadPicture
-import com.kiral.charityapp.utils.makeGravatrLink
+import com.kiral.charityapp.utils.Utils.loadPicture
+import com.kiral.charityapp.utils.makeGravatarLink
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 import javax.inject.Inject
@@ -130,7 +130,7 @@ class ProfileFragment : Fragment() {
                         name = p.name,
                         imageBitmap = p.email.let { e ->
                             val img = loadPicture(
-                                url = e.makeGravatrLink(),
+                                url = e.makeGravatarLink(),
                                 defaultImage = R.drawable.ic_loading_photo
                             )
                             img.value?.asImageBitmap()

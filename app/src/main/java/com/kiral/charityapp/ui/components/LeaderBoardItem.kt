@@ -18,8 +18,8 @@ import androidx.compose.ui.unit.sp
 import com.kiral.charityapp.R
 import com.kiral.charityapp.domain.model.LeaderBoardProfile
 import com.kiral.charityapp.utils.Convert
-import com.kiral.charityapp.utils.loadPicture
-import com.kiral.charityapp.utils.makeGravatrLink
+import com.kiral.charityapp.utils.Utils
+import com.kiral.charityapp.utils.makeGravatarLink
 
 @Composable
 fun LeaderBoardItem(
@@ -44,8 +44,8 @@ fun LeaderBoardItem(
             )
             ProfileImageWithBorder(
                 imageBitmap = item.email.let { e ->
-                    val img = loadPicture(
-                        url = e.makeGravatrLink(),
+                    val img = Utils.loadPicture(
+                        url = e.makeGravatarLink(),
                         defaultImage = R.drawable.ic_loading_photo
                     )
                     img.value?.asImageBitmap()

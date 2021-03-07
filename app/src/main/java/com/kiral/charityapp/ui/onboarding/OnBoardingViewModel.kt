@@ -9,9 +9,9 @@ import com.kiral.charityapp.domain.model.Profile
 import com.kiral.charityapp.network.DataState
 import com.kiral.charityapp.repositories.charities.ProfileRepository
 import com.kiral.charityapp.ui.BaseApplication
-import com.kiral.charityapp.utils.DonationValues
-import com.kiral.charityapp.utils.getCountries
-import com.kiral.charityapp.utils.global_categories
+import com.kiral.charityapp.utils.Constants.CATEGORIES
+import com.kiral.charityapp.utils.Constants.DONATION_VALUES
+import com.kiral.charityapp.utils.Utils.getCountries
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -26,7 +26,7 @@ constructor(
     private val profileRepository: ProfileRepository
 ): AndroidViewModel(application){
 
-    val categories = global_categories
+    val categories = CATEGORIES
 
     val loading = mutableStateOf(false)
     val error = mutableStateOf<String?>(null)
@@ -44,7 +44,7 @@ constructor(
     val intervalItems = DonationFrequency.values().map { it.name }
     val selectedInterval = mutableStateOf(0)
 
-    val amountItems = DonationValues
+    val amountItems = DONATION_VALUES
     val selectedAmount = mutableStateOf(0)
 
     val countryDialog = mutableStateOf(false)

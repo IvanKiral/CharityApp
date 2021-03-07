@@ -3,7 +3,7 @@ package com.kiral.charityapp.network.Dto
 import com.kiral.charityapp.domain.model.Badge
 import com.kiral.charityapp.domain.model.Donor
 import com.kiral.charityapp.domain.util.Mapper
-import com.kiral.charityapp.utils.badgesMap
+import com.kiral.charityapp.utils.Constants.BADGES
 
 class DonorsMapper: Mapper<DonorDto, Donor> {
     override fun mapToDomainModel(model: DonorDto): Donor {
@@ -12,7 +12,7 @@ class DonorsMapper: Mapper<DonorDto, Donor> {
             email = model.email,
             donated = model.sum,
             badges = model.badges.mapNotNull { id ->
-                badgesMap.get(id)?.let{
+                BADGES.get(id)?.let{
                     Badge(
                         id = id,
                         title = it.title,

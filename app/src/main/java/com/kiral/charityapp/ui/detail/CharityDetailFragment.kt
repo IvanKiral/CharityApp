@@ -65,8 +65,7 @@ import com.kiral.charityapp.ui.theme.InformationBoxBlue
 import com.kiral.charityapp.ui.theme.InformationBoxBlueBorder
 import com.kiral.charityapp.ui.utils.buildInformationText
 import com.kiral.charityapp.utils.Convert
-import com.kiral.charityapp.utils.loadPicture
-import com.kiral.charityapp.utils.sharePhoto
+import com.kiral.charityapp.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -121,7 +120,7 @@ class CharityDetailFragment : Fragment() {
     ) {
         Box() {
             imgSrc.let { src ->
-                val image = loadPicture(url = src, defaultImage = R.drawable.children)
+                val image = Utils.loadPicture(url = src, defaultImage = R.drawable.children)
                 image.value?.let { img ->
                     Image(
                         bitmap = img.asImageBitmap(),
@@ -278,7 +277,7 @@ class CharityDetailFragment : Fragment() {
                                     backgroundColor = Color.White,
                                 ),
                                 onClick = {
-                                    sharePhoto(
+                                    Utils.sharePhoto(
                                         activity?.applicationContext!!,
                                         charity.imgSrc
                                     )

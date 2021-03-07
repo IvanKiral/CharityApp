@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.kiral.charityapp.domain.model.Badge
 import com.kiral.charityapp.repositories.charities.ProfileRepository
-import com.kiral.charityapp.utils.badgesMap
+import com.kiral.charityapp.utils.Constants.BADGES
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -22,7 +22,7 @@ constructor(
 
     fun getBadges(badgesId: IntArray) {
         val lst = mutableListOf<Badge>()
-        badgesMap.forEach { (id, value) ->
+        BADGES.forEach { (id, value) ->
             lst.add(
                 Badge(
                     id = id,

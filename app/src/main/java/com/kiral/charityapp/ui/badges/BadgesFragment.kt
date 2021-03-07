@@ -30,7 +30,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.kiral.charityapp.domain.model.Badge
 import com.kiral.charityapp.ui.theme.CharityTheme
-import com.kiral.charityapp.utils.loadPictureFromDrawable
+import com.kiral.charityapp.utils.Utils
 import com.kiral.charityapp.utils.toGrayscale
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -107,7 +107,7 @@ class BadgesFragment : Fragment() {
                 .width(144.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            val img = loadPictureFromDrawable(drawable = badge.iconId)
+            val img = Utils.loadPicture(drawable = badge.iconId)
             img.value?.let {
                 Image(
                     bitmap = if (badge.active) it.toGrayscale()

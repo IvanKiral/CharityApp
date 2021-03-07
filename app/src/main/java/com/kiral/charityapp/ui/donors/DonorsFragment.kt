@@ -45,10 +45,10 @@ import com.kiral.charityapp.ui.components.ErrorScreen
 import com.kiral.charityapp.ui.components.ProfileImageWithBorder
 import com.kiral.charityapp.ui.theme.CharityTheme
 import com.kiral.charityapp.ui.theme.TextOptionSubtitle
+import com.kiral.charityapp.utils.Constants.DONORS_PAGE_SIZE
 import com.kiral.charityapp.utils.Convert
-import com.kiral.charityapp.utils.DONORS_PAGE_SIZE
-import com.kiral.charityapp.utils.loadPicture
-import com.kiral.charityapp.utils.makeGravatrLink
+import com.kiral.charityapp.utils.Utils.loadPicture
+import com.kiral.charityapp.utils.makeGravatarLink
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -112,7 +112,7 @@ class DonorsFragment : Fragment() {
                     ProfileCard(
                         imageBitmap = donor.email.let { e ->
                             val img = loadPicture(
-                                url = e.makeGravatrLink(),
+                                url = e.makeGravatarLink(),
                                 defaultImage = R.drawable.ic_loading_photo
                             )
                             img.value?.asImageBitmap()
