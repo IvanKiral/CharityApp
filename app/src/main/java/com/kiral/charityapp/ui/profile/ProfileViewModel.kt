@@ -1,7 +1,9 @@
 package com.kiral.charityapp.ui.profile
 
-import androidx.compose.runtime.State
+import android.util.Log
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.kiral.charityapp.domain.enums.DonationFrequency
@@ -26,24 +28,24 @@ constructor(
     private val application: BaseApplication,
     private val profileRepository: ProfileRepository
 ): AndroidViewModel(application) {
-    private val _profile = mutableStateOf<Profile?>(null)
-    val profile: State<Profile?>
-        get() = _profile
-
+    var profile by mutableStateOf<Profile?>(null)
+        private set
     var badges = mutableListOf<Badge>()
 
-    val loading = mutableStateOf(false)
-    val error = mutableStateOf<String?>(null)
+    var loading by mutableStateOf(false)
+        private set
+    var error by mutableStateOf<String?>(null)
+        private set
 
     val moneyValues = DONATION_VALUES
-    val selectedMoney =  mutableStateOf(0)
+    var selectedMoney by  mutableStateOf(0)
     val frequencyValues = DonationFrequency.values().map { it.name }
-    val selectedFrequency = mutableStateOf(0)
+    var selectedFrequency by mutableStateOf(0)
 
-    val regularDonationDialog = mutableStateOf(false)
+    var regularDonationDialog by mutableStateOf(false)
 
-    val countryDialog = mutableStateOf(false)
-    val countries = mutableStateOf(mapOf<String, String>())
+    var countryDialog by mutableStateOf(false)
+    var countries = mutableStateOf(mapOf<String, String>())
 
     init {
         viewModelScope.launch {
@@ -52,13 +54,14 @@ constructor(
     }
 
     fun setProfile(id: Int){
+        error = null
         profileRepository.getProfile(id).onEach {  state ->
             when(state){
-                is DataState.Loading -> loading.value = true
+                is DataState.Loading -> loading = true
                 is DataState.Success -> {
-                    loading.value = false
-                    _profile.value = state.data
-                    _profile.value?.let { p ->
+                    loading = false
+                    profile = state.data
+                    profile?.let { p ->
                         BADGES.forEach { (id, value) ->
                             if(p.badges.contains(id)) {
                                 badges.add(
@@ -74,8 +77,8 @@ constructor(
                     }
                 }
                 is DataState.Error -> {
-                    loading.value = false
-                    error.value = state.error
+                    loading = false
+                    error = state.error
                 }
             }
         }.launchIn(viewModelScope)
@@ -83,12 +86,12 @@ constructor(
 
 
     fun setActive(value: Boolean){
-        _profile.value?.let { p ->
+        profile?.let { p ->
             profileRepository.updateRegularDonationActive(p.id, value).onEach { state ->
                 when(state){
                     is DataState.Loading -> {}
                     is DataState.Success -> {
-                        _profile.value = profile.value?.copy(
+                        profile = profile?.copy(
                             regularDonationActive = value
                         )
                     }
@@ -99,12 +102,12 @@ constructor(
     }
 
     fun setRegion(value: String){
-        _profile.value?.let { p ->
+        profile?.let { p ->
             profileRepository.updateRegion(p.id, value).onEach { state ->
                 when(state){
                     is DataState.Loading -> {}
                     is DataState.Success -> {
-                        _profile.value = profile.value?.copy(
+                        profile = profile?.copy(
                             region = value
                         )
                     }
@@ -114,45 +117,48 @@ constructor(
         }
     }
 
-    fun setRegularPayment(userId: Int){
-        val value = moneyValues.get(selectedMoney.value)
-        profileRepository.updateRegularDonation(
-            userId, true, value , selectedFrequency.value
-        ).onEach { state ->
-            when(state) {
-                is DataState.Success -> {
-                    _profile.value = _profile.value?.copy(
-                        regularDonationActive = true,
-                        regularDonationValue = value,
-                        regularDonationFrequency = selectedFrequency.value
-                    )
+    fun setRegularPayment() {
+        val value = moneyValues[selectedMoney]
+        profile?.let { p ->
+            Log.i("AppDebug", "profile id ${p.id}")
+            profileRepository.updateRegularDonation(
+                p.id, true, value, selectedFrequency
+            ).onEach { state ->
+                when (state) {
+                    is DataState.Success -> {
+                        profile = profile?.copy(
+                            regularDonationActive = true,
+                            regularDonationValue = value,
+                            regularDonationFrequency = selectedFrequency
+                        )
+                    }
                 }
-            }
-        }.launchIn(viewModelScope)
-        setRegularDonationDialog(false)
+            }.launchIn(viewModelScope)
+            regularDonationDialog = false
+        }
     }
 
-    fun setCategories(){
-        //TODO: MAKE UI AND CALL FROM REPOSITORY
-    }
-
-    fun addCredit(){
-        //TODO: MAKE UI AND CALL FROM REPOSITORY
-    }
-
-    fun setCountryDialog(value: Boolean){
-        countryDialog.value = value
-    }
-
-    fun setSelectedFrequency(value: Int){
-        selectedFrequency.value = value
-    }
-
-    fun setSelectedMoney(value: Int){
-        selectedMoney.value = value
-    }
-
-    fun setRegularDonationDialog(value: Boolean){
-        regularDonationDialog.value = value
-    }
+//    fun setCategories(){
+//        //TODO: MAKE UI AND CALL FROM REPOSITORY
+//    }
+//
+//    fun addCredit(){
+//        //TODO: MAKE UI AND CALL FROM REPOSITORY
+//    }
+//
+//    fun setCountryDialog(value: Boolean){
+//        countryDialog.value = value
+//    }
+//
+//    fun setSelectedFrequency(value: Int){
+//        selectedFrequency.value = value
+//    }
+//
+//    fun setSelectedMoney(value: Int){
+//        selectedMoney.value = value
+//    }
+//
+//    fun setRegularDonationDialog(value: Boolean){
+//        regularDonationDialog.value = value
+//    }
 }

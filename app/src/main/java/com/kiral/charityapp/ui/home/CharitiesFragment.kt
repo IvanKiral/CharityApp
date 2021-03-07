@@ -24,7 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.kiral.charityapp.ui.components.BaseScreen
@@ -41,7 +41,7 @@ enum class TabsNames {
 
 @AndroidEntryPoint
 class CharitiesFragment : Fragment() {
-    private val viewModel: CharitiesViewModel by viewModels()
+    private val viewModel: CharitiesViewModel by activityViewModels()
 
     @ExperimentalFoundationApi
     override fun onCreateView(
