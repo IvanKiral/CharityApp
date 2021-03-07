@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 interface ProfileRepository{
     fun login(email: String): Flow<DataState<Int>>
 
-    fun register(profile: Profile): Flow<DataState<Boolean>>
+    fun register(profile: Profile): Flow<DataState<Int>>
 
     fun getProfile(id: Int): Flow<DataState<Profile>>
 

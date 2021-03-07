@@ -1,7 +1,6 @@
 package com.kiral.charityapp.ui.welcome
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +20,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -47,8 +45,6 @@ class WelcomeFragment : Fragment() {
     @Inject
     lateinit var account: Auth0
 
-    val USER_ID = intPreferencesKey("user_id")
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -57,7 +53,6 @@ class WelcomeFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 viewModel.shouldNavigateToHomeFragment.value?.let {
-                    Log.i("WelcomeFragment", "value of navigation is $it")
                     if (it) {
                         findNavController().navigate(R.id.action_welcomeFragment_to_charitiesFragment)
                     } else {
@@ -117,15 +112,12 @@ class WelcomeFragment : Fragment() {
             .withScheme("demo")
             .withScope("openid profile email")
             .start(requireContext(), object : Callback<Credentials, AuthenticationException> {
-                override fun onFailure(error: AuthenticationException) {
-                    // Something went wrong!
-                }
+                override fun onFailure(error: AuthenticationException) {}
 
                 override fun onSuccess(result: Credentials) {
                     val accessToken = result.accessToken
                     manager.saveCredentials(result)
                     Auth.withUserEmail(account, accessToken) { email ->
-                        Log.i("AppDebug", "in success")
                         viewModel.getProfileId(email)
                     }
                 }

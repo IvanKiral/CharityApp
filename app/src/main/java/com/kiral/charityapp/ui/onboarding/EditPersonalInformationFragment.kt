@@ -35,11 +35,8 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class EditPersonalInformationFragment: Fragment(){
-
-    val args: EditPersonalInformationFragmentArgs by navArgs()
-
+    private val args: EditPersonalInformationFragmentArgs by navArgs()
     private val viewModel: OnBoardingViewModel by activityViewModels()
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,9 +44,9 @@ class EditPersonalInformationFragment: Fragment(){
         savedInstanceState: Bundle?
     ): View {
         val locale = getCurrentLocale(requireContext())
-        viewModel.setCountry(locale.displayCountry)
+        viewModel.country = locale.displayCountry
         viewModel.createNewProfile(args.email)
-        viewModel.setSelectedCountry(locale.country)
+        viewModel.selectedCountry = locale.country
         return ComposeView(requireContext()).apply {
             setContent {
                 EditInfoScreen()
@@ -61,7 +58,7 @@ class EditPersonalInformationFragment: Fragment(){
     fun EditInfoScreen(){
         val scrollState = rememberScrollState()
 
-        CharityTheme() {
+        CharityTheme {
             Column(
                 modifier = Modifier
                     .padding(horizontal = 32.dp)
@@ -76,24 +73,24 @@ class EditPersonalInformationFragment: Fragment(){
                 )
 
                 FormTextField(
-                    text = viewModel.name.value ,
-                    onChange = { viewModel.setName(it) },
+                    text = viewModel.name ,
+                    onChange = { value -> viewModel.name = value },
                     label = "Type your name",
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
                 BoxedText(
-                    text = viewModel.country.value,
+                    text = viewModel.country,
                     modifier = Modifier.padding(vertical = 8.dp)
                 ){
-                    viewModel.setCountryDialog(true)
+                    viewModel.countryDialog = true
                 }
 
                 CountryDialog(
-                    countries = viewModel.countries.value,
-                    isShown = viewModel.countryDialog.value,
-                    setDialog = { viewModel.setCountryDialog(it) },
-                    setCountryText = { viewModel.setCountry(it) },
-                    setCountry = { viewModel.setSelectedCountry(it) },
+                    countries = viewModel.countries,
+                    isShown = viewModel.countryDialog,
+                    setDialog = { value -> viewModel.countryDialog = value },
+                    setCountryText = { value -> viewModel.country = value },
+                    setCountry = { value -> viewModel.selectedCountry = value },
                 )
 
                 Button(

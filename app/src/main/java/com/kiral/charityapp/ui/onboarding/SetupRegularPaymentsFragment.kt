@@ -32,7 +32,7 @@ import com.kiral.charityapp.utils.Convert
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SetupRegularPaymentsFragment: Fragment(){
+class SetupRegularPaymentsFragment : Fragment() {
     private val viewModel: OnBoardingViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -42,7 +42,7 @@ class SetupRegularPaymentsFragment: Fragment(){
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                if (viewModel.navigateToCharityFragment.value) {
+                if (viewModel.navigateToCharityFragment) {
                     val action = SetupRegularPaymentsFragmentDirections
                         .actionSetupRegularPaymentsFragmentToCharitiesFragment(viewModel.profile.email)
                     findNavController()
@@ -54,17 +54,16 @@ class SetupRegularPaymentsFragment: Fragment(){
     }
 
     @Composable
-    fun SetupPaymentsScreen(){
+    fun SetupPaymentsScreen() {
         val scrollState = rememberScrollState()
         CharityTheme {
             Column(
-                modifier = Modifier.padding(horizontal = 32.dp)
+                modifier = Modifier
+                    .padding(horizontal = 32.dp)
                     .verticalScroll(scrollState),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-
-
                 Text(
                     text = stringResource(R.string.SetupRegularPaymentsFragment_Title),
                     style = MaterialTheme.typography.h5,
@@ -76,8 +75,8 @@ class SetupRegularPaymentsFragment: Fragment(){
                 ) {
                     SingleChoicePicker(
                         items = viewModel.amountItems.map { i -> "${i.Convert()} €" },
-                        selectedItem = viewModel.selectedAmount.value,
-                        setSelectedItem = { viewModel.setSelectedAmount(it) },
+                        selectedItem = viewModel.selectedAmount,
+                        setSelectedItem = { value -> viewModel.selectedAmount = value },
                         modifier = Modifier
                             .fillMaxWidth(0.5f)
                             .padding(horizontal = 8.dp),
@@ -85,8 +84,8 @@ class SetupRegularPaymentsFragment: Fragment(){
                     )
                     SingleChoicePicker(
                         items = viewModel.intervalItems,
-                        selectedItem = viewModel.selectedInterval.value,
-                        setSelectedItem = { viewModel.setSelectedInterval(it) },
+                        selectedItem = viewModel.selectedInterval,
+                        setSelectedItem = { value -> viewModel.selectedInterval = value },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 8.dp),
@@ -105,14 +104,11 @@ class SetupRegularPaymentsFragment: Fragment(){
                     }
                 ) {
                     Text(
-                        text = if (viewModel.selectedAmount.value != 0) "Continue" else "Skip",
+                        text = if (viewModel.selectedAmount != 0) "Continue" else "Skip",
                         style = MaterialTheme.typography.button
                     )
                 }
             }
         }
     }
-
 }
-
-

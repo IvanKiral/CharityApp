@@ -49,7 +49,7 @@ class SelectCharitiesTypesFragment : Fragment() {
     @Composable
     fun SelectCharitiesScreen() {
         val scrollState = rememberScrollState()
-        CharityTheme() {
+        CharityTheme {
             Column(
                 modifier = Modifier
                     .padding(horizontal = 32.dp)
@@ -78,7 +78,7 @@ class SelectCharitiesTypesFragment : Fragment() {
                         .padding(vertical = 32.dp)
                         .height(64.dp),
                     onClick = {
-                        viewModel.addCharitiesTypes()
+                        viewModel.addCategories()
                         findNavController().navigate(R.id.action_selectCharitiesTypesFragment_to_setupRegularPaymentsFragment)
                     }
                 ) {

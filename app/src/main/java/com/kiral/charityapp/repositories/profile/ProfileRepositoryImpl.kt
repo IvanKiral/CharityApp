@@ -36,13 +36,13 @@ class ProfileRepositoryImpl(
         }
     }
 
-    override fun register(profile: Profile): Flow<DataState<Boolean>> = flow {
+    override fun register(profile: Profile): Flow<DataState<Int>> = flow {
         try {
             emit(DataState.Loading)
             val profileDto = profileMapper.mapFromDomainModel(profile)
             val response = profileService.register(profileDto)
             if(response.isSuccessful){
-                emit(DataState.Success(true))
+                emit(DataState.Success(response.body()!!.id))
             } else {
                 emit(DataState.Error("Could not register! Please try again later"))
             }
