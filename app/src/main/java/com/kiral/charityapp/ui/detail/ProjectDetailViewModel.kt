@@ -1,8 +1,8 @@
 package com.kiral.charityapp.ui.detail
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kiral.charityapp.domain.model.Project
@@ -21,39 +21,42 @@ constructor(
     private val charityRepository: CharityRepository
 ) : ViewModel() {
 
-    private val _project: MutableState<Project?> = mutableStateOf(null)
-    val project: State<Project?>
-        get() = _project
+    var project by mutableStateOf<Project?>(null)
+        private set
 
-    val loading = mutableStateOf(false)
-    val error = mutableStateOf<String?>(null)
+    var loading by mutableStateOf(false)
+        private set
+    var error by mutableStateOf<String?>(null)
+        private set
 
     val values = DONATION_VALUES
-    val selectedValue = mutableStateOf(0)
-    val showDialog = mutableStateOf(false)
-    val showDonationSuccessDialog = mutableStateOf(false)
+    var selectedValue by mutableStateOf(0)
+    var showDialog by mutableStateOf(false)
+    var showDonationSuccessDialog by mutableStateOf(false)
 
     fun getProject(id: Int, donorId: Int) {
         charityRepository.getProject(id, donorId).onEach { state ->
             when (state) {
                 is DataState.Loading -> {
-                    loading.value = true
+                    loading = true
                 }
                 is DataState.Success -> {
-                    loading.value = false
-                    _project.value = state.data
+                    loading = false
+                    project = state.data
                 }
                 is DataState.Error -> {
-                    loading.value = false
-                    error.value = state.error
+                    loading = false
+                    error = state.error
                 }
             }
         }.launchIn(viewModelScope)
     }
 
     fun makeDonation(donorId: Int) {
-        val value = values.get(selectedValue.value)
-        _project.value?.let { currentProject ->
+        val value = values[selectedValue]
+        project?.let { currentProject ->
+            val donorDonated = currentProject.donorDonated
+            val actualSum = currentProject.actualSum
             charityRepository.makeDonationToCharity(
                 charityId = currentProject.charityId,
                 donorId = donorId,
@@ -64,25 +67,17 @@ constructor(
                     is DataState.Loading -> {
                     }
                     is DataState.Success -> {
-                        setShowDialog(false)
-                        setDonationSuccessDialog(true)
+                        showDialog = false
+                        showDonationSuccessDialog = true
+                        project = project?.copy(
+                            donorDonated = donorDonated + value,
+                            actualSum = actualSum + value
+                        )
                     }
                     is DataState.Error -> {
                     }
                 }
             }.launchIn(viewModelScope)
         }
-    }
-
-    fun setSelectedValue(value: Int) {
-        selectedValue.value = value
-    }
-
-    fun setShowDialog(value: Boolean) {
-        showDialog.value = value
-    }
-
-    fun setDonationSuccessDialog(value: Boolean) {
-        showDonationSuccessDialog.value = value
     }
 }
