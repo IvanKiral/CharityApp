@@ -1,11 +1,10 @@
 package com.kiral.charityapp.ui.badges
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.kiral.charityapp.domain.model.Badge
-import com.kiral.charityapp.repositories.profile.ProfileRepository
 import com.kiral.charityapp.utils.Constants.BADGES
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -13,12 +12,9 @@ import javax.inject.Inject
 @HiltViewModel
 class BadgesViewModel
 @Inject
-constructor(
-    private val profileRepository: ProfileRepository
-) : ViewModel() {
-    private val _badges: MutableState<List<Badge>> = mutableStateOf(listOf())
-    val badges: State<List<Badge>>
-        get() = _badges
+constructor() : ViewModel() {
+    var badges by mutableStateOf<List<Badge>>(listOf())
+        private set
 
     fun getBadges(badgesId: IntArray) {
         val lst = mutableListOf<Badge>()
@@ -33,6 +29,6 @@ constructor(
             )
         }
         lst.sortBy { it.active }
-        _badges.value = lst
+        badges = lst
     }
 }

@@ -1,6 +1,8 @@
 package com.kiral.charityapp.ui.donors
 
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kiral.charityapp.domain.model.Donor
@@ -18,26 +20,28 @@ class DonorsViewModel
 constructor(
     val charityRepository: CharityRepository
 ): ViewModel() {
-    val charityDonors = mutableStateOf<List<Donor>>(listOf())
-    val page = mutableStateOf(1)
-    val loading = mutableStateOf(false)
-    val error = mutableStateOf<String?>(null)
+    var charityDonors by mutableStateOf<List<Donor>>(listOf())
+    var page by mutableStateOf(1)
+    var loading by mutableStateOf(false)
+    var error by mutableStateOf<String?>(null)
     var indexPosition = 0
 
     fun getCharityDonors(charityId: Int, page: Int)  {
+        error = null
         charityRepository.getCharityDonors(charityId, page).onEach { state ->
             when (state) {
                 is DataState.Loading -> {
-
-                    loading.value = true
+                    loading = true
                 }
                 is DataState.Success -> {
-                    loading.value = false
-                    val tmp = ArrayList(charityDonors.value)
+                    loading = false
+                    val tmp = ArrayList(charityDonors)
                     tmp.addAll(state.data)
-                    charityDonors.value = tmp
+                    charityDonors = tmp
                 }
                 is DataState.Error -> {
+                    loading = false
+                    error = state.error
                 }
             }
         }.launchIn(viewModelScope)
@@ -45,11 +49,16 @@ constructor(
 
     fun nextPage(charityId: Int){
         //preventing recomposing so it would call pagination more times
-        if((indexPosition + 1) >= (page.value * DONORS_PAGE_SIZE) ){
-            page.value = page.value + 1
-            if(page.value > 1){
-                getCharityDonors(charityId, page.value)
+        if((indexPosition + 1) >= (page * DONORS_PAGE_SIZE) ){
+            page += 1
+            if(page > 1){
+                getCharityDonors(charityId, page)
             }
         }
+    }
+
+    fun retry(charityId: Int){
+        page = 1
+        getCharityDonors(charityId, page)
     }
 }
