@@ -1,7 +1,5 @@
 package com.kiral.charityapp.ui.profile.components
 
-import android.content.Context
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -39,7 +37,7 @@ fun Boxes(
     credit: String,
     donations: String,
     modifier: Modifier = Modifier,
-    context: Context
+    addButtonClick: () -> Unit,
 ) {
     Row(
         modifier = modifier,
@@ -75,9 +73,7 @@ fun Boxes(
             showAddButton = true,
             gradientStartColor = BoxGradientStart,
             gradientEndColor = BoxGradientEnd,
-            addButtonClick = {
-                Toast.makeText(context, "click", Toast.LENGTH_SHORT).show()
-            }
+            addButtonClick = addButtonClick
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(

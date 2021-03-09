@@ -43,12 +43,6 @@ fun DonationField(
                     .fillMaxWidth()
                     .animateContentSize()
             ) {
-//                Divider(
-//                    Modifier
-//                        .fillMaxWidth()
-//                        .height(1.dp)
-//                )
-                //Spacer(Modifier.height(16.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.Bottom
@@ -71,7 +65,7 @@ fun DonationField(
                         textStyle = MaterialTheme.typography.body2,
                         modifier = Modifier.fillMaxWidth(0.6f),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                        label = { Text("Your donation") },
+                        label = { Text("Your amount") },
                         trailingIcon = { Text("€", style = MaterialTheme.typography.body2) }
                     )
                     Button(

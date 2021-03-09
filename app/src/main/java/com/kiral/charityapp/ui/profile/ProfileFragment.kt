@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -37,10 +37,12 @@ import com.kiral.charityapp.ui.components.AlertDialogWithChoice
 import com.kiral.charityapp.ui.components.BaseScreen
 import com.kiral.charityapp.ui.components.ClickableIcon
 import com.kiral.charityapp.ui.components.CountryDialog
+import com.kiral.charityapp.ui.components.DonationField
 import com.kiral.charityapp.ui.components.SingleChoicePicker
 import com.kiral.charityapp.ui.home.CharitiesViewModel
 import com.kiral.charityapp.ui.profile.components.Badges
 import com.kiral.charityapp.ui.profile.components.Boxes
+import com.kiral.charityapp.ui.profile.components.CategoriesDialog
 import com.kiral.charityapp.ui.profile.components.OptionsMenu
 import com.kiral.charityapp.ui.profile.components.ProfilePicture
 import com.kiral.charityapp.ui.theme.CharityTheme
@@ -94,7 +96,8 @@ class ProfileFragment : Fragment() {
                                     requireContext(),
                                     dataStore,
                                 ) {
-                                    findNavController().navigate(R.id.action_profileFragment_to_welcomeFragment)
+                                    findNavController()
+                                        .navigate(R.id.action_profileFragment_to_welcomeFragment)
                                 }
                             }
                         )
@@ -119,7 +122,7 @@ fun ProfileScreen(
                     .fillMaxSize()
                     .padding(horizontal = 32.dp),
             ) {
-                val (profilePicture, back, divider, badges, boxRow, optionsMenu) = createRefs()
+                val (profilePicture, back, divider, badges, donationField, boxRow, optionsMenu) = createRefs()
                 val baseline = createGuidelineFromTop(300.dp)
 
                 ClickableIcon(
@@ -176,21 +179,35 @@ fun ProfileScreen(
                         .constrainAs(boxRow) {
                             top.linkTo(badges.bottom, margin = 24.dp)
                         },
-                    context = LocalContext.current
+                    addButtonClick = { viewModel.onAddButtonClick() }
                 )
+                Box(
+                    modifier = Modifier
+                        .constrainAs(donationField) {
+                            top.linkTo(boxRow.bottom)
+                        }
+                ) {
+                    DonationField(
+                        loading = viewModel.creditLoading,
+                        shown = viewModel.credit,
+                        onButtonClick = { value -> viewModel.addCredit(value) }
+                    )
+                }
                 OptionsMenu(
                     regularDonationValue = profile.regularDonationValue,
                     regularDonationFrequency = profile.regularDonationFrequency,
                     region = profile.region,
                     isSwitched = profile.regularDonationActive,
+                    categories = viewModel.categoryString,
                     switchFunction = { value -> viewModel.setActive(value) },
                     setDonationDialog = { value -> viewModel.regularDonationDialog = value },
                     setCountryDialog = { value -> viewModel.countryDialog = value },
+                    setCategoriesDialog = { value -> viewModel.categoriesDialog = value },
                     logout = logout,
                     modifier = Modifier
                         .fillMaxWidth()
                         .constrainAs(optionsMenu) {
-                            top.linkTo(boxRow.bottom)
+                            top.linkTo(donationField.bottom)
                         },
                 )
                 CountryDialog(
@@ -203,13 +220,20 @@ fun ProfileScreen(
                         charitiesViewModel.getCharities()
                     },
                 )
+                if (viewModel.categoriesDialog) {
+                    CategoriesDialog(
+                        shown = viewModel.categoriesDialog,
+                        setShowDialog = { viewModel.categoriesDialog = it },
+                        categoriesSelected = viewModel.selectedCategories,
+                        onConfirmButton = { viewModel.setCategories() }
+                    )
+                }
+
                 AlertDialogWithChoice(
                     title = "Choose value and frequency of regular donations",
                     shown = viewModel.regularDonationDialog,
                     setShowDialog = { value -> viewModel.regularDonationDialog = value },
-                    onConfirmButton = {
-                        viewModel.setRegularPayment()
-                    }
+                    onConfirmButton = { viewModel.setRegularPayment() }
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         SingleChoicePicker(

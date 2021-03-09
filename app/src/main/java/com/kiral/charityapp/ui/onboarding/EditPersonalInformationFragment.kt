@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -99,8 +100,12 @@ class EditPersonalInformationFragment: Fragment(){
                         .padding(vertical = 8.dp)
                         .height(64.dp),
                     onClick = {
-                        viewModel.addPersonalInformation()
-                        findNavController().navigate(R.id.action_editPersonalInformationFragment_to_selectCharitiesTypesFragment)
+                        if(viewModel.addPersonalInformation())
+                            findNavController()
+                                .navigate(R.id.action_editPersonalInformationFragment_to_selectCharitiesTypesFragment)
+                        else{
+                            Toast.makeText(requireContext(), "Please fill up your name", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 ) {
                     Text("Continue", style = MaterialTheme.typography.button)

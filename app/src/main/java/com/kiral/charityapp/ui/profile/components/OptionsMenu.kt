@@ -32,10 +32,12 @@ fun OptionsMenu(
     regularDonationValue: Double,
     regularDonationFrequency: Int,
     region: String,
+    categories: String,
     isSwitched: Boolean,
     setCountryDialog: (Boolean) -> Unit,
     switchFunction: (Boolean) -> Unit,
     setDonationDialog: (Boolean) -> Unit,
+    setCategoriesDialog: (Boolean) -> Unit,
     logout: () -> Unit
 ) {
     Column(
@@ -54,11 +56,11 @@ fun OptionsMenu(
             }
         )
         Option(
-            title = "Select charity types",
-            description = "",
+            title = "Select charity categories",
+            description = categories,
             hasSwitch = false,
             modifier = Modifier.fillMaxWidth(),
-            onClick = {}
+            onClick = { setCategoriesDialog(true) }
         )
         Option(
             title = "Select country",

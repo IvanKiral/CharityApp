@@ -52,7 +52,7 @@ constructor(
     var country by mutableStateOf("")
     var selectedCountry by mutableStateOf("")
 
-    private var categoriesList = MutableList(categories.size) { false }
+    private var categoriesList = MutableList(categories.size) { true }
     var selected = categoriesList.toMutableStateList()
 
     val intervalItems = DonationFrequency.values().map { it.name }
@@ -87,9 +87,10 @@ constructor(
         )
     }
 
-    fun addPersonalInformation() {
+    fun addPersonalInformation(): Boolean {
         profile.name = name
         profile.region = selectedCountry
+        return name.isNotBlank()
     }
 
     fun addCategories() {
