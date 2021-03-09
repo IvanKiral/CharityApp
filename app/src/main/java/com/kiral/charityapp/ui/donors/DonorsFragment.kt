@@ -62,7 +62,8 @@ class DonorsFragment : Fragment() {
                             viewModel = viewModel,
                             userId = args.userId,
                             charityId = args.charityId,
-                            projectId = args.projectId
+                            projectId = args.projectId,
+                            onBackPressed = requireActivity()::onBackPressed
                         )
                     } else {
                         ErrorScreen(text = viewModel.error!!) {
@@ -84,7 +85,8 @@ fun DonorsScreen(
     viewModel: DonorsViewModel,
     userId: Int,
     charityId: Int,
-    projectId: Int
+    projectId: Int,
+    onBackPressed: () -> Unit
 ) {
     val donorList = viewModel.charityDonors
     Box(
@@ -102,7 +104,8 @@ fun DonorsScreen(
                 ) {
                     ClickableIcon(
                         icon = ImageVector.vectorResource(id = R.drawable.ic_back),
-                        onIconClicked = { /*TODO*/ }
+                        onIconClicked = onBackPressed,
+                        size = 18.dp
                     )
                     Text(
                         text = "Donors",
@@ -123,7 +126,7 @@ fun DonorsScreen(
                                     projectId
                                 )
                             },
-                            modifier = Modifier.size(18.dp)
+                            size = 18.dp
                         )
                     }
 

@@ -90,6 +90,7 @@ class ProfileFragment : Fragment() {
                             viewModel = viewModel,
                             charitiesViewModel = charitiesViewModel,
                             navController = findNavController(),
+                            onBackPressed = requireActivity()::onBackPressed,
                             logout = {
                                 Auth.logout(
                                     account,
@@ -113,7 +114,8 @@ fun ProfileScreen(
     viewModel: ProfileViewModel,
     charitiesViewModel: CharitiesViewModel,
     navController: NavController,
-    logout: () -> Unit
+    logout: () -> Unit,
+    onBackPressed: () -> Unit
 ) {
     viewModel.profile?.let { profile ->
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
@@ -127,13 +129,14 @@ fun ProfileScreen(
 
                 ClickableIcon(
                     icon = ImageVector.vectorResource(id = R.drawable.ic_back),
-                    onIconClicked = { /*TODO*/ },
+                    onIconClicked = onBackPressed,
                     modifier = Modifier
                         .constrainAs(back) {
                             top.linkTo(parent.top, margin = 16.dp)
                             start.linkTo(parent.start)
                         }
-                        .offset(x = (-16).dp)
+                        .offset(x = (-16).dp),
+                    size = 18.dp
                 )
                 ProfilePicture(
                     name = profile.name,
