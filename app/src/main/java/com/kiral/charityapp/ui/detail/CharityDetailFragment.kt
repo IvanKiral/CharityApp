@@ -199,7 +199,11 @@ fun CharityDetailBody(
                     .fillMaxWidth(),
                 onClick = {
                     val action = CharityDetailFragmentDirections
-                        .actionCharityDetailFragmentToDonorsFragment(charity.id)
+                        .actionCharityDetailFragmentToDonorsFragment(
+                            charityId = charity.id,
+                            projectId = -1 ,
+                            userId = donorId
+                        )
                     navController.navigate(action)
                 }
             )

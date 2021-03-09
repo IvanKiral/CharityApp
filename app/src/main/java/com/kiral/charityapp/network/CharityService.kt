@@ -13,7 +13,7 @@ import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-interface NetworkService {
+interface CharityService {
 
     @GET("charities")
     suspend fun getCharities(
@@ -34,10 +34,12 @@ interface NetworkService {
         @Query("donorId") donorId: Int
     ): Response<ProjectDto>
 
-    @GET("charity/{charityId}/donors/{page}")
+    @GET("charity/{charityId}/donors")
     suspend fun getCharityDonors(
         @Path("charityId") charityId: Int,
-        @Path("page") page: Int
+        @Query("userId") userId: Int?,
+        @Query("page") page: Int,
+        @Query("projectId") projectId: Int?
     ): Response<DonorsResponse>
 
     @PUT("donate")

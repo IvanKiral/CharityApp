@@ -19,16 +19,27 @@ class DonorsViewModel
 @Inject
 constructor(
     val charityRepository: CharityRepository
-): ViewModel() {
+) : ViewModel() {
     var charityDonors by mutableStateOf<List<Donor>>(listOf())
     var page by mutableStateOf(1)
+    var showUserDonations by mutableStateOf(false)
     var loading by mutableStateOf(false)
     var error by mutableStateOf<String?>(null)
     var indexPosition = 0
 
-    fun getCharityDonors(charityId: Int, page: Int)  {
+    fun getCharityDonors(
+        charityId: Int,
+        page: Int,
+        userId: Int,
+        projectId: Int
+    ) {
         error = null
-        charityRepository.getCharityDonors(charityId, page).onEach { state ->
+        charityRepository.getCharityDonors(
+            charityId = charityId,
+            page = page,
+            projectId = projectId,
+            userId = if (showUserDonations) userId else null,
+        ).onEach { state ->
             when (state) {
                 is DataState.Loading -> {
                     loading = true
@@ -47,18 +58,29 @@ constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun nextPage(charityId: Int){
+    fun onProfileIconClicked(charityId: Int, userId: Int, projectId: Int) {
+        showUserDonations = !showUserDonations
+        reset()
+        getCharityDonors(charityId, page, userId, projectId)
+    }
+
+    fun nextPage(charityId: Int, userId: Int, projectId: Int) {
         //preventing recomposing so it would call pagination more times
-        if((indexPosition + 1) >= (page * DONORS_PAGE_SIZE) ){
+        if ((indexPosition + 1) >= (page * DONORS_PAGE_SIZE)) {
             page += 1
-            if(page > 1){
-                getCharityDonors(charityId, page)
+            if (page > 1) {
+                getCharityDonors(charityId, page, userId, projectId)
             }
         }
     }
 
-    fun retry(charityId: Int){
+    fun retry(charityId: Int, userId: Int, projectId: Int) {
+        reset()
+        getCharityDonors(charityId, page, userId, projectId)
+    }
+
+    fun reset() {
         page = 1
-        getCharityDonors(charityId, page)
+        charityDonors = listOf()
     }
 }

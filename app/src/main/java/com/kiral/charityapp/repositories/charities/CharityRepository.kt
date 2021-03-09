@@ -17,7 +17,7 @@ interface CharityRepository {
 
     fun makeDonationToCharity(charityId: Int, donorId: Int, projectId:Int?, value: Double): Flow<DataState<Boolean>>
 
-    fun getCharityDonors(charityId: Int, page: Int): Flow<DataState<List<Donor>>>
+    fun getCharityDonors(charityId: Int, userId: Int?, page: Int, projectId: Int): Flow<DataState<List<Donor>>>
 
     fun getLeaderboard(userId: Int): Flow<DataState<List<LeaderBoardProfile>>>
 }

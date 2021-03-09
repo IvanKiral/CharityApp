@@ -1,7 +1,7 @@
 package com.kiral.charityapp.di
 
 import com.google.gson.GsonBuilder
-import com.kiral.charityapp.network.NetworkService
+import com.kiral.charityapp.network.CharityService
 import com.kiral.charityapp.network.ProfileService
 import com.kiral.charityapp.network.mappers.CharityListItemMapper
 import com.kiral.charityapp.network.mappers.CharityMapper
@@ -56,12 +56,12 @@ object NetworkModule{
 
     @Singleton
     @Provides
-    fun provideNetworkService(): NetworkService {
+    fun provideNetworkService(): CharityService {
         return Retrofit.Builder()
             .baseUrl(address)
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
             .build()
-            .create(NetworkService::class.java)
+            .create(CharityService::class.java)
     }
 
     @Singleton

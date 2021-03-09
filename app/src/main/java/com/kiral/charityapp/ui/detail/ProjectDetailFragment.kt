@@ -24,6 +24,8 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.kiral.charityapp.domain.model.Project
 import com.kiral.charityapp.ui.components.BaseScreen
@@ -64,9 +66,7 @@ class ProjectDetailFragment : Fragment() {
                 BaseScreen(
                     error = viewModel.error,
                     loading = viewModel.loading,
-                    onRetryClicked = {
-                        viewModel.getProject(args.projectId, args.donorId)
-                    }
+                    onRetryClicked = { viewModel.getProject(args.projectId, args.donorId) }
                 ) {
                     ProjectDetailScreen()
                 }
@@ -96,6 +96,7 @@ class ProjectDetailFragment : Fragment() {
                                 )
                             },
                             shareLinkButtonClick = { Utils.shareLink(activity?.applicationContext!!) },
+                            navController = findNavController()
                         )
                     }
                 }
@@ -112,6 +113,7 @@ fun ProjectDetailBody(
     viewModel: ProjectDetailViewModel,
     sharePhotoButtonClick: () -> Unit,
     shareLinkButtonClick: () -> Unit,
+    navController: NavController,
     modifier: Modifier = Modifier
 ) {
     Surface(
@@ -178,7 +180,16 @@ fun ProjectDetailBody(
                 borderColor = InformationBoxBlueBorder,
                 modifier = Modifier
                     .padding(top = 24.dp)
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
+                onClick = {
+                    val action = ProjectDetailFragmentDirections
+                        .actionProjectDetailFragmentToDonorsFragment(
+                            userId = donorId,
+                            charityId = project.charityId,
+                            projectId = project.id
+                        )
+                    navController.navigate(action)
+                }
             )
 
             DonationSuccessAlertDialog(

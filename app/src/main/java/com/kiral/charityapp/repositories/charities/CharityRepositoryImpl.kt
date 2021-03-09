@@ -5,8 +5,8 @@ import com.kiral.charityapp.domain.model.CharityListItem
 import com.kiral.charityapp.domain.model.Donor
 import com.kiral.charityapp.domain.model.LeaderBoardProfile
 import com.kiral.charityapp.domain.model.Project
+import com.kiral.charityapp.network.CharityService
 import com.kiral.charityapp.network.DataState
-import com.kiral.charityapp.network.NetworkService
 import com.kiral.charityapp.network.dtos.DonationDto
 import com.kiral.charityapp.network.mappers.CharityListItemMapper
 import com.kiral.charityapp.network.mappers.CharityMapper
@@ -24,7 +24,7 @@ class CharityRepositoryImpl(
     private val charityListMapper: CharityListItemMapper,
     private val donorsMapper: DonorsMapper,
     private val leaderboardMapper: LeaderboardMapper,
-    private val networkService: NetworkService
+    private val networkService: CharityService
 ) : CharityRepository {
     override fun search(id: Int, categories: List<Int>): Flow<DataState<List<CharityListItem>>> =
         flow {
@@ -100,10 +100,16 @@ class CharityRepositoryImpl(
         }
     }
 
-    override fun getCharityDonors(charityId: Int, page: Int): Flow<DataState<List<Donor>>> =  flow {
+    override fun getCharityDonors(
+        charityId: Int,
+        userId: Int?,
+        page: Int,
+        projectId: Int
+    ): Flow<DataState<List<Donor>>> =  flow {
         try {
             emit(DataState.Loading)
-            val response = networkService.getCharityDonors(charityId, page)
+            val response = if(projectId == -1) networkService.getCharityDonors(charityId, userId, page, null)
+                else networkService.getCharityDonors(charityId, userId, page, projectId)
             if(response.isSuccessful){
                 emit(DataState.Success(donorsMapper.mapToDomainModelList(response.body()!!.donors)))
             } else {

@@ -114,6 +114,9 @@
         <argument
             android:name="donorId"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_projectDetailFragment_to_donorsFragment"
+            app:destination="@id/donorsFragment" />
     </fragment>
     <fragment
         android:id="@+id/welcomeFragment"
@@ -152,6 +155,13 @@
         android:label="DonorsFragment" >
         <argument
             android:name="charityId"
+            app:argType="integer" />
+        <argument
+            android:name="projectId"
+            app:argType="integer"
+            android:defaultValue="-1" />
+        <argument
+            android:name="userId"
             app:argType="integer" />
     </fragment>
 </navigation>
