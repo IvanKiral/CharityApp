@@ -25,7 +25,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import com.kiral.charityapp.ui.theme.ButtonBlue
+import com.kiral.charityapp.ui.theme.CherryRed
 
 @Composable
 fun StandardDialog(
@@ -98,7 +98,7 @@ fun StandardDialog(
                     )*/
                     Text(
                         text = "OK",
-                        style = MaterialTheme.typography.body1.copy(color = ButtonBlue),
+                        style = MaterialTheme.typography.body1.copy(color = CherryRed),
                         modifier = Modifier
                             .padding(horizontal = 16.dp, vertical = 8.dp)
                             .align(Alignment.Center),

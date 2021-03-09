@@ -19,10 +19,10 @@ val BottomSheetShape = RoundedCornerShape(
 )
 
 private val LightThemeColors = lightColors(
-    primary = ButtonBlue,
+    primary = CherryRed,
     onPrimary = Color.Black,
     secondary = Color.White,
-    secondaryVariant = ButtonBlue,
+    secondaryVariant = CherryRed,
     onSecondary = Color.Black,
     onBackground = Color.Black,
     surface = Color.White,

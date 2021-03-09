@@ -28,7 +28,6 @@ import androidx.compose.ui.unit.sp
 import com.kiral.charityapp.R
 import com.kiral.charityapp.ui.theme.BoxGradientEnd
 import com.kiral.charityapp.ui.theme.BoxGradientStart
-import com.kiral.charityapp.ui.theme.TextBlue
 import com.kiral.charityapp.ui.theme.TextBoxBlackSubTitle
 import com.kiral.charityapp.ui.theme.TextBoxBlackTitle
 
@@ -137,7 +136,7 @@ fun BoxWithAdd(
                     text = "+",
                     style = MaterialTheme.typography.h5.copy(
                         fontSize = 20.sp,
-                        color = TextBlue
+                        color = MaterialTheme.colors.primary
                     )
                 )
             }

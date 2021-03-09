@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.kiral.charityapp.ui.components.InformationAlertDialog
-import com.kiral.charityapp.ui.theme.ButtonBlue
+import com.kiral.charityapp.ui.theme.CherryRed
 
 @Composable
 fun DonationSuccessAlertDialog (
@@ -41,7 +41,7 @@ fun DonationSuccessAlertDialog (
                 ),
                 onClick = sharePhotoButtonClick
             ) {
-                Text("Share photo via", color = ButtonBlue)
+                Text("Share photo via", color = CherryRed)
             }
             Button(
                 modifier = Modifier
@@ -52,7 +52,7 @@ fun DonationSuccessAlertDialog (
                 ),
                 onClick = shareLinkButtonClick
             ) {
-                Text("Share link via", color = ButtonBlue)
+                Text("Share link via", color = CherryRed)
             }
         }
     }

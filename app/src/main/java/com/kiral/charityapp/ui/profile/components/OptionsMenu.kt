@@ -19,7 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.kiral.charityapp.R
 import com.kiral.charityapp.domain.enums.DonationFrequency
-import com.kiral.charityapp.ui.theme.ButtonBlue
+import com.kiral.charityapp.ui.theme.CherryRed
 import com.kiral.charityapp.ui.theme.DividerColor
 import com.kiral.charityapp.ui.theme.TextOptionSubtitle
 import com.kiral.charityapp.ui.theme.TextOptionTitle
@@ -129,7 +129,7 @@ fun Option(
                     checked = isSwitched,
                     onCheckedChange = switchFunction,
                     modifier = Modifier.align(Alignment.CenterEnd),
-                    colors = SwitchDefaults.colors(checkedThumbColor = ButtonBlue)
+                    colors = SwitchDefaults.colors(checkedThumbColor = CherryRed)
                 )
             }
         }

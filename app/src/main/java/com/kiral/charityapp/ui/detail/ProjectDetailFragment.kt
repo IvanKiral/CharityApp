@@ -38,8 +38,8 @@ import com.kiral.charityapp.ui.detail.components.DonationFailedAlertDialog
 import com.kiral.charityapp.ui.detail.components.DonationSuccessAlertDialog
 import com.kiral.charityapp.ui.theme.BottomSheetShape
 import com.kiral.charityapp.ui.theme.CharityTheme
-import com.kiral.charityapp.ui.theme.InformationBoxBlue
-import com.kiral.charityapp.ui.theme.InformationBoxBlueBorder
+import com.kiral.charityapp.ui.theme.InformationBoxRed
+import com.kiral.charityapp.ui.theme.InformationBoxRedBorder
 import com.kiral.charityapp.ui.utils.buildInformationText
 import com.kiral.charityapp.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
@@ -176,8 +176,8 @@ fun ProjectDetailBody(
                     project.donorDonated,
                     "donated to this project."
                 ),
-                backgroundColor = InformationBoxBlue,
-                borderColor = InformationBoxBlueBorder,
+                backgroundColor = InformationBoxRed,
+                borderColor = InformationBoxRedBorder,
                 modifier = Modifier
                     .padding(top = 24.dp)
                     .fillMaxWidth(),

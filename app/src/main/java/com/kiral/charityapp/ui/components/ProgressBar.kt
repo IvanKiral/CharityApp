@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.kiral.charityapp.ui.theme.ButtonBlue
+import com.kiral.charityapp.ui.theme.CherryRed
 
 @Composable
 fun ProgressBar(
@@ -28,7 +28,7 @@ fun ProgressBar(
             modifier = Modifier
                 .fillMaxWidth((value / maxValue).toFloat())
                 .height(height)
-                .background(ButtonBlue)
+                .background(CherryRed)
 
         )
     }

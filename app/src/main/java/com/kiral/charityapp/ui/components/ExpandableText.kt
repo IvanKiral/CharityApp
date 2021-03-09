@@ -17,7 +17,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kiral.charityapp.R
-import com.kiral.charityapp.ui.theme.ButtonBlue
+import com.kiral.charityapp.ui.theme.CherryRed
 
 private enum class TextState{
     Expanded, Collapsed
@@ -50,7 +50,7 @@ fun ExpandableText(
                         else AnnotatedString(stringResource(R.string.ExpandableText_Less)),
                 modifier = Modifier.padding(top = 8.dp),
                 style = MaterialTheme.typography.h6.copy(
-                    color = ButtonBlue,
+                    color = CherryRed,
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp
                 ),
