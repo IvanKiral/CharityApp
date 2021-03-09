@@ -1,4 +1,4 @@
-package com.kiral.charityapp.ui.components
+package com.kiral.charityapp.ui.detail.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -13,28 +13,24 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun InformationAlertDialog(
-    title: String,
+fun DonationFailedAlertDialog(
     shown: Boolean,
-    buttonText: String,
     setShowDialog: (Boolean) -> Unit,
-    content: @Composable () -> Unit = {},
-){
-    if(shown) {
+) {
+    if (shown) {
         AlertDialog(
             onDismissRequest = {
                 setShowDialog(false)
             },
             title = {
                 Text(
-                    title,
+                    "An error has occurred! Please try again later.",
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth(),
                     style = MaterialTheme.typography.h5.copy(fontSize = 20.sp)
                 )
             },
             buttons = {
-
                 Button(
                     onClick = { setShowDialog(false) },
                     modifier = Modifier
@@ -42,15 +38,11 @@ fun InformationAlertDialog(
                         .padding(8.dp)
                 ) {
                     Text(
-                        text = buttonText,
+                        text = "Understood",
                         style = MaterialTheme.typography.button.copy()
                     )
                 }
             },
-            text = {
-                content()
-            },
-            modifier = Modifier.fillMaxWidth(),
         )
     }
 }

@@ -18,6 +18,9 @@ data class ProjectDto(
     @SerializedName("name")
     val name: String,
 
+    @SerializedName("charityName")
+    val charityName: String,
+
     @SerializedName("description")
     val description: String,
 

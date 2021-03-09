@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.kiral.charityapp.domain.model.Charity
 import com.kiral.charityapp.network.DataState
 import com.kiral.charityapp.repositories.charities.CharityRepository
-import com.kiral.charityapp.utils.Constants.DONATION_VALUES
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -27,9 +26,10 @@ constructor(
         private set
     var error by mutableStateOf<String?>(null)
         private set
+    var donationLoading by mutableStateOf(false)
+        private set
+    var donationError by mutableStateOf<String?>(null)
 
-    val values = DONATION_VALUES
-    var selectedValue by mutableStateOf(0)
     var showDialog by mutableStateOf(false)
     var showDonationSuccessDialog by mutableStateOf(false)
 
@@ -52,10 +52,10 @@ constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun makeDonation(donorId: Int) {
-        val value = values.get(selectedValue)
+    fun makeDonation(donorId: Int, value: Double) {
         charity?.let { currentCharity ->
             val donorDonated = currentCharity.donorDonated
+            val raised = currentCharity.raised
             charityRepository.makeDonationToCharity(
                 charityId = currentCharity.id,
                 donorId = donorId,
@@ -64,15 +64,19 @@ constructor(
             ).onEach { state ->
                 when (state) {
                     is DataState.Loading -> {
+                        donationLoading = true
                     }
                     is DataState.Success -> {
-                        showDialog = false
+                        donationLoading = false
                         showDonationSuccessDialog = true
                         charity = charity?.copy(
-                            donorDonated = donorDonated + value
+                            donorDonated = donorDonated + value,
+                            raised = raised + value
                         )
                     }
                     is DataState.Error -> {
+                        donationLoading = false
+                        donationError = state.error
                     }
                 }
             }.launchIn(viewModelScope)

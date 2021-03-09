@@ -1,52 +1,50 @@
 package com.kiral.charityapp.ui.detail
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.kiral.charityapp.domain.model.Project
-import com.kiral.charityapp.ui.components.AlertDialogWithChoice
 import com.kiral.charityapp.ui.components.BaseScreen
+import com.kiral.charityapp.ui.components.DonationField
 import com.kiral.charityapp.ui.components.ExpandableText
-import com.kiral.charityapp.ui.components.InformationAlertDialog
 import com.kiral.charityapp.ui.components.InformationBox
-import com.kiral.charityapp.ui.components.SingleChoicePicker
 import com.kiral.charityapp.ui.detail.components.CharityRaisedColumn
 import com.kiral.charityapp.ui.detail.components.DetailHeader
+import com.kiral.charityapp.ui.detail.components.DonationFailedAlertDialog
+import com.kiral.charityapp.ui.detail.components.DonationSuccessAlertDialog
 import com.kiral.charityapp.ui.theme.BottomSheetShape
-import com.kiral.charityapp.ui.theme.ButtonBlue
 import com.kiral.charityapp.ui.theme.CharityTheme
 import com.kiral.charityapp.ui.theme.InformationBoxBlue
 import com.kiral.charityapp.ui.theme.InformationBoxBlueBorder
 import com.kiral.charityapp.ui.utils.buildInformationText
-import com.kiral.charityapp.utils.Convert
 import com.kiral.charityapp.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -93,28 +91,35 @@ class ProjectDetailFragment : Fragment() {
                         donorDonated = p.donorDonated,
                         onBackPressed = { requireActivity().onBackPressed() }
                     )
-                    ProjectDetailBody(
-                        project = p,
-                        donorId = args.donorId,
-                        viewModel = viewModel,
-                        sharePhotoButtonClick = {
-                            Utils.sharePhoto(
-                                activity?.applicationContext!!,
-                                p.charityImage
-                            )
-                        },
-                        shareLinkButtonClick = {
-                            val share = Intent.createChooser(Intent().apply {
-                                action = Intent.ACTION_SEND
-                                type = "text/plain"
-                                putExtra(Intent.EXTRA_TEXT, "https://cherrities.app")
-                            }, null)
-                            startActivity(share)
-                        },
-                        modifier = Modifier.offset(y = (-20).dp)
-                    )
+                    Column(modifier = Modifier.fillMaxSize()) {
+                        val configuration = LocalConfiguration.current
+                        val bodyHeight = when(configuration.orientation) {
+                            Configuration.ORIENTATION_LANDSCAPE -> 100.dp
+                            else -> 204.dp
+                        }
+                        Spacer(Modifier.height(bodyHeight))
+                        ProjectDetailBody(
+                            project = p,
+                            donorId = args.donorId,
+                            viewModel = viewModel,
+                            sharePhotoButtonClick = {
+                                Utils.sharePhoto(
+                                    activity?.applicationContext!!,
+                                    p.charityImage
+                                )
+                            },
+                            shareLinkButtonClick = {
+                                val share = Intent.createChooser(Intent().apply {
+                                    action = Intent.ACTION_SEND
+                                    type = "text/plain"
+                                    putExtra(Intent.EXTRA_TEXT, "https://cherrities.app")
+                                }, null)
+                                startActivity(share)
+                            },
+                            modifier = Modifier.offset(y = (-20).dp)
+                        )
+                    }
                 }
-
             }
         }
     }
@@ -157,7 +162,7 @@ fun ProjectDetailBody(
 
             Text(
                 modifier = Modifier.padding(top = 4.dp),
-                text = project.charityAdress,
+                text = project.charityAddress,
                 style = MaterialTheme.typography.body1
             )
 
@@ -174,9 +179,16 @@ fun ProjectDetailBody(
             CharityRaisedColumn(
                 actualSum = project.actualSum,
                 goalSum = project.goalSum,
-                onButtonClick = { viewModel.showDialog = true },
+                onButtonClick = { viewModel.showDialog = !viewModel.showDialog },
                 modifier = Modifier.padding(top = 16.dp)
             )
+            DonationField(
+                loading = viewModel.donationLoading ,
+                shown = viewModel.showDialog,
+                modifier = Modifier.padding(top = 16.dp),
+                onButtonClick = { viewModel.makeDonation(donorId, it.toDouble())}
+            )
+
             InformationBox(
                 text = buildInformationText(
                     project.peopleDonated,
@@ -189,63 +201,18 @@ fun ProjectDetailBody(
                     .padding(top = 24.dp)
                     .fillMaxWidth()
             )
-        }
-        if (viewModel.showDialog) {
-            AlertDialogWithChoice(
-                setShowDialog = { value -> viewModel.showDialog = value },
-                title = "Select value to donate",
-                onConfirmButton = { viewModel.makeDonation(donorId) }
-            ) {
-                SingleChoicePicker(
-                    items = viewModel.values.map { v -> v.Convert() + " €" },
-                    selectedItem = viewModel.selectedValue,
-                    setSelectedItem = { value -> viewModel.selectedValue = value },
-                    textAlignment = Alignment.Start
-                )
-            }
-        }
-        if (viewModel.showDonationSuccessDialog) {
-            InformationAlertDialog(
-                title = "Thank you for your contribution!",
-                buttonText = "Okay",
-                setShowDialog = { value -> viewModel.showDonationSuccessDialog = value }
-            ) {
-                Column {
-                    Text(
-                        "You did great today! Wanna share about your contribution?",
-                        textAlign = TextAlign.Justify
-                    )
-                    Button(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 8.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = Color.White,
-                        ),
-                        onClick = sharePhotoButtonClick
-                    ) {
-                        Text("Share photo via", color = ButtonBlue)
-                    }
-                    Button(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 8.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = Color.White,
-                        ),
-                        onClick = shareLinkButtonClick
-                    ) {
-                        Text("Share link via", color = ButtonBlue)
-                    }
-                }
-            }
+
+            DonationSuccessAlertDialog(
+                shown = viewModel.showDonationSuccessDialog,
+                setShowDialog = { value -> viewModel.showDonationSuccessDialog = value },
+                sharePhotoButtonClick = sharePhotoButtonClick,
+                shareLinkButtonClick = shareLinkButtonClick
+            )
+
+            DonationFailedAlertDialog(
+                shown = viewModel.donationError != null,
+                setShowDialog = { viewModel.donationError = null }
+            )
         }
     }
 }
-
-
-
-
-
-
-

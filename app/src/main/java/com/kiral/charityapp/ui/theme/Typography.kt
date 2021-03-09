@@ -3,7 +3,9 @@ package com.kiral.charityapp.ui.theme
 import androidx.compose.material.Typography
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.*
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.kiral.charityapp.R
 
@@ -67,7 +69,7 @@ val CharityTypography = Typography(
 )
 
 val labelTextStyle = CharityTypography.body2.copy(
-    color = TextBlack
+    color = TextBlack.copy(alpha = 0.6f)
 )
 
 val cardTextStyle = CharityTypography.h6

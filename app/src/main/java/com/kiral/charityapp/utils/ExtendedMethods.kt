@@ -74,6 +74,10 @@ fun Double.Convert(): String{
     return format.format(this).toString()
 }
 
+fun String.checkCurrencyFormat(): Boolean{
+    return this.matches(Regex("|(([1-9]\\d*|0)\\.?(\\d{1,2})?)"))
+}
+
 fun String.makeGravatarLink(): String{
     return GRAVATAR_LINK + this.toLowerCase(Locale.ROOT).md5().toLowerCase(Locale.ROOT)
 }

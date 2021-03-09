@@ -12,9 +12,9 @@ class ProjectMapper: Mapper<ProjectDto, Project> {
             description = model.description,
             goalSum = model.goalSum,
             actualSum = model.actualSum,
-            charityName = model.name,
+            charityName = model.charityName,
             charityImage = model.imgSrc,
-            charityAdress = model.address,
+            charityAddress = model.address,
             peopleDonated = model.peopleDonated,
             donorDonated =  model.donorDonated
         )

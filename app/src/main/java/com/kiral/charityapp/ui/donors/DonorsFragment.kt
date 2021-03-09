@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
-import com.auth0.android.Auth0
 import com.kiral.charityapp.R
 import com.kiral.charityapp.ui.components.ErrorScreen
 import com.kiral.charityapp.ui.donors.components.ProfileCard
@@ -34,15 +33,11 @@ import com.kiral.charityapp.utils.Convert
 import com.kiral.charityapp.utils.Utils.loadPicture
 import com.kiral.charityapp.utils.makeGravatarLink
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class DonorsFragment : Fragment() {
     private val viewModel: DonorsViewModel by viewModels()
     private val args: DonorsFragmentArgs by navArgs()
-
-    @Inject
-    lateinit var account: Auth0
 
     override fun onCreateView(
         inflater: LayoutInflater,

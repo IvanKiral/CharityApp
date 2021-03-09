@@ -3,13 +3,13 @@ package com.kiral.charityapp.network.dtos
 import com.google.gson.annotations.SerializedName
 
 data class DonationDto(
-    @SerializedName("donor_id")
+    @SerializedName("userId")
     val donorId: Int,
 
-    @SerializedName("charity_id")
+    @SerializedName("charityId")
     val charityId: Int,
 
-    @SerializedName("charity_goal_id")
+    @SerializedName("projectId")
     val charityGoalId: Int?,
 
     @SerializedName("sum")

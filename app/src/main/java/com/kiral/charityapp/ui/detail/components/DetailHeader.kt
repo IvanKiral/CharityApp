@@ -36,7 +36,7 @@ fun DetailHeader(
                     contentScale = ContentScale.FillWidth,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(230.dp)
+                        .height(224.dp)
                 )
             }
         }

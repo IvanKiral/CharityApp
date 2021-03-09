@@ -80,6 +80,7 @@ class CharityRepositoryImpl(
     ): Flow<DataState<Boolean>> = flow {
         try {
             emit(DataState.Loading)
+            delay(2000)
             val result = networkService.donate(
                 DonationDto(
                     donorId = donorId,

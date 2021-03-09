@@ -203,31 +203,30 @@ fun ProfileScreen(
                         charitiesViewModel.getCharities()
                     },
                 )
-                if (viewModel.regularDonationDialog) {
-                    AlertDialogWithChoice(
-                        title = "Choose value and frequency of regular donations",
-                        setShowDialog = { value -> viewModel.regularDonationDialog = value },
-                        onConfirmButton = {
-                            viewModel.setRegularPayment()
-                        }
-                    ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            SingleChoicePicker(
-                                items = viewModel.moneyValues.map { v -> v.Convert() + " €" },
-                                selectedItem = viewModel.selectedMoney,
-                                setSelectedItem = { value -> viewModel.selectedMoney = value },
-                                textAlignment = Alignment.End
-                            )
-                            SingleChoicePicker(
-                                items = viewModel.frequencyValues,
-                                selectedItem = viewModel.selectedFrequency,
-                                setSelectedItem = { value ->
-                                    viewModel.selectedFrequency = value
-                                },
-                                textAlignment = Alignment.Start,
-                                modifier = Modifier.padding(start = 8.dp)
-                            )
-                        }
+                AlertDialogWithChoice(
+                    title = "Choose value and frequency of regular donations",
+                    shown = viewModel.regularDonationDialog,
+                    setShowDialog = { value -> viewModel.regularDonationDialog = value },
+                    onConfirmButton = {
+                        viewModel.setRegularPayment()
+                    }
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        SingleChoicePicker(
+                            items = viewModel.moneyValues.map { v -> v.Convert() + " €" },
+                            selectedItem = viewModel.selectedMoney,
+                            setSelectedItem = { value -> viewModel.selectedMoney = value },
+                            textAlignment = Alignment.End
+                        )
+                        SingleChoicePicker(
+                            items = viewModel.frequencyValues,
+                            selectedItem = viewModel.selectedFrequency,
+                            setSelectedItem = { value ->
+                                viewModel.selectedFrequency = value
+                            },
+                            textAlignment = Alignment.Start,
+                            modifier = Modifier.padding(start = 8.dp)
+                        )
                     }
                 }
             }

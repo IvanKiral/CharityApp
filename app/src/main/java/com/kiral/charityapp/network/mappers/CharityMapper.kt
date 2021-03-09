@@ -14,7 +14,7 @@ class CharityMapper: Mapper<CharityDto, Charity> {
             description = model.charityStory,
             howDonationHelps = model.howDonationHelps,
             whyToDonate = model.whyToDonate,
-            raised = model.raised.toFloat(),
+            raised = model.raised,
             peopleDonated = model.peopleDonated,
             donorDonated = model.donorDonated,
             projects =  model.projects.map { CharityProject(
