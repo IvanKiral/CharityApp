@@ -126,6 +126,16 @@ object Utils {
         context.startActivity(share)
     }
 
+    fun shareLink(context: Context) {
+        val share = Intent.createChooser(Intent().apply {
+            action = Intent.ACTION_SEND
+            type = "text/plain"
+            putExtra(Intent.EXTRA_TEXT, "https://cherrities.app")
+        }, null)
+        share.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        context.startActivity(share)
+    }
+
     suspend fun getCountries(context: Context): Map<String, String> {
         return withContext(Dispatchers.IO) {
             val currentLocale = getCurrentLocale(context)

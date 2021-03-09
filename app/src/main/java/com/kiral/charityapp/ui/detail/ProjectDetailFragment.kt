@@ -1,17 +1,12 @@
 package com.kiral.charityapp.ui.detail
 
-import android.content.Intent
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -25,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
@@ -37,7 +31,7 @@ import com.kiral.charityapp.ui.components.DonationField
 import com.kiral.charityapp.ui.components.ExpandableText
 import com.kiral.charityapp.ui.components.InformationBox
 import com.kiral.charityapp.ui.detail.components.CharityRaisedColumn
-import com.kiral.charityapp.ui.detail.components.DetailHeader
+import com.kiral.charityapp.ui.detail.components.DetailScreen
 import com.kiral.charityapp.ui.detail.components.DonationFailedAlertDialog
 import com.kiral.charityapp.ui.detail.components.DonationSuccessAlertDialog
 import com.kiral.charityapp.ui.theme.BottomSheetShape
@@ -55,8 +49,8 @@ class ProjectDetailFragment : Fragment() {
     private val viewModel: ProjectDetailViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         viewModel.getProject(args.projectId, args.donorId)
+        super.onCreate(savedInstanceState)
     }
 
     @ExperimentalMaterialApi
@@ -86,18 +80,11 @@ class ProjectDetailFragment : Fragment() {
         CharityTheme {
             Column {
                 viewModel.project?.let { p ->
-                    DetailHeader(
+                    DetailScreen(
                         imgSrc = p.charityImage,
                         donorDonated = p.donorDonated,
-                        onBackPressed = { requireActivity().onBackPressed() }
-                    )
-                    Column(modifier = Modifier.fillMaxSize()) {
-                        val configuration = LocalConfiguration.current
-                        val bodyHeight = when(configuration.orientation) {
-                            Configuration.ORIENTATION_LANDSCAPE -> 100.dp
-                            else -> 204.dp
-                        }
-                        Spacer(Modifier.height(bodyHeight))
+                        onClosePressed = requireActivity()::onBackPressed
+                    ) {
                         ProjectDetailBody(
                             project = p,
                             donorId = args.donorId,
@@ -108,15 +95,7 @@ class ProjectDetailFragment : Fragment() {
                                     p.charityImage
                                 )
                             },
-                            shareLinkButtonClick = {
-                                val share = Intent.createChooser(Intent().apply {
-                                    action = Intent.ACTION_SEND
-                                    type = "text/plain"
-                                    putExtra(Intent.EXTRA_TEXT, "https://cherrities.app")
-                                }, null)
-                                startActivity(share)
-                            },
-                            modifier = Modifier.offset(y = (-20).dp)
+                            shareLinkButtonClick = { Utils.shareLink(activity?.applicationContext!!) },
                         )
                     }
                 }
@@ -179,14 +158,14 @@ fun ProjectDetailBody(
             CharityRaisedColumn(
                 actualSum = project.actualSum,
                 goalSum = project.goalSum,
-                onButtonClick = { viewModel.showDialog = !viewModel.showDialog },
+                onButtonClick = { viewModel.onExtraDonateButtonPressed() },
                 modifier = Modifier.padding(top = 16.dp)
             )
             DonationField(
-                loading = viewModel.donationLoading ,
-                shown = viewModel.showDialog,
+                loading = viewModel.donationLoading,
+                shown = viewModel.showDonate,
                 modifier = Modifier.padding(top = 16.dp),
-                onButtonClick = { viewModel.makeDonation(donorId, it.toDouble())}
+                onButtonClick = { viewModel.onDonateButtonPressed(donorId, it) }
             )
 
             InformationBox(
@@ -204,13 +183,13 @@ fun ProjectDetailBody(
 
             DonationSuccessAlertDialog(
                 shown = viewModel.showDonationSuccessDialog,
-                setShowDialog = { value -> viewModel.showDonationSuccessDialog = value },
+                setShowDialog = { value -> viewModel.setDonationSuccessDialog(value) },
                 sharePhotoButtonClick = sharePhotoButtonClick,
                 shareLinkButtonClick = shareLinkButtonClick
             )
 
             DonationFailedAlertDialog(
-                shown = viewModel.donationError != null,
+                shown = viewModel.shouldShowDonationFailedDialog(),
                 setShowDialog = { viewModel.donationError = null }
             )
         }

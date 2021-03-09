@@ -3,6 +3,7 @@ package com.kiral.charityapp.ui.detail
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kiral.charityapp.domain.model.Charity
@@ -13,11 +14,14 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
+//const val KEY_CHARITY = "charity.key"
+
 @HiltViewModel
-class DetailViewModel
+class CharityDetailViewModel
 @Inject
 constructor(
-    private val charityRepository: CharityRepository
+    private val charityRepository: CharityRepository,
+    private val state: SavedStateHandle,
 ) : ViewModel() {
     var charity by mutableStateOf<Charity?>(null)
         private set
@@ -30,7 +34,7 @@ constructor(
         private set
     var donationError by mutableStateOf<String?>(null)
 
-    var showDialog by mutableStateOf(false)
+    var showDonate by mutableStateOf(false)
     var showDonationSuccessDialog by mutableStateOf(false)
 
     fun getCharity(id: Int, donorId: Int) {
@@ -82,4 +86,18 @@ constructor(
             }.launchIn(viewModelScope)
         }
     }
+
+    fun onExtraDonateButtonPressed(){
+        showDonate = !showDonate
+    }
+
+    fun onDonateButtonPressed(donorId: Int, value: String){
+        makeDonation(donorId, value.toDouble())
+    }
+
+    fun setDonationSuccessDialog(value: Boolean){
+        showDonationSuccessDialog = value
+    }
+
+    fun shouldShowDonationFailedDialog(): Boolean = donationError != null
 }

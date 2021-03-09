@@ -30,7 +30,7 @@ constructor(
         private set
     var donationError by mutableStateOf<String?>(null)
 
-    var showDialog by mutableStateOf(false)
+    var showDonate by mutableStateOf(false)
     var showDonationSuccessDialog by mutableStateOf(false)
 
     fun getProject(id: Int, userId: Int) {
@@ -82,4 +82,18 @@ constructor(
             }.launchIn(viewModelScope)
         }
     }
+
+    fun onExtraDonateButtonPressed(){
+        showDonate = !showDonate
+    }
+
+    fun onDonateButtonPressed(donorId: Int, value: String){
+        makeDonation(donorId, value.toDouble())
+    }
+
+    fun setDonationSuccessDialog(value: Boolean){
+        showDonationSuccessDialog = value
+    }
+
+    fun shouldShowDonationFailedDialog(): Boolean = donationError != null
 }
