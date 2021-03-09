@@ -33,6 +33,7 @@ import com.auth0.android.provider.WebAuthProvider
 import com.auth0.android.result.Credentials
 import com.kiral.charityapp.R
 import com.kiral.charityapp.ui.theme.CharityTheme
+import com.kiral.charityapp.ui.theme.TextError
 import com.kiral.charityapp.utils.Auth
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -52,7 +53,7 @@ class WelcomeFragment : Fragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                viewModel.shouldNavigateToHomeFragment.value?.let {
+                viewModel.shouldNavigateToHomeFragment?.let {
                     if (it) {
                         findNavController().navigate(R.id.action_welcomeFragment_to_charitiesFragment)
                     } else {
@@ -100,9 +101,16 @@ class WelcomeFragment : Fragment() {
             ) {
                 Text("Login into application")
             }
+            if(viewModel.error != null) {
+                Text(
+                    text = viewModel.error!!,
+                    style = MaterialTheme.typography.body2.copy(color = TextError),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(top = 16.dp)
+                )
+            }
         }
     }
-
 
     private fun loginWithBrowser() {
         val apiClient = AuthenticationAPIClient(account)

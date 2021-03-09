@@ -1,7 +1,6 @@
 package com.kiral.charityapp.ui.main
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,10 +15,7 @@ import androidx.navigation.fragment.findNavController
 import com.auth0.android.Auth0
 import com.auth0.android.authentication.AuthenticationAPIClient
 import com.auth0.android.authentication.storage.CredentialsManager
-import com.auth0.android.authentication.storage.CredentialsManagerException
 import com.auth0.android.authentication.storage.SharedPreferencesStorage
-import com.auth0.android.callback.Callback
-import com.auth0.android.result.Credentials
 import com.kiral.charityapp.R
 import com.kiral.charityapp.ui.components.ErrorScreen
 import com.kiral.charityapp.ui.theme.CharityTheme
@@ -81,21 +77,7 @@ class MainFragment : Fragment() {
                     Auth.logout(account, requireContext(), dataStore)
                     viewModel.navigateToWelcomeFragment = true
                 } else {
-                    manager.getCredentials(object :
-                        Callback<Credentials, CredentialsManagerException> {
-                        override fun onSuccess(result: Credentials) {
-                            Auth.withUserEmail(account, result.accessToken, onFailFunction = {
-                                viewModel.error = "Was not able to connect you! Please try again later"
-                            }) { email ->
-                                viewModel.getProfileId(email)
-                            }
-                        }
-
-                        override fun onFailure(error: CredentialsManagerException) {
-                            Log.i("WelcomeFragment", "Error has occurred $error")
-                        }
-                    }
-                    )
+                    viewModel.navigateToCharitiesFragment = true
                 }
             }.launchIn(lifecycleScope)
         } else {

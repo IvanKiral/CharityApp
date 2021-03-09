@@ -22,6 +22,7 @@ val TextBlack = Color(0xFF474747)
 val TextOptionTitle = Color(0xFF4B5564)
 val TextOptionSubtitle = Color(0xFF969FAD)
 val TextBlue = Color(0xFF0050C9)
+val TextError = Color(0xFFff1f1f)
 
 
 val DividerColor = Color(0xFFEEF2F8)

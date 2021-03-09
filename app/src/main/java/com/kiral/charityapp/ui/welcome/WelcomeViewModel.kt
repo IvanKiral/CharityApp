@@ -1,7 +1,8 @@
 package com.kiral.charityapp.ui.welcome
 
-import android.util.Log
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
@@ -26,24 +27,26 @@ constructor(
 
     val USER_ID = intPreferencesKey("user_id")
 
-    val shouldNavigateToHomeFragment = mutableStateOf<Boolean?>(null)
+    var shouldNavigateToHomeFragment by mutableStateOf<Boolean?>(null)
 
     var donor_id: Int? = null
+
+    var error by mutableStateOf<String?>(null)
 
     var email: String? = null
 
     fun getProfileId(email: String) {
         this.email = email
-        Log.i("AppDebug", "in viewModel")
         profileRepository.login(email).onEach { state ->
             when (state) {
                 is DataState.Success -> {
                     donor_id = state.data
-                    shouldNavigateToHomeFragment.value = true
+                    shouldNavigateToHomeFragment = true
                     write_id(donor_id!!)
                 }
                 is DataState.HttpsErrorCode -> {
-                    shouldNavigateToHomeFragment.value = false
+                    shouldNavigateToHomeFragment = false
+                    error = state.message
                 }
             }
         }.launchIn(viewModelScope)
