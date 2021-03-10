@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.kiral.charityapp.R
@@ -66,7 +67,7 @@ fun ProfileCard(
                     badges.take(3).forEachIndexed { i, b ->
                         Image(
                             imageVector = ImageVector.vectorResource(id = b.iconId),
-                            contentDescription = "Donor badge icon",
+                            contentDescription = stringResource(R.string.donors_icon_description),
                             contentScale = ContentScale.FillHeight,
                             modifier = if (i != 0) Modifier
                                 .height(18.dp)
@@ -94,7 +95,7 @@ fun ProfileCard(
             ) {
                 Image(
                     imageVector = ImageVector.vectorResource(id = R.drawable.ic_heart),
-                    contentDescription = "heart icon",
+                    contentDescription = stringResource(R.string.donors_heartIcon_description),
                     modifier = Modifier
                         .size(24.dp)
                         .padding(top = 8.dp),

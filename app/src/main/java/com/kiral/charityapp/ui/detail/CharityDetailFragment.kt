@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -32,6 +33,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.kiral.charityapp.R
 import com.kiral.charityapp.domain.model.Charity
 import com.kiral.charityapp.ui.components.BaseScreen
 import com.kiral.charityapp.ui.components.DonationField
@@ -148,18 +150,23 @@ fun CharityDetailBody(
                 style = MaterialTheme.typography.body1
             )
 
+            // need to store strings in variable, if not compiler error is thrown
+            val charityStoryTitle = stringResource(R.string.detail_charity_charityStory)
+            val howCharityHelps = stringResource(R.string.detail_charity_howCharityHelps)
+            val whyDonate = stringResource(R.string.detail_charity_whyDonate)
+
             ExpandableText(
                 text = buildAnnotatedString {
                     withStyle(SpanStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold)) {
-                        append("Our story\n")
+                        append(charityStoryTitle)
                     }
                     append(charity.description + "\n\n")
                     withStyle(SpanStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold)) {
-                        append("How donation helps\n")
+                        append(howCharityHelps)
                     }
                     append(charity.howDonationHelps + "\n\n")
                     withStyle(SpanStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold)) {
-                        append("Why donate\n")
+                        append(whyDonate)
                     }
                     append(charity.whyToDonate)
                 },
@@ -182,6 +189,7 @@ fun CharityDetailBody(
             DonationField(
                 shown = viewModel.showDonate,
                 loading = viewModel.donationLoading,
+                buttonText = stringResource(R.string.detail_donate),
                 modifier = Modifier.padding(top = 16.dp),
                 onButtonClick = { donation -> viewModel.onDonateButtonPressed(donorId, donation) }
             )
@@ -190,7 +198,7 @@ fun CharityDetailBody(
                 text = buildInformationText(
                     charity.peopleDonated,
                     charity.donorDonated,
-                    "donated to this charity."
+                    stringResource(R.string.detail_charity_peopleDonated)
                 ),
                 backgroundColor = InformationBoxRed,
                 borderColor = InformationBoxRedBorder,

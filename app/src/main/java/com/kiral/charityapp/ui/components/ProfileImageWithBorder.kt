@@ -12,8 +12,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.kiral.charityapp.R
 
 @Composable
 fun ProfileImageWithBorder(
@@ -36,7 +38,7 @@ fun ProfileImageWithBorder(
         imageBitmap?.let{
             Image(
                 bitmap = imageBitmap,
-                contentDescription = "",
+                contentDescription = stringResource(R.string.profileImage_imageDescription),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(imageSize)

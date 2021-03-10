@@ -65,7 +65,7 @@ class SetupRegularPaymentsFragment : Fragment() {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = stringResource(R.string.SetupRegularPaymentsFragment_Title),
+                    text = stringResource(R.string.setupRegularPayments_title),
                     style = MaterialTheme.typography.h5,
                     textAlign = TextAlign.Center,
                 )

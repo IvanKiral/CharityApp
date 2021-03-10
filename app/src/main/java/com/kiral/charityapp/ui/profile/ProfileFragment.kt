@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -130,6 +131,7 @@ fun ProfileScreen(
                 ClickableIcon(
                     icon = ImageVector.vectorResource(id = R.drawable.ic_back),
                     onIconClicked = onBackPressed,
+                    contentDescription = stringResource(id = R.string.back_icon_description),
                     modifier = Modifier
                         .constrainAs(back) {
                             top.linkTo(parent.top, margin = 16.dp)
@@ -193,6 +195,7 @@ fun ProfileScreen(
                     DonationField(
                         loading = viewModel.creditLoading,
                         shown = viewModel.credit,
+                        buttonText = stringResource(R.string.profile_donationField_add),
                         onButtonClick = { value -> viewModel.addCredit(value) }
                     )
                 }
@@ -233,7 +236,7 @@ fun ProfileScreen(
                 }
 
                 AlertDialogWithChoice(
-                    title = "Choose value and frequency of regular donations",
+                    title = stringResource(R.string.profile_alertDialog_title),
                     shown = viewModel.regularDonationDialog,
                     setShowDialog = { value -> viewModel.regularDonationDialog = value },
                     onConfirmButton = { viewModel.setRegularPayment() }

@@ -23,13 +23,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.kiral.charityapp.R
 import com.kiral.charityapp.utils.checkCurrencyFormat
 
 @Composable
 fun DonationField(
     loading: Boolean,
+    buttonText: String,
     shown: Boolean,
     modifier: Modifier = Modifier,
     onButtonClick: (String) -> Unit = {}
@@ -65,7 +68,7 @@ fun DonationField(
                         textStyle = MaterialTheme.typography.body2,
                         modifier = Modifier.fillMaxWidth(0.6f),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                        label = { Text("Your amount") },
+                        label = { Text(stringResource(R.string.donationField_textFieldLabel)) },
                         trailingIcon = { Text("€", style = MaterialTheme.typography.body2) }
                     )
                     Button(
@@ -79,7 +82,7 @@ fun DonationField(
                             .height(56.dp),
                     ) {
                         Text(
-                            text = "Donate",
+                            text = buttonText,
                             style = MaterialTheme.typography.button,
                         )
                     }

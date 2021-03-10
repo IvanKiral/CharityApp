@@ -13,7 +13,7 @@ fun buildInformationText(
 ): AnnotatedString {
     return buildAnnotatedString {
         if (peopleDonated != 0) {
-            append(peopleDonated.toString() + " people ")
+            append("$peopleDonated people ")
             if (donorDonated > 0) {
                 append("and ")
                 withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {

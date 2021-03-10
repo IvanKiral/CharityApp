@@ -46,7 +46,7 @@ fun Badges(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = stringResource(R.string.ProfileFragment_YourBadges),
+            text = stringResource(R.string.profile_yourBadges),
             style = MaterialTheme.typography.h6.copy(color = TextBadgesTitle)
         )
         BadgeRow(
@@ -56,7 +56,7 @@ fun Badges(
                 .padding(top = 16.dp)
         )
         ClickableText(
-            text = AnnotatedString(stringResource(R.string.ProfileFragment_ShowBadges)),
+            text = AnnotatedString(stringResource(R.string.profile_showBadges)),
             style = MaterialTheme.typography.body1.copy(color = TextShowBadges),
             modifier = Modifier.padding(top = 24.dp),
             onClick = {
@@ -102,8 +102,10 @@ fun BadgeRow(
                     listOf(3,1,0,2,4).forEachIndexed { index, i ->
                         val badgeSize = size + (boxDifference.times(lstMiddle - abs(index - lstMiddle)))
                         Badge(
-                            icon = if (i < badges.size) ImageVector.vectorResource(id = badges[i].iconId) else null,
-                            iconSize = (badgeSize.minus(imagePadding.times(4))) + ((lstMiddle - abs(index - lstMiddle)) * 5).dp,
+                            icon = if (i < badges.size) ImageVector.vectorResource(id = badges[i].iconId)
+                                else null,
+                            iconSize = (badgeSize.minus(imagePadding.times(4)))
+                                    + ((lstMiddle - abs(index - lstMiddle)) * 5).dp,
                             boxSize = badgeSize
                         )
                     }
@@ -135,7 +137,7 @@ fun Badge(
             icon?.let {
                 Image(
                     imageVector = it,
-                    contentDescription = "",
+                    contentDescription = stringResource(R.string.profile_badge_icon_description),
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .size(iconSize)

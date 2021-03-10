@@ -45,7 +45,7 @@ fun OptionsMenu(
     ) {
 
         Option(
-            title = stringResource(R.string.ProfileFragment_RegularDonations),
+            title = stringResource(R.string.profile_regularDonations),
             description = "${regularDonationValue.Convert()} €/${DonationFrequency.values()[regularDonationFrequency]}",
             hasSwitch = true,
             isSwitched = isSwitched,
@@ -56,14 +56,14 @@ fun OptionsMenu(
             }
         )
         Option(
-            title = "Select charity categories",
+            title = stringResource(R.string.profile_option_categories),
             description = categories,
             hasSwitch = false,
             modifier = Modifier.fillMaxWidth(),
             onClick = { setCategoriesDialog(true) }
         )
         Option(
-            title = "Select country",
+            title = stringResource(R.string.profile_option_countries),
             description = Locale("", region).displayCountry,
             hasSwitch = false,
             modifier = Modifier.fillMaxWidth(),
@@ -72,8 +72,8 @@ fun OptionsMenu(
             }
         )
         Option(
-            title = stringResource(R.string.ProfileFragment_Logout),
-            description = stringResource(R.string.ProfileFragment_LogoutDescription),
+            title = stringResource(R.string.profile_logout),
+            description = stringResource(R.string.profile_logoutDescription),
             hasSwitch = false,
             modifier = Modifier.fillMaxWidth(),
             onClick = {

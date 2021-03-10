@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
@@ -70,11 +71,12 @@ fun BadgeScreen(
             ) {
                 ClickableIcon(
                     icon = ImageVector.vectorResource(id = R.drawable.ic_back),
+                    contentDescription = stringResource(R.string.back_icon_description),
                     onIconClicked = onBackPressed,
                     size = 18.dp
                 )
                 Text(
-                    text = "Your badges",
+                    text = stringResource(R.string.badges_title),
                     style = MaterialTheme.typography.h5,
                     modifier = Modifier.padding(start = 8.dp)
                 )

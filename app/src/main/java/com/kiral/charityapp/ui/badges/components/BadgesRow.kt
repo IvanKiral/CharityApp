@@ -14,8 +14,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.kiral.charityapp.R
 import com.kiral.charityapp.domain.model.Badge
 import com.kiral.charityapp.utils.Utils
 import com.kiral.charityapp.utils.toGrayscale
@@ -54,7 +56,7 @@ fun BadgeCard(
             Image(
                 bitmap = if (badge.active) it.toGrayscale()
                     .asImageBitmap() else it.asImageBitmap(),
-                contentDescription = "badge icon",
+                contentDescription = stringResource(R.string.badges_badgeIconDescription),
                 modifier = Modifier.size(128.dp)
             )
         }

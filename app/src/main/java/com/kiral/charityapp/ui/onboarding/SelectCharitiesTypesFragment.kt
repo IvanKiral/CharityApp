@@ -59,7 +59,7 @@ class SelectCharitiesTypesFragment : Fragment() {
             ) {
 
                 Text(
-                    text = stringResource(R.string.SelectCharitiesTypesFragment_Title),
+                    text = stringResource(R.string.selectCharitiesTypes_title),
                     style = MaterialTheme.typography.h5,
                     textAlign = TextAlign.Center,
                 )
@@ -82,7 +82,10 @@ class SelectCharitiesTypesFragment : Fragment() {
                         findNavController().navigate(R.id.action_selectCharitiesTypesFragment_to_setupRegularPaymentsFragment)
                     }
                 ) {
-                    Text("Continue", style = MaterialTheme.typography.button)
+                    Text(
+                        text = stringResource(id = R.string.navigation_continue),
+                        style = MaterialTheme.typography.button
+                    )
                 }
             }
         }

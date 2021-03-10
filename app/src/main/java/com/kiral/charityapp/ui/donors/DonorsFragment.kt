@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
@@ -104,6 +105,7 @@ fun DonorsScreen(
                 ) {
                     ClickableIcon(
                         icon = ImageVector.vectorResource(id = R.drawable.ic_back),
+                        contentDescription = stringResource(id = R.string.back_icon_description),
                         onIconClicked = onBackPressed,
                         size = 18.dp
                     )
@@ -119,6 +121,7 @@ fun DonorsScreen(
                     ) {
                         ClickableIcon(
                             icon = ImageVector.vectorResource(id = R.drawable.ic_profile),
+                            contentDescription = stringResource(R.string.donor_userDonations_icon_description),
                             onIconClicked = {
                                 viewModel.onProfileIconClicked(
                                     charityId,

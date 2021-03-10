@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
@@ -27,6 +28,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.kiral.charityapp.R
 import com.kiral.charityapp.domain.model.Project
 import com.kiral.charityapp.ui.components.BaseScreen
 import com.kiral.charityapp.ui.components.DonationField
@@ -166,6 +168,7 @@ fun ProjectDetailBody(
             DonationField(
                 loading = viewModel.donationLoading,
                 shown = viewModel.showDonate,
+                buttonText = stringResource(id = R.string.detail_donate),
                 modifier = Modifier.padding(top = 16.dp),
                 onButtonClick = { viewModel.onDonateButtonPressed(donorId, it) }
             )
@@ -174,7 +177,7 @@ fun ProjectDetailBody(
                 text = buildInformationText(
                     project.peopleDonated,
                     project.donorDonated,
-                    "donated to this project."
+                    stringResource(R.string.detail_project_peopleDonated)
                 ),
                 backgroundColor = InformationBoxRed,
                 borderColor = InformationBoxRedBorder,

@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.kiral.charityapp.R
@@ -70,7 +71,7 @@ fun RowSelector(
         if (selected) {
             Image(
                 imageVector = ImageVector.vectorResource(id = R.drawable.ic_selected),
-                contentDescription = "",
+                contentDescription = stringResource(R.string.charitiesSelector_iconDescription),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.align(Alignment.CenterVertically)
             )

@@ -56,7 +56,7 @@ fun Boxes(
                     )
                 )
                 Text(
-                    text = stringResource(R.string.ProfileFragment_BoxDonations),
+                    text = stringResource(R.string.profile_boxDonations),
                     style = MaterialTheme.typography.button.copy(
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Normal,
@@ -80,7 +80,7 @@ fun Boxes(
                     style = MaterialTheme.typography.button.copy(fontSize = 24.sp)
                 )
                 Text(
-                    text = stringResource(R.string.ProfileFragment_BoxCredit),
+                    text = stringResource(R.string.profile_boxCredit),
                     style = MaterialTheme.typography.button.copy(
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Normal,

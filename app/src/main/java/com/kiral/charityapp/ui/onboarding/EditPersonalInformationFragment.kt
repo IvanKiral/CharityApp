@@ -68,7 +68,7 @@ class EditPersonalInformationFragment: Fragment(){
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = stringResource(R.string.EditPersonalInformationFragment_Title),
+                    text = stringResource(R.string.editPersonalInformation_title),
                     style = MaterialTheme.typography.h5,
                     textAlign = TextAlign.Center,
                 )
@@ -76,7 +76,7 @@ class EditPersonalInformationFragment: Fragment(){
                 FormTextField(
                     text = viewModel.name ,
                     onChange = { value -> viewModel.name = value },
-                    label = "Type your name",
+                    label = stringResource(R.string.editPersonalInformation_name_label),
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
                 BoxedText(
@@ -104,11 +104,14 @@ class EditPersonalInformationFragment: Fragment(){
                             findNavController()
                                 .navigate(R.id.action_editPersonalInformationFragment_to_selectCharitiesTypesFragment)
                         else{
-                            Toast.makeText(requireContext(), "Please fill up your name", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                requireContext(),
+                                getString(R.string.editPersonalInformation_toastText),
+                                Toast.LENGTH_SHORT).show()
                         }
                     }
                 ) {
-                    Text("Continue", style = MaterialTheme.typography.button)
+                    Text(stringResource(R.string.navigation_continue), style = MaterialTheme.typography.button)
                 }
             }
         }

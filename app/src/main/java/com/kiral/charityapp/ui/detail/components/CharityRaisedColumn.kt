@@ -32,7 +32,7 @@ fun CharityRaisedColumn(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Raised",
+            text = stringResource(R.string.detail_project_raised),
             style = MaterialTheme.typography.h6.copy(
                 color = TextDonationGray,
                 fontSize = 13.sp
@@ -68,7 +68,7 @@ fun CharityRaisedColumn(
             onClick = onButtonClick
         ) {
             Text(
-                text = stringResource(R.string.CharityDetailFragment_ButtonDonation),
+                text = stringResource(R.string.detail_buttonExtraDonation),
                 style = MaterialTheme.typography.button
             )
         }

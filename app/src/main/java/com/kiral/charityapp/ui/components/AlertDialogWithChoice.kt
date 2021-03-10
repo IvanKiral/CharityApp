@@ -12,9 +12,11 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.kiral.charityapp.R
 
 @Composable
 fun AlertDialogWithChoice(
@@ -47,7 +49,7 @@ fun AlertDialogWithChoice(
                 ) {
                     Button(onClick = { setShowDialog(false) }) {
                         Text(
-                            text = "Cancel",
+                            text = stringResource(R.string.alertDialog_cancel),
                             style = MaterialTheme.typography.button.copy(fontSize = 14.sp)
                         )
                     }
@@ -56,7 +58,7 @@ fun AlertDialogWithChoice(
                         onClick = onConfirmButton
                     ) {
                         Text(
-                            text = "Confirm",
+                            text = stringResource(R.string.alertDialog_confirm),
                             style = MaterialTheme.typography.button.copy(fontSize = 14.sp)
                         )
                     }

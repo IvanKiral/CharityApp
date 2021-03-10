@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
@@ -169,11 +170,12 @@ fun FilterScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Select charities to Show",
+                text = stringResource(R.string.charities_filter_title),
                 style = MaterialTheme.typography.h5,
             )
             ClickableIcon(
                 icon = ImageVector.vectorResource(id = R.drawable.ic_close_black),
+                contentDescription = stringResource(id = R.string.back_icon_description),
                 onIconClicked = {
                     viewModel.onFilterChange()
                 },

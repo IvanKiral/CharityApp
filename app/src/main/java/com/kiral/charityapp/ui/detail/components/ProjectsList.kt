@@ -7,9 +7,11 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.kiral.charityapp.R
 import com.kiral.charityapp.domain.model.CharityProject
 import com.kiral.charityapp.ui.detail.CharityDetailFragmentDirections
 
@@ -22,7 +24,7 @@ fun ProjectsList(
 ) {
     Column(modifier = modifier) {
         Text(
-            text = "Projects",
+            text = stringResource(R.string.detail_charity_projects),
             style = MaterialTheme.typography.body1
         )
         projects.forEach { project ->

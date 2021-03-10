@@ -9,8 +9,10 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.kiral.charityapp.R
 import com.kiral.charityapp.ui.components.InformationAlertDialog
 import com.kiral.charityapp.ui.theme.CherryRed
 
@@ -22,14 +24,14 @@ fun DonationSuccessAlertDialog (
     shareLinkButtonClick: () -> Unit,
 ) {
     InformationAlertDialog(
-        title = "Thank you for your contribution!",
+        title = stringResource(R.string.detail_donationSuccess_title),
         shown = shown,
-        buttonText = "Okay",
+        buttonText = stringResource(R.string.detail_donationSuccess_confirm),
         setShowDialog = setShowDialog
     ) {
         Column {
             Text(
-                "You did great today! Wanna share about your contribution?",
+                stringResource(R.string.detail_donationSuccess_description),
                 textAlign = TextAlign.Justify
             )
             Button(
@@ -41,7 +43,7 @@ fun DonationSuccessAlertDialog (
                 ),
                 onClick = sharePhotoButtonClick
             ) {
-                Text("Share photo via", color = CherryRed)
+                Text(stringResource(R.string.detail_donationSuccess_sharePhoto), color = CherryRed)
             }
             Button(
                 modifier = Modifier
@@ -52,7 +54,7 @@ fun DonationSuccessAlertDialog (
                 ),
                 onClick = shareLinkButtonClick
             ) {
-                Text("Share link via", color = CherryRed)
+                Text(stringResource(R.string.detail_donationSuccess_shareLink), color = CherryRed)
             }
         }
     }

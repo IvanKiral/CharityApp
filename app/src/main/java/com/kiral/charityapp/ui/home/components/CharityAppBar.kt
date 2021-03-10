@@ -32,8 +32,8 @@ fun CharityAppBar(
         Tabs(
             modifier = Modifier.weight(0.7f),
             titles = listOf(
-                stringResource(R.string.CharitiesFragment_Charities),
-                stringResource(R.string.CharitiesFragment_Rankings)
+                stringResource(R.string.charities_tab_charities),
+                stringResource(R.string.charities_tab_rankings)
             ),
             tabSelected = tabSelected,
             onTabSelected = onTabSelected
@@ -47,6 +47,7 @@ fun CharityAppBar(
         ) {
             ClickableIcon(
                 icon = ImageVector.vectorResource(id = R.drawable.ic_filter),
+                contentDescription = stringResource(R.string.charities_filter_icon_description),
                 alpha = if(filterOn) 1f else 0.6f,
                 onIconClicked = onFilterClicked,
                 size = 24.dp

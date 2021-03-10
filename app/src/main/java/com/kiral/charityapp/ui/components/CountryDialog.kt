@@ -16,9 +16,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.kiral.charityapp.R
 
 @Composable
 fun CountryDialog(
@@ -31,40 +33,10 @@ fun CountryDialog(
 ) {
     if (isShown) {
         val countriesScrollState = rememberScrollState()
-        /*AlertDialogWithChoice(
-            title = "Select your country",
-            setShowDialog = { setDialog(it) },
-            ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(300.dp)
-                    .verticalScroll(countriesScrollState)
-            ) {
-                countries.forEach {
-                    Box(
-                        modifier = Modifier
-                            .height(48.dp)
-                            .fillMaxWidth()
-                            .clickable {
-                                setCountry(it.key)
-                                setCountryText(it.value)
-                                setDialog(false)
-                            },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = it.value,
-                        )
-                    }
-                    Divider(modifier = Modifier.fillMaxWidth())
-                }
-            }
-        }*/
         Dialog(onDismissRequest = { setDialog(false) }) {
             Column(modifier = modifier.background(color = Color.White)) {
                 Text(
-                    text = "Select your region",
+                    text = stringResource(R.string.countryDialog_title),
                     style = MaterialTheme.typography.h5,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()

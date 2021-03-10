@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
@@ -85,7 +86,7 @@ class WelcomeFragment : Fragment() {
                 style = MaterialTheme.typography.h4
             )
             Text(
-                text = "It's good to have you here! Start donating to charities by login into the app \u2665",
+                text = stringResource(R.string.welcome_greeting),
                 style = MaterialTheme.typography.body2.copy(color = Color.Black.copy(alpha = 0.75f)),
                 textAlign = TextAlign.Justify,
                 modifier = Modifier.padding(top = 32.dp)
@@ -99,7 +100,7 @@ class WelcomeFragment : Fragment() {
                     loginWithBrowser()
                 }
             ) {
-                Text("Login into application")
+                Text(stringResource(R.string.welcome_login))
             }
             if(viewModel.error != null) {
                 Text(

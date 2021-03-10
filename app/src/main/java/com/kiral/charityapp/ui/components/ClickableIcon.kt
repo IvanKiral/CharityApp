@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun ClickableIcon(
     icon: ImageVector,
+    contentDescription: String,
     onIconClicked: () -> Unit,
     modifier: Modifier = Modifier,
     alpha: Float = 1f,
@@ -25,7 +26,7 @@ fun ClickableIcon(
     ) {
         Image(
             imageVector = icon,
-            contentDescription = "",
+            contentDescription = contentDescription,
             contentScale = ContentScale.Crop,
             alpha = alpha,
             modifier = Modifier.padding(6.dp).size(size)

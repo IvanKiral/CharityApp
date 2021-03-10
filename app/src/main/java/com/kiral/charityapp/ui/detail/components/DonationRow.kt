@@ -33,7 +33,7 @@ fun DonationRow(
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = stringResource(R.string.CharityDetailFragment_Raised),
+                text = stringResource(R.string.detail_charity_raised),
                 style = MaterialTheme.typography.body1.copy(fontSize = 13.sp),
                 color = TextDonationGray
             )
@@ -49,7 +49,7 @@ fun DonationRow(
             onClick = onButtonClick
         ) {
             Text(
-                text = stringResource(R.string.CharityDetailFragment_ButtonDonation),
+                text = stringResource(R.string.detail_buttonExtraDonation),
                 style = MaterialTheme.typography.button
             )
         }

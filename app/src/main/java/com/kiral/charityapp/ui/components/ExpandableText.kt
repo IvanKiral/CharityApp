@@ -46,8 +46,8 @@ fun ExpandableText(
         )
         if(showExpander.value) {
             ClickableText(
-                text = if (state.value == TextState.Collapsed) AnnotatedString(stringResource(R.string.ExpandableText_ReadMore))
-                        else AnnotatedString(stringResource(R.string.ExpandableText_Less)),
+                text = if (state.value == TextState.Collapsed) AnnotatedString(stringResource(R.string.expandableText_readMore))
+                        else AnnotatedString(stringResource(R.string.expandableText_less)),
                 modifier = Modifier.padding(top = 8.dp),
                 style = MaterialTheme.typography.h6.copy(
                     color = CherryRed,
