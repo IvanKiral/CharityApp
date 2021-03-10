@@ -15,7 +15,7 @@ class DonorsMapper: Mapper<DonorDto, Donor> {
                 BADGES.get(id)?.let{
                     Badge(
                         id = id,
-                        title = it.title,
+                        stringId = it.stringId,
                         iconId =  it.icon,
                         active = true
                     )

@@ -1,6 +1,6 @@
 package com.kiral.charityapp.domain.model
 
 data class BadgeData(
-    val title: String,
+    val stringId: Int,
     val icon: Int
 )

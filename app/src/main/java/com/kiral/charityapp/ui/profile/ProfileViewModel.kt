@@ -80,7 +80,7 @@ constructor(
                                 badges.add(
                                     Badge(
                                         id = id,
-                                        title = value.title,
+                                        stringId = value.stringId,
                                         active = true,
                                         iconId = value.icon
                                     )

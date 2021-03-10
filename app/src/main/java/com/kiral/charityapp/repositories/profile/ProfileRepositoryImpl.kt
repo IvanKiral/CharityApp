@@ -7,32 +7,35 @@ import com.kiral.charityapp.network.ProfileService
 import com.kiral.charityapp.network.dtos.LoginDto
 import com.kiral.charityapp.network.dtos.ProfilePostDto
 import com.kiral.charityapp.network.mappers.ProfileMapper
+import com.kiral.charityapp.utils.AssetProvider
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.io.IOException
 
 class ProfileRepositoryImpl(
     private val profileService: ProfileService,
-    private val profileMapper: ProfileMapper
-): ProfileRepository {
+    private val profileMapper: ProfileMapper,
+    private val assetProvider: AssetProvider
+) : ProfileRepository {
     override fun login(email: String): Flow<DataState<Int>> = flow {
-        try{
-            Log.i("AppDebug", "login begin")
+        try {
             emit(DataState.Loading)
-            Log.i("AppDebug", "login after loading")
             val response = profileService.login(LoginDto(email = email))
-            Log.i("AppDebug", "after call")
-            if(response.isSuccessful){
-                Log.i("AppDebug", "success")
+            if (response.isSuccessful) {
                 emit(DataState.Success(response.body()!!.id))
-            } else{
-                when(response.code()) {
-                    404 -> emit(DataState.HttpsErrorCode(404, "User not found"))
+            } else {
+                when (response.code()) {
+                    404 -> emit(
+                        DataState.HttpsErrorCode(
+                            code = 404,
+                            assetProvider.userNotFound()
+                        )
+                    )
                 }
             }
-        } catch (e : IOException){
-            Log.i("AppDebug", "OOPS ERROR ${e.localizedMessage}  ${e.message}")
-            emit(DataState.Error("An error has ocurred! Please retry later"))
+        } catch (e: IOException) {
+            Log.i("AppDebug", "ERROR ${e.localizedMessage}  ${e.message}")
+            emit(DataState.Error(assetProvider.networkError()))
         }
     }
 
@@ -41,13 +44,13 @@ class ProfileRepositoryImpl(
             emit(DataState.Loading)
             val profileDto = profileMapper.mapFromDomainModel(profile)
             val response = profileService.register(profileDto)
-            if(response.isSuccessful){
+            if (response.isSuccessful) {
                 emit(DataState.Success(response.body()!!.id))
             } else {
-                emit(DataState.Error("Could not register! Please try again later"))
+                emit(DataState.Error(assetProvider.networkRegisterError()))
             }
         } catch (e: IOException) {
-            emit(DataState.Error("An error has ocurred! Please retry later"))
+            emit(DataState.Error(assetProvider.networkError()))
         }
     }
 
@@ -55,13 +58,13 @@ class ProfileRepositoryImpl(
         try {
             emit(DataState.Loading)
             val response = profileService.getProfile(id)
-            if(response.isSuccessful){
+            if (response.isSuccessful) {
                 emit(DataState.Success(profileMapper.mapToDomainModel(response.body()!!)))
             } else {
-                emit(DataState.Error("No profile with that id"))
+                emit(DataState.Error(assetProvider.userNotFound()))
             }
         } catch (e: IOException) {
-            emit(DataState.Error("An error has ocurred! Please retry later"))
+            emit(DataState.Error(assetProvider.networkError()))
         }
     }
 
@@ -71,7 +74,7 @@ class ProfileRepositoryImpl(
         regularDonationValue: Double?,
         regularDonationFrequency: Int?
     ): Flow<DataState<Boolean>> = flow {
-        try{
+        try {
             emit(DataState.Loading)
             val response = profileService.updateProfile(
                 ProfilePostDto(
@@ -80,17 +83,15 @@ class ProfileRepositoryImpl(
                     regularDonationValue = regularDonationValue,
                     regularDonationFrequency = regularDonationFrequency,
                     categories = null
-                    )
+                )
             )
-            if(response.isSuccessful){
+            if (response.isSuccessful) {
                 emit(DataState.Success(true))
+            } else {
+                emit(DataState.Error(assetProvider.networkError()))
             }
-            else{
-                emit(DataState.Error("An error has ocurred! Please retry later"))
-            }
-        }
-        catch (e: IOException){
-            emit(DataState.Error("An error has ocurred! Please retry later"))
+        } catch (e: IOException) {
+            emit(DataState.Error(assetProvider.networkError()))
         }
     }
 
@@ -98,7 +99,7 @@ class ProfileRepositoryImpl(
         id: Int,
         regularDonationActive: Boolean
     ): Flow<DataState<Boolean>> = flow {
-        try{
+        try {
             emit(DataState.Loading)
             val response = profileService.updateProfile(
                 ProfilePostDto(
@@ -106,20 +107,18 @@ class ProfileRepositoryImpl(
                     regularDonationActive = regularDonationActive,
                 )
             )
-            if(response.isSuccessful){
+            if (response.isSuccessful) {
                 emit(DataState.Success(true))
+            } else {
+                emit(DataState.Error(assetProvider.networkError()))
             }
-            else{
-                emit(DataState.Error("An error has ocurred! Please retry later"))
-            }
-        }
-        catch (e: IOException){
-            emit(DataState.Error("An error has ocurred! Please retry later"))
+        } catch (e: IOException) {
+            emit(DataState.Error(assetProvider.networkError()))
         }
     }
 
     override fun updateCategories(id: Int, categories: List<Int>): Flow<DataState<Boolean>> = flow {
-        try{
+        try {
             emit(DataState.Loading)
             val response = profileService.updateProfile(
                 ProfilePostDto(
@@ -127,20 +126,18 @@ class ProfileRepositoryImpl(
                     categories = categories,
                 )
             )
-            if(response.isSuccessful){
+            if (response.isSuccessful) {
                 emit(DataState.Success(true))
+            } else {
+                emit(DataState.Error(assetProvider.networkError()))
             }
-            else{
-                emit(DataState.Error("An error has occurred! Please retry later"))
-            }
-        }
-        catch (e: IOException){
-            emit(DataState.Error("An error has occurred! Please retry later"))
+        } catch (e: IOException) {
+            emit(DataState.Error(assetProvider.networkError()))
         }
     }
 
     override fun updateRegion(id: Int, region: String): Flow<DataState<Boolean>> = flow {
-        try{
+        try {
             emit(DataState.Loading)
             val response = profileService.updateProfile(
                 ProfilePostDto(
@@ -148,20 +145,18 @@ class ProfileRepositoryImpl(
                     region = region
                 )
             )
-            if(response.isSuccessful){
+            if (response.isSuccessful) {
                 emit(DataState.Success(true))
+            } else {
+                emit(DataState.Error(assetProvider.networkError()))
             }
-            else{
-                emit(DataState.Error("An error has ocurred! Please retry later"))
-            }
-        }
-        catch (e: IOException){
-            emit(DataState.Error("An error has ocurred! Please retry later"))
+        } catch (e: IOException) {
+            emit(DataState.Error(assetProvider.networkError()))
         }
     }
 
     override fun addCredit(id: Int, credit: Double): Flow<DataState<Boolean>> = flow {
-        try{
+        try {
             emit(DataState.Loading)
             val response = profileService.updateProfile(
                 ProfilePostDto(
@@ -169,15 +164,13 @@ class ProfileRepositoryImpl(
                     credit = credit,
                 )
             )
-            if(response.isSuccessful){
+            if (response.isSuccessful) {
                 emit(DataState.Success(true))
+            } else {
+                emit(DataState.Error(assetProvider.networkError()))
             }
-            else{
-                emit(DataState.Error("An error has ocurred! Please retry later"))
-            }
-        }
-        catch (e: IOException){
-            emit(DataState.Error("An error has ocurred! Please retry later"))
+        } catch (e: IOException) {
+            emit(DataState.Error(assetProvider.networkError()))
         }
     }
 }

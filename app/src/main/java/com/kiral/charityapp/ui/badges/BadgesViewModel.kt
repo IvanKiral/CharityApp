@@ -22,7 +22,7 @@ constructor() : ViewModel() {
             lst.add(
                 Badge(
                     id = id,
-                    title = value.title,
+                    stringId = value.stringId,
                     active = !badgesId.contains(id),
                     iconId = value.icon
                 )

@@ -1,40 +1,37 @@
 package com.kiral.charityapp.domain
 
-import com.kiral.charityapp.R
-import com.kiral.charityapp.domain.model.Badge
-
-val fakeBadges: List<Badge> = listOf(
-    Badge(
-        id = 0,
-        title = "doggo",
-        active = true,
-        iconId = R.drawable.ic_dog
-    ),
-    Badge(
-        id = 1,
-        title = "doggo",
-        active = true,
-        iconId = R.drawable.ic_dog
-    ),
-    Badge(
-        id = 2,
-        title = "doggo",
-        active = true,
-        iconId = R.drawable.ic_dog
-    ),
-    Badge(
-        id = 3,
-        title = "doggo",
-        active = true,
-        iconId = R.drawable.ic_dog
-    ),
-    Badge(
-        id = 4,
-        title = "doggo",
-        active = true,
-        iconId = R.drawable.ic_dog
-    ),
-)
+//val fakeBadges: List<Badge> = listOf(
+//    Badge(
+//        id = 0,
+//        title = "doggo",
+//        active = true,
+//        iconId = R.drawable.ic_dog
+//    ),
+//    Badge(
+//        id = 1,
+//        title = "doggo",
+//        active = true,
+//        iconId = R.drawable.ic_dog
+//    ),
+//    Badge(
+//        id = 2,
+//        title = "doggo",
+//        active = true,
+//        iconId = R.drawable.ic_dog
+//    ),
+//    Badge(
+//        id = 3,
+//        title = "doggo",
+//        active = true,
+//        iconId = R.drawable.ic_dog
+//    ),
+//    Badge(
+//        id = 4,
+//        title = "doggo",
+//        active = true,
+//        iconId = R.drawable.ic_dog
+//    ),
+//)
 /*val profiles = mutableListOf(
     Profile(
         id = 0,

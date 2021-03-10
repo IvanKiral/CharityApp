@@ -13,6 +13,7 @@ import com.kiral.charityapp.network.mappers.CharityMapper
 import com.kiral.charityapp.network.mappers.DonorsMapper
 import com.kiral.charityapp.network.mappers.LeaderboardMapper
 import com.kiral.charityapp.network.mappers.ProjectMapper
+import com.kiral.charityapp.utils.AssetProvider
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -24,7 +25,8 @@ class CharityRepositoryImpl(
     private val charityListMapper: CharityListItemMapper,
     private val donorsMapper: DonorsMapper,
     private val leaderboardMapper: LeaderboardMapper,
-    private val networkService: CharityService
+    private val networkService: CharityService,
+    private val assetProvider: AssetProvider
 ) : CharityRepository {
     override fun search(id: Int, categories: List<Int>): Flow<DataState<List<CharityListItem>>> =
         flow {
@@ -36,10 +38,10 @@ class CharityRepositoryImpl(
                 if(response.isSuccessful){
                     emit(DataState.Success(charityListMapper.mapToDomainModelList(response.body()!!.charities)))
                 } else {
-                    emit(DataState.Error("An error has occured! Please retry later."))
+                    emit(DataState.Error(assetProvider.networkError()))
                 }
             } catch (e: IOException) {
-                emit(DataState.Error("An error has occured! Please retry later."))
+                emit(DataState.Error(assetProvider.networkError()))
             }
         }
 
@@ -50,10 +52,10 @@ class CharityRepositoryImpl(
             if(response.isSuccessful) {
                 emit(DataState.Success(charityMapper.mapToDomainModel(response.body()!!)))
             } else {
-                emit(DataState.Error("An error has occured! Please retry later."))
+                emit(DataState.Error(assetProvider.networkError()))
             }
         } catch (e: IOException) {
-            emit(DataState.Error("An error has occured! Please retry later."))
+            emit(DataState.Error(assetProvider.networkError()))
         }
     }
 
@@ -65,10 +67,10 @@ class CharityRepositoryImpl(
             if(response.isSuccessful) {
                 emit(DataState.Success(charityGoalMapper.mapToDomainModel(response.body()!!)))
             } else {
-                emit(DataState.Error("An error has occured! Please retry later."))
+                emit(DataState.Error(assetProvider.networkError()))
             }
         } catch (e: Throwable) {
-            emit(DataState.Error("An error has occured! Please retry later."))
+            emit(DataState.Error(assetProvider.networkError()))
         }
     }
 
@@ -93,10 +95,10 @@ class CharityRepositoryImpl(
                 emit(DataState.Success(true))
             }
             else{
-             emit(DataState.Error("Ooops! Something went wrong! Please try your payment later"))
+             emit(DataState.Error(assetProvider.networkPaymentError()))
             }
         } catch (e: Throwable) {
-            emit(DataState.Error("Ooops! Something went wrong! Please try your payment later"))
+            emit(DataState.Error(assetProvider.networkPaymentError()))
         }
     }
 
@@ -113,10 +115,10 @@ class CharityRepositoryImpl(
             if(response.isSuccessful){
                 emit(DataState.Success(donorsMapper.mapToDomainModelList(response.body()!!.donors)))
             } else {
-                emit(DataState.Error("An error has occured! Please retry later."))
+                emit(DataState.Error(assetProvider.networkError()))
             }
         } catch (e: Throwable) {
-            emit(DataState.Error("An error has occured! Please retry later."))
+            emit(DataState.Error(assetProvider.networkError()))
         }
     }
 
@@ -127,10 +129,10 @@ class CharityRepositoryImpl(
             if(response.isSuccessful){
                 emit(DataState.Success(leaderboardMapper.mapFromDomainModelList(response.body()!!.donors)))
             } else {
-                emit(DataState.Error("An error has occured! Please retry later."))
+                emit(DataState.Error(assetProvider.networkError()))
             }
         } catch (e: Throwable) {
-            emit(DataState.Error("An error has occured! Please retry later."))
+            emit(DataState.Error(assetProvider.networkError()))
         }
     }
 }

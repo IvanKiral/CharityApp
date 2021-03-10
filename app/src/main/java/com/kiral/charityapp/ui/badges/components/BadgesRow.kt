@@ -61,7 +61,7 @@ fun BadgeCard(
             )
         }
         Text(
-            text = badge.title,
+            text = stringResource(id = badge.stringId),
             style = MaterialTheme.typography.body1,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(top = 8.dp)
