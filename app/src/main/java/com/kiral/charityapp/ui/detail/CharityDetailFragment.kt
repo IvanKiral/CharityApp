@@ -91,7 +91,7 @@ class CharityDetailFragment : Fragment() {
                 charity?.let { c ->
                     DetailScreen(
                         imgSrc = c.imgSrc,
-                        donorDonated = c.donorDonated ,
+                        donorDonated = c.donorDonated,
                         onClosePressed = requireActivity()::onBackPressed
                     ) {
                         CharityDetailBody(
@@ -158,15 +158,15 @@ fun CharityDetailBody(
             ExpandableText(
                 text = buildAnnotatedString {
                     withStyle(SpanStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold)) {
-                        append(charityStoryTitle)
+                        append(charityStoryTitle + "\n")
                     }
                     append(charity.description + "\n\n")
                     withStyle(SpanStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold)) {
-                        append(howCharityHelps)
+                        append(howCharityHelps + "\n")
                     }
                     append(charity.howDonationHelps + "\n\n")
                     withStyle(SpanStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold)) {
-                        append(whyDonate)
+                        append(whyDonate + "\n")
                     }
                     append(charity.whyToDonate)
                 },
@@ -198,7 +198,7 @@ fun CharityDetailBody(
                 text = buildInformationText(
                     charity.peopleDonated,
                     charity.donorDonated,
-                    stringResource(R.string.detail_charity_peopleDonated)
+                    stringResource(R.string.detail_peopleDonated_charity_postfix)
                 ),
                 backgroundColor = InformationBoxRed,
                 borderColor = InformationBoxRedBorder,
@@ -209,7 +209,7 @@ fun CharityDetailBody(
                     val action = CharityDetailFragmentDirections
                         .actionCharityDetailFragmentToDonorsFragment(
                             charityId = charity.id,
-                            projectId = -1 ,
+                            projectId = -1,
                             userId = donorId
                         )
                     navController.navigate(action)
@@ -224,7 +224,7 @@ fun CharityDetailBody(
 
             DonationSuccessAlertDialog(
                 shown = viewModel.showDonationSuccessDialog,
-                setShowDialog = { value -> viewModel.setDonationSuccessDialog(value)},
+                setShowDialog = { value -> viewModel.setDonationSuccessDialog(value) },
                 sharePhotoButtonClick = sharePhotoButtonClick,
                 shareLinkButtonClick = shareLinkButtonClick
             )
@@ -236,5 +236,6 @@ fun CharityDetailBody(
         }
     }
 }
+
 
 

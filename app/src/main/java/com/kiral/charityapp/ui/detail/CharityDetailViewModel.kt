@@ -60,6 +60,7 @@ constructor(
         charity?.let { currentCharity ->
             val donorDonated = currentCharity.donorDonated
             val raised = currentCharity.raised
+            val peopleDonated = currentCharity.peopleDonated
             charityRepository.makeDonationToCharity(
                 charityId = currentCharity.id,
                 donorId = donorId,
@@ -75,7 +76,8 @@ constructor(
                         showDonationSuccessDialog = true
                         charity = charity?.copy(
                             donorDonated = donorDonated + value,
-                            raised = raised + value
+                            raised = raised + value,
+                            peopleDonated = peopleDonated + 1
                         )
                     }
                     is DataState.Error -> {

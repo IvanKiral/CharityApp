@@ -18,6 +18,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.kiral.charityapp.R
 import com.kiral.charityapp.ui.components.DonationBox
+import com.kiral.charityapp.utils.Convert
 import com.kiral.charityapp.utils.Utils
 
 @Composable
@@ -48,8 +49,8 @@ fun DetailHeader(
             if (donorDonated > 0) {
                 DonationBox(
                     text = stringResource(
-                        id = R.string.detail_userDonated
-                        //donorDonated.Convert()
+                        id = R.string.detail_userDonated,
+                        donorDonated.Convert()
                     ),
                     backgroundColor = Color.Black.copy(alpha = 0.5f),
                 )
