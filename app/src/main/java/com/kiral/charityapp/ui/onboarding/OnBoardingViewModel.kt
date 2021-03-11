@@ -38,7 +38,7 @@ constructor(
     lateinit var profile: Profile
         private set
 
-    var loading by mutableStateOf(true)
+    var loading by mutableStateOf(false)
         private set
 
     var error by mutableStateOf<String?>(null)
@@ -92,11 +92,12 @@ constructor(
     }
 
     fun addCategories() {
-        profile.categories = selected.mapIndexedNotNull { index, v -> if (v) index + 1 else null }
+        profile.categories = selected
+            .mapIndexedNotNull { index, v -> if (v) index + 1 else null }
     }
 
-    fun addRegularPayments() {
-        profile.regularDonationActive = amountItems[selectedAmount] > 0
+    fun addRegularPayments(active: Boolean) {
+        profile.regularDonationActive = active
         profile.regularDonationFrequency = selectedInterval
         profile.regularDonationValue = amountItems[selectedAmount]
     }
@@ -113,6 +114,7 @@ constructor(
                     writeId(state.data)
                 }
                 is DataState.Error -> {
+                    loading = false
                     error = state.error
                 }
             }

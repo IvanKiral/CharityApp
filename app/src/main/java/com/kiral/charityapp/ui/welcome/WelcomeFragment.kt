@@ -54,10 +54,12 @@ class WelcomeFragment : Fragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                viewModel.shouldNavigateToHomeFragment?.let {
-                    if (it) {
-                        findNavController().navigate(R.id.action_welcomeFragment_to_charitiesFragment)
-                    } else {
+                when {
+                    viewModel.shouldNavigateToHomeFragment -> {
+                        findNavController()
+                            .navigate(R.id.action_welcomeFragment_to_charitiesFragment)
+                    }
+                    viewModel.shouldNavigateToEditPersonalInformationFragment -> {
                         val action =
                             WelcomeFragmentDirections.actionWelcomeFragmentToEditPersonalInformationFragment(
                                 viewModel.email!!

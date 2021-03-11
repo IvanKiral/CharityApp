@@ -25,34 +25,48 @@ constructor(
     @Inject
     lateinit var dataStore: DataStore<Preferences>
 
-    val USER_ID = intPreferencesKey("user_id")
+    private val USER_ID = intPreferencesKey("user_id")
 
-    var shouldNavigateToHomeFragment by mutableStateOf<Boolean?>(null)
+    var shouldNavigateToHomeFragment by mutableStateOf(false)
+    var shouldNavigateToEditPersonalInformationFragment by mutableStateOf(false)
 
     var donor_id: Int? = null
 
+    var loading by mutableStateOf(false)
     var error by mutableStateOf<String?>(null)
 
     var email: String? = null
 
     fun getProfileId(email: String) {
+        error = null
         this.email = email
         profileRepository.login(email).onEach { state ->
+            loading = false
             when (state) {
+                is DataState.Loading -> {
+                    loading = true
+                }
                 is DataState.Success -> {
                     donor_id = state.data
                     shouldNavigateToHomeFragment = true
-                    write_id(donor_id!!)
+                    writeId(donor_id!!)
                 }
                 is DataState.HttpsErrorCode -> {
-                    shouldNavigateToHomeFragment = false
-                    error = state.message
+                    when(state.code) {
+                        404 -> shouldNavigateToEditPersonalInformationFragment = true
+                        else -> {
+                            error = state.message
+                        }
+                    }
+                }
+                is DataState.Error -> {
+                    error = state.error
                 }
             }
         }.launchIn(viewModelScope)
     }
 
-    suspend fun write_id(id: Int) {
+    private suspend fun writeId(id: Int) {
         dataStore.edit { settings ->
             settings[USER_ID] = id
         }

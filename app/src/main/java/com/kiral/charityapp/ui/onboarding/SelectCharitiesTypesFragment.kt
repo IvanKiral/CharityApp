@@ -24,6 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.kiral.charityapp.R
 import com.kiral.charityapp.ui.components.CharitiesSelector
@@ -42,52 +43,59 @@ class SelectCharitiesTypesFragment : Fragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                SelectCharitiesScreen()
+                SelectCharitiesScreen(
+                    viewModel = viewModel,
+                    navController = findNavController()
+                )
             }
         }
     }
+}
 
-    @Composable
-    fun SelectCharitiesScreen() {
-        val scrollState = rememberScrollState()
-        CharityTheme {
-            Column(
+@Composable
+fun SelectCharitiesScreen(
+    viewModel: OnBoardingViewModel,
+    navController: NavController
+) {
+    val scrollState = rememberScrollState()
+    CharityTheme {
+        Column(
+            modifier = Modifier
+                .padding(horizontal = 32.dp)
+                .verticalScroll(scrollState),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            Text(
+                text = stringResource(R.string.selectCharitiesTypes_title),
+                style = MaterialTheme.typography.h5,
+                textAlign = TextAlign.Center,
+            )
+
+            CharitiesSelector(
+                categories = stringArrayResource(id = R.array.Categories),
+                categoriesSelected = viewModel.selected,
                 modifier = Modifier
-                    .padding(horizontal = 32.dp)
-                    .verticalScroll(scrollState),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
+                    .align(Alignment.Start)
+                    .padding(top = 64.dp)
+            )
 
-                Text(
-                    text = stringResource(R.string.selectCharitiesTypes_title),
-                    style = MaterialTheme.typography.h5,
-                    textAlign = TextAlign.Center,
-                )
-
-                CharitiesSelector(
-                    categories = stringArrayResource(id = R.array.Categories),
-                    categoriesSelected = viewModel.selected,
-                    modifier = Modifier
-                        .align(Alignment.Start)
-                        .padding(top = 64.dp)
-                )
-
-                Button(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 32.dp)
-                        .height(64.dp),
-                    onClick = {
-                        viewModel.addCategories()
-                        findNavController().navigate(R.id.action_selectCharitiesTypesFragment_to_setupRegularPaymentsFragment)
-                    }
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.navigation_continue),
-                        style = MaterialTheme.typography.button
-                    )
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 32.dp)
+                    .height(64.dp),
+                onClick = {
+                    viewModel.addCategories()
+                    navController
+                        .navigate(R.id.action_selectCharitiesTypesFragment_to_setupRegularPaymentsFragment)
                 }
+            ) {
+                Text(
+                    text = stringResource(id = R.string.navigation_continue),
+                    style = MaterialTheme.typography.button
+                )
             }
         }
     }

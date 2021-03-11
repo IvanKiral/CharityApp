@@ -4,20 +4,25 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -48,19 +53,40 @@ class SetupRegularPaymentsFragment : Fragment() {
                     findNavController()
                         .navigate(action)
                 }
-                SetupPaymentsScreen()
+                SetupPaymentsScreen(
+                    viewModel = viewModel
+                )
             }
         }
     }
+}
 
-    @Composable
-    fun SetupPaymentsScreen() {
-        val scrollState = rememberScrollState()
-        CharityTheme {
+@Composable
+fun SetupPaymentsScreen(
+    viewModel: OnBoardingViewModel
+) {
+    val scrollState = rememberScrollState()
+    CharityTheme {
+        Box(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Box(modifier = Modifier
+                .clickable {
+                    viewModel.addRegularPayments(false)
+                    viewModel.register()
+                }
+            ) {
+                Text(
+                    text = "Skip",
+                    style = MaterialTheme.typography.body2.copy(color = Color.Black.copy(alpha = 0.7f)),
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
             Column(
                 modifier = Modifier
                     .padding(horizontal = 32.dp)
-                    .verticalScroll(scrollState),
+                    .verticalScroll(scrollState)
+                    .align(Alignment.Center),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -99,13 +125,27 @@ class SetupRegularPaymentsFragment : Fragment() {
                         .padding(vertical = 8.dp)
                         .height(64.dp),
                     onClick = {
-                        viewModel.addRegularPayments()
+                        viewModel.addRegularPayments(true)
                         viewModel.register()
                     }
                 ) {
                     Text(
-                        text = if (viewModel.selectedAmount != 0) "Continue" else "Skip",
+                        text = stringResource(id = R.string.navigation_continue),
                         style = MaterialTheme.typography.button
+                    )
+                }
+
+                if(viewModel.loading){
+                    CircularProgressIndicator(
+                        modifier = Modifier.padding(top = 16.dp)
+                    )
+                }
+                else if(viewModel.error != null){
+                    Text(
+                        viewModel.error!!,
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.body2.copy(color = Color.Red),
+                        modifier = Modifier.padding(top = 16.dp)
                     )
                 }
             }

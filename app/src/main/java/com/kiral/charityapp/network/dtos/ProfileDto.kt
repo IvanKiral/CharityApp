@@ -24,13 +24,13 @@ data class ProfileDto(
     @SerializedName("donations")
     val donations: Int,
 
-    @SerializedName("repeat_active")
+    @SerializedName("regularDonationActive")
     val repeatActive: Boolean,
 
-    @SerializedName("repeat_value")
+    @SerializedName("regularDonationValue")
     val repeatValue: Double,
 
-    @SerializedName("repeat_frequency")
+    @SerializedName("regularDonationFrequency")
     val repeatFrequency: Int,
 
     @SerializedName("badges")
