@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
@@ -183,7 +184,7 @@ fun FilterScreen(
             )
         }
         CharitiesSelector(
-            categories = viewModel.categories,
+            categories = stringArrayResource(id = R.array.Categories),
             categoriesSelected = viewModel.selectedCategories,
             modifier = Modifier.padding(top = 32.dp)
         )

@@ -15,7 +15,7 @@ import com.kiral.charityapp.domain.model.Profile
 import com.kiral.charityapp.network.DataState
 import com.kiral.charityapp.repositories.profile.ProfileRepository
 import com.kiral.charityapp.ui.BaseApplication
-import com.kiral.charityapp.utils.Constants.CATEGORIES
+import com.kiral.charityapp.utils.Constants.CATEGORIES_NUMBER
 import com.kiral.charityapp.utils.Constants.DONATION_VALUES
 import com.kiral.charityapp.utils.Utils.getCountries
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -35,8 +35,6 @@ constructor(
 
     private val USER_ID = intPreferencesKey("user_id")
 
-    val categories = CATEGORIES
-
     lateinit var profile: Profile
         private set
 
@@ -52,7 +50,7 @@ constructor(
     var country by mutableStateOf("")
     var selectedCountry by mutableStateOf("")
 
-    private var categoriesList = MutableList(categories.size) { true }
+    private var categoriesList = List ( CATEGORIES_NUMBER ) { true }
     var selected = categoriesList.toMutableStateList()
 
     val intervalItems = DonationFrequency.values().map { it.name }

@@ -72,7 +72,7 @@
     <string name="welcome_greeting">It\'s good to have you here! Start donating to charities by login into the app</string>
     <string name="welcome_login">Login into application</string>
     <string name="network_payment_error">Oops! Something went wrong! Please try your payment later</string>
-    
+
     <string name="badge_donated_1">You have donated 1</string>
     <string name="badge_donated_10">You have donated 10</string>
     <string name="badge_donated_100">You have donated 100</string>
@@ -84,4 +84,12 @@
     <string name="badge_educational">You have donated educational charity</string>
     <string name="badge_artsAndCulture">You have donated arts and culture charity</string>
     <string name="badge_streak_month">You have reached one month streak</string>
+
+    <string-array name="Categories">
+        <item>Environmental</item>
+        <item>Animal</item>
+        <item>Health</item>
+        <item>Educational</item>
+        <item>Art and Culture</item>
+    </string-array>
 </resources>

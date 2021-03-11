@@ -3,20 +3,20 @@ package com.kiral.charityapp.utils
 import com.kiral.charityapp.R
 import com.kiral.charityapp.domain.model.BadgeData
 
-
+data class Category(
+    val categoryId: Int,
+    val nameId: String,
+    val active: Boolean
+)
 
 object Constants {
-
     val DONATION_VALUES = listOf(0.5, 1.0, 2.0, 5.0, 10.0, 20.0, 50.0, 100.0, 500.0, 1000.0)
 
     val GRAVATAR_LINK = "https://www.gravatar.com/avatar/"
 
     val DONORS_PAGE_SIZE = 5
 
-    val CATEGORIES = listOf(
-        "Environment charity", "Animal charity",
-        "Health charity", "Education charity", "Art and culture charity"
-    )
+    val CATEGORIES_NUMBER = 5
 
     val BADGES = mapOf(
         1 to BadgeData(

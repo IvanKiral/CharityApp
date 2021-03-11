@@ -13,7 +13,7 @@ import com.kiral.charityapp.domain.model.CharityListItem
 import com.kiral.charityapp.domain.model.LeaderBoardProfile
 import com.kiral.charityapp.network.DataState
 import com.kiral.charityapp.repositories.charities.CharityRepository
-import com.kiral.charityapp.utils.Constants.CATEGORIES
+import com.kiral.charityapp.utils.Constants.CATEGORIES_NUMBER
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.launchIn
@@ -28,8 +28,7 @@ constructor(
     private val charityRepository: CharityRepository,
     dataStore: DataStore<Preferences>
 ) : ViewModel() {
-    val categories = CATEGORIES
-    val USER_ID = intPreferencesKey("user_id")
+    private val USER_ID = intPreferencesKey("user_id")
     var userId: Int = -1
 
     var charities by mutableStateOf<List<CharityListItem>>(ArrayList())
@@ -40,7 +39,7 @@ constructor(
     var charitiesLoading by mutableStateOf(false)
         private set
 
-    private var categoriesList = MutableList(categories.size) { true }
+    private var categoriesList = MutableList(CATEGORIES_NUMBER) { true }
     var selectedCategories = categoriesList.toMutableStateList()
 
     var showFilter by mutableStateOf(false)
@@ -59,7 +58,7 @@ constructor(
                 preferences[USER_ID] ?: -1
             }
         uId.onEach { id ->
-            if(id != -1){
+            if (id != -1) {
                 userId = id
                 getCharities()
                 getLeaderboard()
@@ -71,7 +70,7 @@ constructor(
         charitiesError = null
         charityRepository.search(
             userId,
-            selectedCategories.mapIndexed { index, v -> if(v) index + 1 else -1}.filter { it > -1 }
+            getSelectedCategories()
         ).onEach {
             when (it) {
                 is DataState.Success<List<CharityListItem>> -> {
@@ -92,7 +91,7 @@ constructor(
     fun getLeaderboard() {
         leaderboardError = null
         charityRepository.getLeaderboard(userId).onEach { state ->
-            when(state){
+            when (state) {
                 is DataState.Success -> {
                     leaderboardLoading = false
                     leaderboard = state.data
@@ -108,9 +107,17 @@ constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun onFilterChange(){
+    fun onFilterChange() {
         showFilter = !showFilter
-        if(!showFilter)
+        if (!showFilter)
             getCharities()
+    }
+
+    private fun getSelectedCategories(): List<Int> {
+        // + 1 because categories on database starts by 1
+        return selectedCategories
+            .mapIndexedNotNull { index, v ->
+                if (v) index + 1 else null
+            }
     }
 }

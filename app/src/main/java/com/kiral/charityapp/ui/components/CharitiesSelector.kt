@@ -21,18 +21,17 @@ import com.kiral.charityapp.ui.theme.labelTextStyle
 
 @Composable
 fun CharitiesSelector(
-    categories: List<String>,
+    categories: Array<String>,
     categoriesSelected: SnapshotStateList<Boolean>,
     modifier: Modifier = Modifier,
 ) {
-
     Column(modifier = modifier) {
         for (i in categories.indices) {
             RowSelector(
                 text = categories[i],
                 selected = categoriesSelected[i],
                 onRowClick = {
-                    val selectedSize = categoriesSelected.filter { b -> b == true }.size
+                    val selectedSize = categoriesSelected.filter { b -> b }.size
                     if (selectedSize > 0) {
                         if (selectedSize > 1) {
                             categoriesSelected[i] = !categoriesSelected[i]

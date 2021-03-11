@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.kiral.charityapp.R
 import com.kiral.charityapp.domain.enums.DonationFrequency
 import com.kiral.charityapp.domain.model.Badge
 import com.kiral.charityapp.domain.model.Profile
@@ -13,7 +14,7 @@ import com.kiral.charityapp.network.DataState
 import com.kiral.charityapp.repositories.profile.ProfileRepository
 import com.kiral.charityapp.ui.BaseApplication
 import com.kiral.charityapp.utils.Constants.BADGES
-import com.kiral.charityapp.utils.Constants.CATEGORIES
+import com.kiral.charityapp.utils.Constants.CATEGORIES_NUMBER
 import com.kiral.charityapp.utils.Constants.DONATION_VALUES
 import com.kiral.charityapp.utils.Utils.getCountries
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -50,7 +51,7 @@ constructor(
     val frequencyValues = DonationFrequency.values().map { it.name }
     var selectedFrequency by mutableStateOf(0)
 
-    var selectedCategories = List(CATEGORIES.size) {false}.toMutableStateList()
+    var selectedCategories = List(CATEGORIES_NUMBER) {false}.toMutableStateList()
     var categoryString by mutableStateOf("")
 
     var categoriesDialog by mutableStateOf(false)
@@ -175,7 +176,7 @@ constructor(
 
     private fun makeCategoryString(){
         val categories = selectedCategories.mapIndexedNotNull{ i, v ->
-            if(v) CATEGORIES[i].removeSuffix(" charity") else null
+            if(v) application.resources.getStringArray(R.array.Categories)[i].removeSuffix(" charity") else null
         }
         categoryString = categories.joinToString { it }
     }

@@ -226,15 +226,12 @@ fun ProfileScreen(
                         charitiesViewModel.getCharities()
                     },
                 )
-                if (viewModel.categoriesDialog) {
-                    CategoriesDialog(
-                        shown = viewModel.categoriesDialog,
-                        setShowDialog = { viewModel.categoriesDialog = it },
-                        categoriesSelected = viewModel.selectedCategories,
-                        onConfirmButton = { viewModel.setCategories() }
-                    )
-                }
-
+                CategoriesDialog(
+                    shown = viewModel.categoriesDialog,
+                    setShowDialog = { viewModel.categoriesDialog = it },
+                    categoriesSelected = viewModel.selectedCategories,
+                    onConfirmButton = { viewModel.setCategories() }
+                )
                 AlertDialogWithChoice(
                     title = stringResource(R.string.profile_alertDialog_title),
                     shown = viewModel.regularDonationDialog,
