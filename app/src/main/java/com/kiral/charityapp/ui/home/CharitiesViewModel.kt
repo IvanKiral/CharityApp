@@ -1,18 +1,18 @@
 package com.kiral.charityapp.ui.home
 
+import android.app.Application
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toMutableStateList
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.intPreferencesKey
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.kiral.charityapp.domain.model.CharityListItem
 import com.kiral.charityapp.domain.model.LeaderBoardProfile
 import com.kiral.charityapp.network.DataState
 import com.kiral.charityapp.repositories.charities.CharityRepository
+import com.kiral.charityapp.ui.dataStore
 import com.kiral.charityapp.utils.Constants
 import com.kiral.charityapp.utils.Constants.CATEGORIES_NUMBER
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,8 +27,10 @@ class CharitiesViewModel
 @Inject
 constructor(
     private val charityRepository: CharityRepository,
-    dataStore: DataStore<Preferences>
-) : ViewModel() {
+    val app: Application
+) : AndroidViewModel(app) {
+
+
     private val USER_ID = intPreferencesKey("user_id")
     var userId: Int = -1
 
@@ -59,7 +61,7 @@ constructor(
     var indexPosition = 0
 
     init {
-        val uId: Flow<Int> = dataStore.data
+        val uId: Flow<Int> = app.dataStore.data
             .map { preferences ->
                 preferences[USER_ID] ?: -1
             }

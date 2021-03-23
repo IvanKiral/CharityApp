@@ -5,8 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -18,6 +16,7 @@ import com.auth0.android.authentication.storage.CredentialsManager
 import com.auth0.android.authentication.storage.SharedPreferencesStorage
 import com.kiral.charityapp.R
 import com.kiral.charityapp.ui.components.ErrorScreen
+import com.kiral.charityapp.ui.dataStore
 import com.kiral.charityapp.ui.theme.CharityTheme
 import com.kiral.charityapp.utils.Auth
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,11 +30,11 @@ import javax.inject.Inject
 class MainFragment : Fragment() {
     private val viewModel: MainViewModel by viewModels()
     private val USER_ID = intPreferencesKey("user_id")
+    //val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
     @Inject
     lateinit var account: Auth0
-    @Inject
-    lateinit var dataStore: DataStore<Preferences>
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,8 +46,8 @@ class MainFragment : Fragment() {
             setContent {
                 CharityTheme {
                     if (viewModel.error != null) {
-                        ErrorScreen(text = viewModel.error!!){
-                           login()
+                        ErrorScreen(text = viewModel.error!!) {
+                            login()
                         }
                     }
                     if (viewModel.navigateToCharitiesFragment) {
@@ -63,23 +62,24 @@ class MainFragment : Fragment() {
         }
     }
 
-    fun login(){
+    fun login() {
         val client = AuthenticationAPIClient(account)
         val manager = CredentialsManager(client, SharedPreferencesStorage(requireContext()))
         if (manager.hasValidCredentials()) {
-            val uId: Flow<Int> = dataStore.data
+            val uId: Flow<Int> = requireContext().dataStore.data
                 .map { preferences ->
                     preferences[USER_ID] ?: -1
                 }
 
             uId.onEach {
                 if (it == -1) {
-                    Auth.logout(account, requireContext(), dataStore)
+                    Auth.logout(account, requireContext(), requireContext().dataStore)
                     viewModel.navigateToWelcomeFragment = true
                 } else {
                     viewModel.navigateToCharitiesFragment = true
                 }
             }.launchIn(lifecycleScope)
+
         } else {
             viewModel.navigateToWelcomeFragment = true
         }

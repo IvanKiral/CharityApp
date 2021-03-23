@@ -4,8 +4,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toMutableStateList
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.lifecycle.AndroidViewModel
@@ -15,6 +13,7 @@ import com.kiral.charityapp.domain.model.Profile
 import com.kiral.charityapp.network.DataState
 import com.kiral.charityapp.repositories.profile.ProfileRepository
 import com.kiral.charityapp.ui.BaseApplication
+import com.kiral.charityapp.ui.dataStore
 import com.kiral.charityapp.utils.Constants.CATEGORIES_NUMBER
 import com.kiral.charityapp.utils.Constants.DONATION_VALUES
 import com.kiral.charityapp.utils.Utils.getCountries
@@ -30,9 +29,7 @@ class OnBoardingViewModel
 constructor(
     private val application: BaseApplication,
     private val profileRepository: ProfileRepository,
-    private var dataStore: DataStore<Preferences>
 ) : AndroidViewModel(application) {
-
     private val USER_ID = intPreferencesKey("user_id")
 
     lateinit var profile: Profile
@@ -122,7 +119,7 @@ constructor(
     }
 
     private suspend fun writeId(id: Int) {
-        dataStore.edit { settings ->
+        application.dataStore.edit { settings ->
             settings[USER_ID] = id
         }
     }

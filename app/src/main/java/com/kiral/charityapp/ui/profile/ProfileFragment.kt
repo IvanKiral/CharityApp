@@ -24,8 +24,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -40,6 +38,7 @@ import com.kiral.charityapp.ui.components.ClickableIcon
 import com.kiral.charityapp.ui.components.CountryDialog
 import com.kiral.charityapp.ui.components.DonationField
 import com.kiral.charityapp.ui.components.SingleChoicePicker
+import com.kiral.charityapp.ui.dataStore
 import com.kiral.charityapp.ui.home.CharitiesViewModel
 import com.kiral.charityapp.ui.profile.components.Badges
 import com.kiral.charityapp.ui.profile.components.Boxes
@@ -57,8 +56,6 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
-    @Inject
-    lateinit var dataStore: DataStore<Preferences>
 
     @Inject
     lateinit var account: Auth0
@@ -96,7 +93,7 @@ class ProfileFragment : Fragment() {
                                 Auth.logout(
                                     account,
                                     requireContext(),
-                                    dataStore,
+                                    context.dataStore,
                                 ) {
                                     findNavController()
                                         .navigate(R.id.action_profileFragment_to_welcomeFragment)
