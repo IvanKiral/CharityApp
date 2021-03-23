@@ -1,4 +1,4 @@
-package com.kiral.charityapp.network
+package com.kiral.charityapp.network.services
 
 import com.kiral.charityapp.network.dtos.CharityDto
 import com.kiral.charityapp.network.dtos.DonationDto

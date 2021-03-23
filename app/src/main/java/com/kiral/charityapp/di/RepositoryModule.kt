@@ -1,13 +1,13 @@
 package com.kiral.charityapp.di
 
-import com.kiral.charityapp.network.CharityService
-import com.kiral.charityapp.network.ProfileService
 import com.kiral.charityapp.network.mappers.CharityListItemMapper
 import com.kiral.charityapp.network.mappers.CharityMapper
 import com.kiral.charityapp.network.mappers.DonorsMapper
 import com.kiral.charityapp.network.mappers.LeaderboardMapper
 import com.kiral.charityapp.network.mappers.ProfileMapper
 import com.kiral.charityapp.network.mappers.ProjectMapper
+import com.kiral.charityapp.network.services.CharityService
+import com.kiral.charityapp.network.services.ProfileService
 import com.kiral.charityapp.repositories.charities.CharityRepository
 import com.kiral.charityapp.repositories.charities.CharityRepositoryImpl
 import com.kiral.charityapp.repositories.profile.ProfileRepository

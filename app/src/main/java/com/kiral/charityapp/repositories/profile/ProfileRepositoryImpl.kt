@@ -3,10 +3,10 @@ package com.kiral.charityapp.repositories.profile
 import android.util.Log
 import com.kiral.charityapp.domain.model.Profile
 import com.kiral.charityapp.network.DataState
-import com.kiral.charityapp.network.ProfileService
 import com.kiral.charityapp.network.dtos.LoginDto
 import com.kiral.charityapp.network.dtos.ProfilePostDto
 import com.kiral.charityapp.network.mappers.ProfileMapper
+import com.kiral.charityapp.network.services.ProfileService
 import com.kiral.charityapp.utils.AssetProvider
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

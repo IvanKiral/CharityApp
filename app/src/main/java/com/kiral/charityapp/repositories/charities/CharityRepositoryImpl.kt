@@ -5,7 +5,6 @@ import com.kiral.charityapp.domain.model.CharityListItem
 import com.kiral.charityapp.domain.model.Donor
 import com.kiral.charityapp.domain.model.LeaderBoardProfile
 import com.kiral.charityapp.domain.model.Project
-import com.kiral.charityapp.network.CharityService
 import com.kiral.charityapp.network.DataState
 import com.kiral.charityapp.network.dtos.DonationDto
 import com.kiral.charityapp.network.mappers.CharityListItemMapper
@@ -13,6 +12,7 @@ import com.kiral.charityapp.network.mappers.CharityMapper
 import com.kiral.charityapp.network.mappers.DonorsMapper
 import com.kiral.charityapp.network.mappers.LeaderboardMapper
 import com.kiral.charityapp.network.mappers.ProjectMapper
+import com.kiral.charityapp.network.services.CharityService
 import com.kiral.charityapp.utils.AssetProvider
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
