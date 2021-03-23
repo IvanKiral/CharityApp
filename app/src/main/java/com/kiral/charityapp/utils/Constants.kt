@@ -14,9 +14,10 @@ object Constants {
 
     val GRAVATAR_LINK = "https://www.gravatar.com/avatar/"
 
-    val DONORS_PAGE_SIZE = 5
+    const val DONORS_PAGE_SIZE = 5
+    const val CHARITIES_PAGE_SIZE = 4
 
-    val CATEGORIES_NUMBER = 5
+    const val CATEGORIES_NUMBER = 5
 
     val BADGES = mapOf(
         1 to BadgeData(

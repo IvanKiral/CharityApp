@@ -125,7 +125,8 @@ fun CharityScreen(
         CharityGrid(
             lst = viewModel.charities,
             modifier = Modifier
-                .padding(top = 20.dp)
+                .padding(top = 20.dp),
+            viewModel = viewModel
         ) { itemId ->
             val action = CharitiesFragmentDirections
                 .actionCharitiesFragmentToCharityDetailFragment(itemId, viewModel.userId)

@@ -79,7 +79,7 @@ constructor(
         getCharityDonors(charityId, page, userId, projectId)
     }
 
-    fun reset() {
+    private fun reset() {
         page = 1
         charityDonors = listOf()
     }

@@ -13,6 +13,7 @@ import com.kiral.charityapp.domain.model.CharityListItem
 import com.kiral.charityapp.domain.model.LeaderBoardProfile
 import com.kiral.charityapp.network.DataState
 import com.kiral.charityapp.repositories.charities.CharityRepository
+import com.kiral.charityapp.utils.Constants
 import com.kiral.charityapp.utils.Constants.CATEGORIES_NUMBER
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -38,6 +39,8 @@ constructor(
         private set
     var charitiesLoading by mutableStateOf(false)
         private set
+    var charitiesPagingLoading by mutableStateOf(false)
+        private set
 
     private var categoriesList = MutableList(CATEGORIES_NUMBER) { true }
     var selectedCategories = categoriesList.toMutableStateList()
@@ -51,6 +54,9 @@ constructor(
         private set
     var leaderboardLoading by mutableStateOf(false)
         private set
+
+    var page by mutableStateOf(1)
+    var indexPosition = 0
 
     init {
         val uId: Flow<Int> = dataStore.data
@@ -70,22 +76,37 @@ constructor(
         charitiesError = null
         charityRepository.search(
             userId,
+            page,
             getSelectedCategories()
-        ).onEach {
-            when (it) {
+        ).onEach { state ->
+            charitiesLoading = false
+            charitiesPagingLoading = false
+            when (state) {
                 is DataState.Success<List<CharityListItem>> -> {
-                    charitiesLoading = false
-                    charities = it.data
+                    appendCharities(state.data)
                 }
                 is DataState.Error -> {
-                    charitiesLoading = false
-                    charitiesError = it.error
+                    charitiesError = state.error
                 }
                 is DataState.Loading -> {
-                    charitiesLoading = true
+                    if(page == 1){
+                        charitiesLoading = true
+                    } else {
+                       charitiesPagingLoading = true
+                    }
                 }
             }
         }.launchIn(viewModelScope)
+    }
+
+    fun nextPage() {
+        //preventing recomposing so it would call pagination more times
+        if ((indexPosition + 1) >= (page * Constants.CHARITIES_PAGE_SIZE)) {
+            page += 1
+            if (page > 1) {
+                getCharities()
+            }
+        }
     }
 
     fun getLeaderboard() {
@@ -109,8 +130,10 @@ constructor(
 
     fun onFilterChange() {
         showFilter = !showFilter
-        if (!showFilter)
+        if (!showFilter) {
+            reset()
             getCharities()
+        }
     }
 
     private fun getSelectedCategories(): List<Int> {
@@ -119,5 +142,16 @@ constructor(
             .mapIndexedNotNull { index, v ->
                 if (v) index + 1 else null
             }
+    }
+
+    private fun reset() {
+        page = 1
+        charities = listOf()
+    }
+
+    private fun appendCharities(data: List<CharityListItem>){
+        val tmp = ArrayList(charities)
+        tmp.addAll(data)
+        charities = tmp
     }
 }
