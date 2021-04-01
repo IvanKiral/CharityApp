@@ -1,35 +1,95 @@
 <resources>
+    <string name="alertDialog_cancel">Cancel</string>
+    <string name="alertDialog_confirm">Confirm</string>
     <string name="app_name">CharityApp</string>
-    <string name="ExpandableText_ReadMore">Read more</string>
-    <string name="ExpandableText_Less">Less</string>
-    <string name="CharityDetailFragment_InformationBox"> %1$d people and you have donated this project.</string>
-    <string name="CharityDetailFragment_Raised">Raised last week</string>
-    <string name="CharityDetailFragment_ButtonDonation">Extra Donation</string>
-    <string name="CharitiesFragment_Charities">Charities</string>
-    <string name="CharitiesFragment_Rankings">Rankings</string>
-    <string name="LoginFragment_Title">Login</string>
-    <string name="LoginFragment_Email">Email</string>
-    <string name="LoginFragment_Password">Password</string>
-    <string name="LoginFragment_ButtonLogin">Login</string>
-    <string name="LoginFragment_OrLoginWith">Or login with</string>
-    <string name="LoginFragment_DontHaveAnAccount">Don\'t have an account?</string>
-    <string name="LoginFragment_Register">Register</string>
-    <string name="EditPersonalInformationFragment_Title">Edit personal information</string>
-    <string name="SelectCharitiesTypesFragment_Title">Select charities types</string>
-    <string name="SetupRegularPaymentsFragment_Title">Setup regular Payments</string>
-    <string name="ProfileFragment_YourBadges">Your Badges</string>
-    <string name="ProfileFragment_ShowBadges">Show badges</string>
-    <string name="ProfileFragment_BoxDonations">Donations</string>
-    <string name="ProfileFragment_BoxCredit">Credit</string>
-    <string name="ProfileFragment_RegularDonations">Regular donations</string>
-    <string name="ProfileFragment_Logout">Logout</string>
-    <string name="ProfileFragment_LogoutDescription">Logout from the system</string>
-    <string name="RegistrationFragment_Email">Email</string>
-    <string name="RegistrationFragment_Password">Password</string>
-    <string name="RegistrationFragment_PasswordConfirmation">Password confirmation</string>
-    <string name="RegistrationFragment_CreateAccount">Create account</string>
-    <string name="RegistrationFragment_SignUpWith">Or sign up with</string>
-    <string name="RegistrationFragment_AlreadyRegistered">Already registered?</string>
-    <string name="RegistrationFragment_Login">Login</string>
-    <string name="RegistrationFragment_Title">Register</string>
+    <string name="back_icon_description">back icon</string>
+    <string name="badges_badgeIconDescription">badge icon</string>
+    <string name="badges_title">Your badges</string>
+    <string name="categoriesDialog_title">Categories for regular donations</string>
+    <string name="countryDialog_title">Select your region</string>
+    <string name="detail_buttonExtraDonation">Extra Donation</string>
+    <string name="detail_donate">Donate</string>
+    <string name="detail_donationFailed_confirm">Understood</string>
+    <string name="detail_donationFailed_error">An error has occurred! Please try again later.</string>
+    <string name="detail_donationSuccess_confirm">Okay</string>
+    <string name="detail_donationSuccess_description">Do you want to share about your contribution?</string>
+    <string name="detail_donationSuccess_shareLink">Share link…</string>
+    <string name="detail_donationSuccess_sharePhoto">Share photo…</string>
+    <string name="detail_donationSuccess_title">Thank you for your contribution!</string>
+    <string name="detail_charity_howCharityHelps">How donation helps</string>
+    <string name="detail_charity_charityStory">Our story</string>
+    <string name="detail_peopleDonated_prefix_zero">No one has yet</string>
+    <plurals name="detail_peopleDonated_prefix">
+        <item quantity="zero">@string/detail_peopleDonated_prefix_zero</item>
+        <item quantity="one">%1d person</item>
+        <item quantity="other">%1d people</item>
+    </plurals>
+    <string name="detail_peopleDonated_has">has</string>
+    <string name="detail_peopleDonated_have">have</string>
+    <string name="detail_peopleDonated_and">and</string>
+    <string name="detail_peopleDonated_you">you</string>
+    <string name="detail_peopleDonated_charity_postfix">donated to this charity.</string>
+    <string name="detail_charity_projects">Projects</string>
+    <string name="detail_charity_raised">Raised last week</string>
+    <string name="detail_charity_whyDonate">Why donate</string>
+    <string name="detail_project_peopleDonated">donated to this project.</string>
+    <string name="detail_project_raised">Raised</string>
+    <string name="detail_userDonated">You donated %1s</string>
+    <string name="donationField_textFieldLabel">Your amount</string>
+    <string name="donor_userDonations_icon_description">donor show users donations icon</string>
+    <string name="donors_heartIcon_description">heart icon</string>
+    <string name="donors_icon_description">donor badge icon</string>
+    <string name="editPersonalInformation_name_label">Type your name</string>
+    <string name="editPersonalInformation_title">Edit personal information</string>
+    <string name="editPersonalInformation_toastText">Please fill up your name</string>
+    <string name="errorScreen_retry">Retry</string>
+    <string name="expandableText_less">Less</string>
+    <string name="expandableText_readMore">Read more</string>
+    <string name="charities_filter_icon_description">filter icon</string>
+    <string name="charities_filter_title">Select charities to Show</string>
+    <string name="charities_tab_charities">Charities</string>
+    <string name="charities_tab_rankings">Rankings</string>
+    <string name="charitiesSelector_iconDescription">selected icon</string>
+    <string name="navigation_continue">Continue</string>
+    <string name="network_error">An error has occurred! Please retry later.</string>
+    <string name="network_registerError">Could not register! Please try again later</string>
+    <string name="network_userNotFound">No profile with that id</string>
+    <string name="profile_alertDialog_title">Choose value and frequency of regular donations</string>
+    <string name="profile_badge_icon_description">badge icon</string>
+    <string name="profile_boxCredit">Credit</string>
+    <string name="profile_boxDonations">Donations</string>
+    <string name="profile_donationField_add">Add</string>
+    <string name="profile_logout">Logout</string>
+    <string name="profile_logoutDescription">Logout from the system</string>
+    <string name="profile_option_categories">Select charity categories</string>
+    <string name="profile_option_countries">Select country</string>
+    <string name="profile_regularDonations">Regular donations</string>
+    <string name="profile_showBadges">Show badges</string>
+    <string name="profile_yourBadges">Your Badges</string>
+    <string name="profileImage_imageDescription">profile image</string>
+    <string name="selectCharitiesTypes_title">Select charities types</string>
+    <string name="setupRegularPayments_title">Setup regular Payments</string>
+    <string name="welcome_greeting">It\'s good to have you here! Start donating to charities by login into the app</string>
+    <string name="welcome_login">Login into application</string>
+    <string name="network_payment_error">Oops! Something went wrong! Please try your payment later</string>
+
+    <string name="badge_donated_1">You have donated 1</string>
+    <string name="badge_donated_10">You have donated 10</string>
+    <string name="badge_donated_100">You have donated 100</string>
+    <string name="badge_donated_1000">You have donated 1000</string>
+    <string name="badge_donated_all">You have donated to all charities</string>
+    <string name="badge_environmental">You have donated to environmental charity</string>
+    <string name="badge_animal">You have donated to animal charity</string>
+    <string name="badge_health">You have donated to health charity</string>
+    <string name="badge_educational">You have donated educational charity</string>
+    <string name="badge_artsAndCulture">You have donated arts and culture charity</string>
+    <string name="badge_streak_month">You have reached one month streak</string>
+
+    <string-array name="Categories">
+        <item>Environmental</item>
+        <item>Animal</item>
+        <item>Health</item>
+        <item>Educational</item>
+        <item>Art and Culture</item>
+    </string-array>
 </resources>

@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.kiral.charityapp.utils.Constants.GRAVATAR_LINK
 import java.security.MessageDigest
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
@@ -73,8 +74,12 @@ fun Double.Convert(): String{
     return format.format(this).toString()
 }
 
-fun String.makeGravatrLink(): String{
-    return gravatarLink + this.toLowerCase(Locale.ROOT).md5().toLowerCase(Locale.ROOT)
+fun String.checkCurrencyFormat(): Boolean{
+    return this.matches(Regex("|(([1-9]\\d*|0)\\.?(\\d{1,2})?)"))
+}
+
+fun String.makeGravatarLink(): String{
+    return GRAVATAR_LINK + this.toLowerCase(Locale.ROOT).md5().toLowerCase(Locale.ROOT)
 }
 
 fun String.md5(): String {

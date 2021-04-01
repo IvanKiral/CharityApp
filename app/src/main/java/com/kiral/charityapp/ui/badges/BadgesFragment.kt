@@ -5,14 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
@@ -21,17 +17,18 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
-import com.kiral.charityapp.domain.model.Badge
+import com.kiral.charityapp.R
+import com.kiral.charityapp.ui.badges.components.BadgesRow
+import com.kiral.charityapp.ui.components.ClickableIcon
 import com.kiral.charityapp.ui.theme.CharityTheme
-import com.kiral.charityapp.utils.loadPictureFromDrawable
-import com.kiral.charityapp.utils.toGrayscale
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -48,80 +45,50 @@ class BadgesFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             viewModel.getBadges(args.badges)
             setContent {
-                BadgeScreen()
-            }
-        }
-    }
-
-    @ExperimentalFoundationApi
-    @Composable
-    fun BadgeScreen() {
-        val scrollState = rememberScrollState()
-        CharityTheme {
-            Column(
-                modifier = Modifier.verticalScroll(scrollState)
-            ) {
-                Text(
-                    text = "Your badges",
-                    style = MaterialTheme.typography.h5,
-                    modifier = Modifier.padding(16.dp)
-                )
-                Divider(
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(start = 16.dp, end = 16.dp)
-                )
-                viewModel.badges.value.chunked(2).forEach {
-                    RowBadges(badges = it)
-                }
-            }
-        }
-    }
-
-    @Composable
-    fun RowBadges(
-        badges: List<Badge>,
-        modifier: Modifier = Modifier
-    ) {
-        Row(
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            badges.forEach { badge ->
-                BadgeCard(
-                    badge = badge
+                BadgeScreen(
+                    viewModel,
+                    requireActivity()::onBackPressed
                 )
             }
         }
     }
+}
 
-    @Composable
-    fun BadgeCard(
-        badge: Badge,
-        modifier: Modifier = Modifier
-    ) {
+@ExperimentalFoundationApi
+@Composable
+fun BadgeScreen(
+    viewModel: BadgesViewModel,
+    onBackPressed: () -> Unit
+) {
+    val scrollState = rememberScrollState()
+    CharityTheme {
         Column(
-            modifier = modifier
-                .width(144.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier.verticalScroll(scrollState)
         ) {
-            val img = loadPictureFromDrawable(drawable = badge.iconId)
-            img.value?.let {
-                Image(
-                    bitmap = if (badge.active) it.toGrayscale()
-                        .asImageBitmap() else it.asImageBitmap(),
-                    contentDescription = "badge icon",
-                    modifier = Modifier.size(128.dp)
+            Row(
+                modifier = Modifier.padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                ClickableIcon(
+                    icon = ImageVector.vectorResource(id = R.drawable.ic_back),
+                    contentDescription = stringResource(R.string.back_icon_description),
+                    onIconClicked = onBackPressed,
+                    size = 18.dp
+                )
+                Text(
+                    text = stringResource(R.string.badges_title),
+                    style = MaterialTheme.typography.h5,
+                    modifier = Modifier.padding(start = 8.dp)
                 )
             }
-            Text(
-                text = badge.title,
-                style = MaterialTheme.typography.body1,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(top = 8.dp)
+            Divider(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, end = 16.dp)
             )
+            viewModel.badges.chunked(2).forEach {
+                BadgesRow(badges = it)
+            }
         }
     }
 }

@@ -1,17 +1,22 @@
 package com.kiral.charityapp.ui.onboarding
 
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toMutableStateList
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.kiral.charityapp.domain.enums.DonationFrequency
 import com.kiral.charityapp.domain.model.Profile
 import com.kiral.charityapp.network.DataState
-import com.kiral.charityapp.repositories.charities.ProfileRepository
+import com.kiral.charityapp.repositories.profile.ProfileRepository
 import com.kiral.charityapp.ui.BaseApplication
-import com.kiral.charityapp.utils.DonationValues
-import com.kiral.charityapp.utils.getCountries
-import com.kiral.charityapp.utils.global_categories
+import com.kiral.charityapp.ui.dataStore
+import com.kiral.charityapp.utils.Constants.CATEGORIES_NUMBER
+import com.kiral.charityapp.utils.Constants.DONATION_VALUES
+import com.kiral.charityapp.utils.Utils.getCountries
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -23,41 +28,45 @@ class OnBoardingViewModel
 @Inject
 constructor(
     private val application: BaseApplication,
-    private val profileRepository: ProfileRepository
-): AndroidViewModel(application){
-
-    val categories = global_categories
-
-    val loading = mutableStateOf(false)
-    val error = mutableStateOf<String?>(null)
+    private val profileRepository: ProfileRepository,
+) : AndroidViewModel(application) {
+    private val USER_ID = intPreferencesKey("user_id")
 
     lateinit var profile: Profile
+        private set
 
-    val name = mutableStateOf("")
-    val country = mutableStateOf("")
-    val selectedCountry = mutableStateOf("")
-    val navigateToCharityFragment = mutableStateOf(false)
+    var loading by mutableStateOf(false)
+        private set
 
-    val lst = MutableList(categories.size) { false }
-    val selected = lst.toMutableStateList()
+    var error by mutableStateOf<String?>(null)
+        private set
+
+    var navigateToCharityFragment by mutableStateOf(false)
+
+    var name by mutableStateOf("")
+    var country by mutableStateOf("")
+    var selectedCountry by mutableStateOf("")
+
+    private var categoriesList = List ( CATEGORIES_NUMBER ) { true }
+    var selected = categoriesList.toMutableStateList()
 
     val intervalItems = DonationFrequency.values().map { it.name }
-    val selectedInterval = mutableStateOf(0)
+    var selectedInterval by mutableStateOf(0)
 
-    val amountItems = DonationValues
-    val selectedAmount = mutableStateOf(0)
+    var amountItems = DONATION_VALUES
+    var selectedAmount by mutableStateOf(0)
 
-    val countryDialog = mutableStateOf(false)
+    var countryDialog by mutableStateOf(false)
 
-    val countries = mutableStateOf(mapOf<String, String>())
+    var countries by mutableStateOf(mapOf<String, String>())
 
     init {
         viewModelScope.launch {
-            countries.value = getCountries(application.baseContext)
+            countries = getCountries(application.baseContext)
         }
     }
 
-    fun createNewProfile(email: String){
+    fun createNewProfile(email: String) {
         profile = Profile(
             id = 0,
             email = email,
@@ -73,66 +82,45 @@ constructor(
         )
     }
 
-    fun addPersonalInformation(){
-        profile.name = name.value
-        profile.region = selectedCountry.value
+    fun addPersonalInformation(): Boolean {
+        profile.name = name
+        profile.region = selectedCountry
+        return name.isNotBlank()
     }
 
-    fun addCharitiesTypes(){
-        /*profile.categories = selected.foldIndexed(
-            "",
-            { index, result, sel ->
-                if(sel) result + categories[index] + (if(index != selected.filter { it == true }.size - 1) ";" else "")
-                else result + ""
-            }
-        )*/
+    fun addCategories() {
+        profile.categories = selected
+            .mapIndexedNotNull { index, v -> if (v) index + 1 else null }
     }
 
-    fun addRegularPayments(){
-        profile.regularDonationActive = if (amountItems.get(selectedAmount.value) > 0) true else false
-        profile.regularDonationFrequency = selectedInterval.value
-        profile.regularDonationValue = amountItems.get(selectedAmount.value)
+    fun addRegularPayments(active: Boolean) {
+        profile.regularDonationActive = active
+        profile.regularDonationFrequency = selectedInterval
+        profile.regularDonationValue = amountItems[selectedAmount]
     }
 
-    fun register(){
+    fun register() {
         profileRepository.register(profile).onEach { state ->
-            when(state){
+            when (state) {
                 is DataState.Loading -> {
-                    loading.value = true
+                    loading = true
                 }
                 is DataState.Success -> {
-                    loading.value = false
-                    navigateToCharityFragment.value = true
+                    loading = false
+                    navigateToCharityFragment = true
+                    writeId(state.data)
                 }
                 is DataState.Error -> {
-                    error.value = state.error
+                    loading = false
+                    error = state.error
                 }
             }
         }.launchIn(viewModelScope)
     }
 
-    fun setName(value: String){
-        name.value = value
-    }
-
-    fun setSelectedAmount(value: Int){
-        selectedAmount.value = value
-    }
-
-    fun setSelectedInterval(value: Int){
-        selectedInterval.value = value
-    }
-
-    fun setCountryDialog(value: Boolean){
-        countryDialog.value = value
-    }
-
-    fun setCountry(value: String){
-        country.value = value
-    }
-
-    fun setSelectedCountry(value: String){
-        profile.region = value
-        selectedCountry.value = value
+    private suspend fun writeId(id: Int) {
+        application.dataStore.edit { settings ->
+            settings[USER_ID] = id
+        }
     }
 }

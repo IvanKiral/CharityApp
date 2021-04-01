@@ -7,7 +7,7 @@
     <fragment
         android:id="@+id/editPersonalInformationFragment"
         android:name="com.kiral.charityapp.ui.onboarding.EditPersonalInformationFragment"
-        android:label="EditPersonalInformationFragment" >
+        android:label="EditPersonalInformationFragment">
         <action
             android:id="@+id/action_editPersonalInformationFragment_to_selectCharitiesTypesFragment"
             app:destination="@id/selectCharitiesTypesFragment"
@@ -15,8 +15,8 @@
             app:exitAnim="@android:anim/fade_out" />
         <argument
             android:name="email"
-            app:argType="string"
-            android:defaultValue='""' />
+            android:defaultValue='""'
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/selectCharitiesTypesFragment"
@@ -37,8 +37,8 @@
             app:destination="@id/charitiesFragment"
             app:enterAnim="@android:anim/fade_in"
             app:exitAnim="@android:anim/fade_out"
-            app:popUpTo="@id/welcomeFragment"
-           app:popUpToInclusive="true" />
+            app:popUpTo="@id/editPersonalInformationFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/charitiesFragment"
@@ -114,6 +114,9 @@
         <argument
             android:name="donorId"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_projectDetailFragment_to_donorsFragment"
+            app:destination="@id/donorsFragment" />
     </fragment>
     <fragment
         android:id="@+id/welcomeFragment"
@@ -121,7 +124,9 @@
         android:label="WelcomeFragment" >
         <action
             android:id="@+id/action_welcomeFragment_to_editPersonalInformationFragment"
-            app:destination="@id/editPersonalInformationFragment" />
+            app:destination="@id/editPersonalInformationFragment"
+            app:popUpTo="@id/welcomeFragment"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_welcomeFragment_to_charitiesFragment"
             app:destination="@id/charitiesFragment"
@@ -152,6 +157,13 @@
         android:label="DonorsFragment" >
         <argument
             android:name="charityId"
+            app:argType="integer" />
+        <argument
+            android:name="projectId"
+            app:argType="integer"
+            android:defaultValue="-1" />
+        <argument
+            android:name="userId"
             app:argType="integer" />
     </fragment>
 </navigation>

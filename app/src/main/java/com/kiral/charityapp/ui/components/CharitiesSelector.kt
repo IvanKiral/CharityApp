@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.kiral.charityapp.R
@@ -20,17 +21,26 @@ import com.kiral.charityapp.ui.theme.labelTextStyle
 
 @Composable
 fun CharitiesSelector(
-    categories: List<String>,
+    categories: Array<String>,
     categoriesSelected: SnapshotStateList<Boolean>,
     modifier: Modifier = Modifier,
 ) {
-
     Column(modifier = modifier) {
         for (i in categories.indices) {
             RowSelector(
                 text = categories[i],
                 selected = categoriesSelected[i],
-                onRowClick = { categoriesSelected[i] = !categoriesSelected[i] }
+                onRowClick = {
+                    val selectedSize = categoriesSelected.filter { b -> b }.size
+                    if (selectedSize > 0) {
+                        if (selectedSize > 1) {
+                            categoriesSelected[i] = !categoriesSelected[i]
+                        } else if (selectedSize == 1) {
+                            if (!categoriesSelected[i])
+                                categoriesSelected[i] = !categoriesSelected[i]
+                        }
+                    }
+                }
             )
         }
     }
@@ -60,7 +70,7 @@ fun RowSelector(
         if (selected) {
             Image(
                 imageVector = ImageVector.vectorResource(id = R.drawable.ic_selected),
-                contentDescription = "",
+                contentDescription = stringResource(R.string.charitiesSelector_iconDescription),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.align(Alignment.CenterVertically)
             )

@@ -1,7 +1,6 @@
 package com.kiral.charityapp.ui.welcome
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,9 +18,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -35,6 +34,7 @@ import com.auth0.android.provider.WebAuthProvider
 import com.auth0.android.result.Credentials
 import com.kiral.charityapp.R
 import com.kiral.charityapp.ui.theme.CharityTheme
+import com.kiral.charityapp.ui.theme.TextError
 import com.kiral.charityapp.utils.Auth
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -47,8 +47,6 @@ class WelcomeFragment : Fragment() {
     @Inject
     lateinit var account: Auth0
 
-    val USER_ID = intPreferencesKey("user_id")
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -56,11 +54,12 @@ class WelcomeFragment : Fragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                viewModel.shouldNavigateToHomeFragment.value?.let {
-                    Log.i("WelcomeFragment", "value of navigation is $it")
-                    if (it) {
-                        findNavController().navigate(R.id.action_welcomeFragment_to_charitiesFragment)
-                    } else {
+                when {
+                    viewModel.shouldNavigateToHomeFragment -> {
+                        findNavController()
+                            .navigate(R.id.action_welcomeFragment_to_charitiesFragment)
+                    }
+                    viewModel.shouldNavigateToEditPersonalInformationFragment -> {
                         val action =
                             WelcomeFragmentDirections.actionWelcomeFragmentToEditPersonalInformationFragment(
                                 viewModel.email!!
@@ -89,7 +88,7 @@ class WelcomeFragment : Fragment() {
                 style = MaterialTheme.typography.h4
             )
             Text(
-                text = "It's good to have you here! Start donating to charities by login into the app \u2665",
+                text = stringResource(R.string.welcome_greeting),
                 style = MaterialTheme.typography.body2.copy(color = Color.Black.copy(alpha = 0.75f)),
                 textAlign = TextAlign.Justify,
                 modifier = Modifier.padding(top = 32.dp)
@@ -103,11 +102,18 @@ class WelcomeFragment : Fragment() {
                     loginWithBrowser()
                 }
             ) {
-                Text("Login into application")
+                Text(stringResource(R.string.welcome_login))
+            }
+            if(viewModel.error != null) {
+                Text(
+                    text = viewModel.error!!,
+                    style = MaterialTheme.typography.body2.copy(color = TextError),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(top = 16.dp)
+                )
             }
         }
     }
-
 
     private fun loginWithBrowser() {
         val apiClient = AuthenticationAPIClient(account)
@@ -117,15 +123,12 @@ class WelcomeFragment : Fragment() {
             .withScheme("demo")
             .withScope("openid profile email")
             .start(requireContext(), object : Callback<Credentials, AuthenticationException> {
-                override fun onFailure(error: AuthenticationException) {
-                    // Something went wrong!
-                }
+                override fun onFailure(error: AuthenticationException) {}
 
                 override fun onSuccess(result: Credentials) {
                     val accessToken = result.accessToken
                     manager.saveCredentials(result)
                     Auth.withUserEmail(account, accessToken) { email ->
-                        Log.i("AppDebug", "in success")
                         viewModel.getProfileId(email)
                     }
                 }

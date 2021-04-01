@@ -1,13 +1,13 @@
 package com.kiral.charityapp.di
 
 import com.google.gson.GsonBuilder
-import com.kiral.charityapp.network.Dto.CharityListItemMapper
-import com.kiral.charityapp.network.Dto.CharityMapper
-import com.kiral.charityapp.network.Dto.DonorsMapper
-import com.kiral.charityapp.network.Dto.LeaderboardMapper
-import com.kiral.charityapp.network.Dto.ProjectMapper
-import com.kiral.charityapp.network.NetworkService
-import com.kiral.charityapp.network.ProfileService
+import com.kiral.charityapp.network.mappers.CharityListItemMapper
+import com.kiral.charityapp.network.mappers.CharityMapper
+import com.kiral.charityapp.network.mappers.DonorsMapper
+import com.kiral.charityapp.network.mappers.LeaderboardMapper
+import com.kiral.charityapp.network.mappers.ProjectMapper
+import com.kiral.charityapp.network.services.CharityService
+import com.kiral.charityapp.network.services.ProfileService
 import com.kiral.charityapp.utils.PrivateConstants
 import dagger.Module
 import dagger.Provides
@@ -56,12 +56,12 @@ object NetworkModule{
 
     @Singleton
     @Provides
-    fun provideNetworkService(): NetworkService {
+    fun provideNetworkService(): CharityService {
         return Retrofit.Builder()
             .baseUrl(address)
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
             .build()
-            .create(NetworkService::class.java)
+            .create(CharityService::class.java)
     }
 
     @Singleton
