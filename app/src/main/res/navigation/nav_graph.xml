@@ -94,6 +94,9 @@
             app:destination="@id/welcomeFragment"
             app:popUpTo="@id/charitiesFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_profileFragment_to_creditFragment"
+            app:destination="@id/creditFragment" />
     </fragment>
     <fragment
         android:id="@+id/badgesFragment"
@@ -166,4 +169,8 @@
             android:name="userId"
             app:argType="integer" />
     </fragment>
+    <fragment
+        android:id="@+id/creditFragment"
+        android:name="com.kiral.charityapp.ui.profile.CreditFragment"
+        android:label="CreditFragment" />
 </navigation>

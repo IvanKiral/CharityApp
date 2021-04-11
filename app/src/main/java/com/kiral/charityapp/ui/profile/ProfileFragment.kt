@@ -207,6 +207,9 @@ fun ProfileScreen(
                     setCountryDialog = { value -> viewModel.countryDialog = value },
                     setCategoriesDialog = { value -> viewModel.categoriesDialog = value },
                     logout = logout,
+                    navigateToCredits = {
+                                        navController.navigate(R.id.action_profileFragment_to_creditFragment)
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .constrainAs(optionsMenu) {

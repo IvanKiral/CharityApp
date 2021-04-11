@@ -38,6 +38,7 @@ fun OptionsMenu(
     switchFunction: (Boolean) -> Unit,
     setDonationDialog: (Boolean) -> Unit,
     setCategoriesDialog: (Boolean) -> Unit,
+    navigateToCredits: () -> Unit,
     logout: () -> Unit
 ) {
     Column(
@@ -78,6 +79,14 @@ fun OptionsMenu(
             modifier = Modifier.fillMaxWidth(),
             onClick = {
                 logout()
+            }
+        )
+        Option(
+            title = stringResource(R.string.profile_option_credits),
+            description = "",
+            modifier = Modifier.fillMaxWidth(),
+            onClick = {
+                navigateToCredits()
             }
         )
         Divider(

@@ -71,6 +71,8 @@
     <string name="setupRegularPayments_title">Setup regular Payments</string>
     <string name="welcome_greeting">It\'s good to have you here! Start donating to charities by login into the app</string>
     <string name="welcome_login">Login into application</string>
+    <string name="credit_freepik">Icons made by https://www.freepik.com from www.flaticon.com</string>
+    <string name="profile_option_credits">Credits</string>
     <string name="network_payment_error">Oops! Something went wrong! Please try your payment later</string>
 
     <string name="badge_donated_1">You have donated 1€</string>
@@ -89,6 +91,8 @@
     <string name="badge_silver_medal">Be the 2nd in the leaderboard in a current week</string>
     <string name="badge_bronze_medal">Be the 3rd in the leaderboard in a current week</string>
     <string name="badge_share">Share a charity/donation on a social media</string>
+    <string name="credit_title">Credits</string>
+
 
     <string-array name="Categories">
         <item>Environmental</item>
