@@ -62,11 +62,11 @@
     <fragment
         android:id="@+id/charityDetailFragment"
         android:name="com.kiral.charityapp.ui.detail.CharityDetailFragment"
-        android:label="CharityDetailFragment" >
+        android:label="CharityDetailFragment">
         <argument
             android:name="charityId"
-            app:argType="integer"
-            android:defaultValue="-1" />
+            android:defaultValue="-1"
+            app:argType="integer" />
         <argument
             android:name="donorId"
             app:argType="integer" />
