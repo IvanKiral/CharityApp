@@ -29,7 +29,7 @@ fun DetailHeader(
 ) {
     Box() {
         imgSrc.let { src ->
-            val image = Utils.loadPicture(url = src, defaultImage = R.drawable.children)
+            val image = Utils.loadPicture(url = src, defaultImage = R.drawable.ic_loading_photo)
             image.value?.let { img ->
                 Image(
                     bitmap = img.asImageBitmap(),

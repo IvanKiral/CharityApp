@@ -29,6 +29,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -147,12 +148,22 @@ fun RankingScreen(
             viewModel.getLeaderboard()
         }
     ) {
-        LazyColumn {
-            itemsIndexed(viewModel.leaderboard) { index, item ->
-                LeaderBoardItem(
-                    item = item,
-                    index = index + 1
-                )
+        Column() {
+            Text(
+                text = "Rank: ${viewModel.donorRank}",
+                style = MaterialTheme.typography.h5,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                textAlign = TextAlign.End
+            )
+            LazyColumn {
+                itemsIndexed(viewModel.leaderboard) { index, item ->
+                    LeaderBoardItem(
+                        item = item,
+                        index = index + 1
+                    )
+                }
             }
         }
     }

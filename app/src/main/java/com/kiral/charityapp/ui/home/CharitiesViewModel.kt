@@ -49,6 +49,8 @@ constructor(
 
     var showFilter by mutableStateOf(false)
 
+    var donorRank by mutableStateOf<Int?>(null)
+        private set
     var leaderboard by mutableStateOf<List<LeaderBoardProfile>>(ArrayList())
         private set
 
@@ -118,6 +120,7 @@ constructor(
                 is DataState.Success -> {
                     leaderboardLoading = false
                     leaderboard = state.data
+                    donorRank = 1
                 }
                 is DataState.Loading -> {
                     leaderboardLoading = true
