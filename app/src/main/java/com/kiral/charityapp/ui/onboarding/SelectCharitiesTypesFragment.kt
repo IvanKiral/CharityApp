@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -59,33 +61,39 @@ fun SelectCharitiesScreen(
 ) {
     val scrollState = rememberScrollState()
     CharityTheme {
-        Column(
-            modifier = Modifier
-                .padding(horizontal = 32.dp)
-                .verticalScroll(scrollState),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 24.dp)
         ) {
-
-            Text(
-                text = stringResource(R.string.selectCharitiesTypes_title),
-                style = MaterialTheme.typography.h5,
-                textAlign = TextAlign.Center,
-            )
-
-            CharitiesSelector(
-                categories = stringArrayResource(id = R.array.Categories),
-                categoriesSelected = viewModel.selected,
+            Column(
                 modifier = Modifier
-                    .align(Alignment.Start)
-                    .padding(top = 64.dp)
-            )
+                    .align(Alignment.Center)
+                    .verticalScroll(scrollState),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+
+                Text(
+                    text = stringResource(R.string.selectCharitiesTypes_title),
+                    style = MaterialTheme.typography.h5,
+                    textAlign = TextAlign.Center,
+                )
+
+                CharitiesSelector(
+                    categories = stringArrayResource(id = R.array.Categories),
+                    categoriesSelected = viewModel.selected,
+                    modifier = Modifier
+                        .align(Alignment.Start)
+                        .padding(top = 32.dp)
+                )
+            }
 
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 32.dp)
-                    .height(64.dp),
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 32.dp)
+                    .height(56.dp),
                 onClick = {
                     viewModel.addCategories()
                     navController

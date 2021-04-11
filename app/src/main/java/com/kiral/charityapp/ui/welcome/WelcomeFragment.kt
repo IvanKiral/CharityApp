@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -67,7 +68,7 @@ class WelcomeFragment : Fragment() {
                         findNavController().navigate(action)
                     }
                 }
-                CharityTheme {
+                CharityTheme{
                     WelcomeScreen()
                 }
             }
@@ -76,41 +77,48 @@ class WelcomeFragment : Fragment() {
 
     @Composable
     fun WelcomeScreen() {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(24.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 24.dp)
         ) {
-            Text(
-                text = "Cherrities",
-                style = MaterialTheme.typography.h4
-            )
-            Text(
-                text = stringResource(R.string.welcome_greeting),
-                style = MaterialTheme.typography.body2.copy(color = Color.Black.copy(alpha = 0.75f)),
-                textAlign = TextAlign.Justify,
-                modifier = Modifier.padding(top = 32.dp)
-            )
+            Column(
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .fillMaxSize()
+                    .padding(24.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "Cherrities",
+                    style = MaterialTheme.typography.h4
+                )
+                Text(
+                    text = stringResource(R.string.welcome_greeting),
+                    style = MaterialTheme.typography.body2.copy(color = Color.Black.copy(alpha = 0.75f)),
+                    textAlign = TextAlign.Justify,
+                    modifier = Modifier.padding(top = 32.dp)
+                )
+                if (viewModel.error != null) {
+                    Text(
+                        text = viewModel.error!!,
+                        style = MaterialTheme.typography.body2.copy(color = TextError),
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(top = 16.dp)
+                    )
+                }
+            }
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 32.dp)
-                    .height(60.dp),
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 32.dp)
+                    .height(56.dp),
                 onClick = {
                     loginWithBrowser()
                 }
             ) {
                 Text(stringResource(R.string.welcome_login))
-            }
-            if(viewModel.error != null) {
-                Text(
-                    text = viewModel.error!!,
-                    style = MaterialTheme.typography.body2.copy(color = TextError),
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(top = 16.dp)
-                )
             }
         }
     }

@@ -40,7 +40,7 @@
     <string name="donors_heartIcon_description">heart icon</string>
     <string name="donors_icon_description">donor badge icon</string>
     <string name="editPersonalInformation_name_label">Type your name</string>
-    <string name="editPersonalInformation_title">Edit personal information</string>
+    <string name="editPersonalInformation_title">Something about you</string>
     <string name="editPersonalInformation_toastText">Please fill up your name</string>
     <string name="errorScreen_retry">Retry</string>
     <string name="expandableText_less">Less</string>

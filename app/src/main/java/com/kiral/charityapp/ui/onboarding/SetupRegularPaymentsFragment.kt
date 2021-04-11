@@ -68,7 +68,8 @@ fun SetupPaymentsScreen(
     val scrollState = rememberScrollState()
     CharityTheme {
         Box(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
         ) {
             Box(modifier = Modifier
                 .clickable {
@@ -84,7 +85,7 @@ fun SetupPaymentsScreen(
             }
             Column(
                 modifier = Modifier
-                    .padding(horizontal = 32.dp)
+                    .padding(horizontal = 24.dp)
                     .verticalScroll(scrollState)
                     .align(Alignment.Center),
                 verticalArrangement = Arrangement.Center,
@@ -118,36 +119,36 @@ fun SetupPaymentsScreen(
                         textAlignment = Alignment.Start
                     )
                 }
+            }
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 32.dp, start = 24.dp, end = 24.dp)
+                    .height(56.dp),
+                onClick = {
+                    viewModel.addRegularPayments(true)
+                    viewModel.register()
+                }
+            ) {
+                Text(
+                    text = stringResource(id = R.string.navigation_continue),
+                    style = MaterialTheme.typography.button
+                )
+            }
 
-                Button(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp)
-                        .height(64.dp),
-                    onClick = {
-                        viewModel.addRegularPayments(true)
-                        viewModel.register()
-                    }
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.navigation_continue),
-                        style = MaterialTheme.typography.button
-                    )
-                }
-
-                if(viewModel.loading){
-                    CircularProgressIndicator(
-                        modifier = Modifier.padding(top = 16.dp)
-                    )
-                }
-                else if(viewModel.error != null){
-                    Text(
-                        viewModel.error!!,
-                        textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.body2.copy(color = Color.Red),
-                        modifier = Modifier.padding(top = 16.dp)
-                    )
-                }
+            if(viewModel.loading){
+                CircularProgressIndicator(
+                    modifier = Modifier.padding(top = 16.dp)
+                )
+            }
+            else if(viewModel.error != null){
+                Text(
+                    viewModel.error!!,
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.body2.copy(color = Color.Red),
+                    modifier = Modifier.padding(top = 16.dp)
+                )
             }
         }
     }

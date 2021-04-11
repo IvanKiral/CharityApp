@@ -45,9 +45,9 @@ constructor(
                     loading = true
                 }
                 is DataState.Success -> {
+                    writeId(state.data)
                     donor_id = state.data
                     shouldNavigateToHomeFragment = true
-                    writeId(donor_id!!)
                 }
                 is DataState.HttpsErrorCode -> {
                     when(state.code) {
