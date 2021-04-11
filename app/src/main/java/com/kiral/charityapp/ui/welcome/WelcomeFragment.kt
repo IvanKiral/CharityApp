@@ -34,9 +34,11 @@ import com.auth0.android.callback.Callback
 import com.auth0.android.provider.WebAuthProvider
 import com.auth0.android.result.Credentials
 import com.kiral.charityapp.R
+import com.kiral.charityapp.ui.dataStore
 import com.kiral.charityapp.ui.theme.CharityTheme
 import com.kiral.charityapp.ui.theme.TextError
 import com.kiral.charityapp.utils.Auth
+import com.kiral.charityapp.utils.Auth.logout
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -100,6 +102,11 @@ class WelcomeFragment : Fragment() {
                     modifier = Modifier.padding(top = 32.dp)
                 )
                 if (viewModel.error != null) {
+                    logout(
+                        account,
+                        requireContext(),
+                        requireContext().dataStore
+                    )
                     Text(
                         text = viewModel.error!!,
                         style = MaterialTheme.typography.body2.copy(color = TextError),
