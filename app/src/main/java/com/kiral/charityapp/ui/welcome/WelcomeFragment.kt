@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -71,61 +72,12 @@ class WelcomeFragment : Fragment() {
                     }
                 }
                 CharityTheme{
-                    WelcomeScreen()
-                }
-            }
-        }
-    }
-
-    @Composable
-    fun WelcomeScreen() {
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 24.dp)
-        ) {
-            Column(
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .fillMaxSize()
-                    .padding(24.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = "Cherrities",
-                    style = MaterialTheme.typography.h4
-                )
-                Text(
-                    text = stringResource(R.string.welcome_greeting),
-                    style = MaterialTheme.typography.body2.copy(color = Color.Black.copy(alpha = 0.75f)),
-                    textAlign = TextAlign.Justify,
-                    modifier = Modifier.padding(top = 32.dp)
-                )
-                if (viewModel.error != null) {
-                    logout(
-                        account,
-                        requireContext(),
-                        requireContext().dataStore
-                    )
-                    Text(
-                        text = viewModel.error!!,
-                        style = MaterialTheme.typography.body2.copy(color = TextError),
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(top = 16.dp)
+                    WelcomeScreen(
+                        account = account,
+                        viewModel = viewModel,
+                        login = { loginWithBrowser() }
                     )
                 }
-            }
-            Button(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 32.dp)
-                    .height(56.dp),
-                onClick = {
-                    loginWithBrowser()
-                }
-            ) {
-                Text(stringResource(R.string.welcome_login))
             }
         }
     }
@@ -148,5 +100,62 @@ class WelcomeFragment : Fragment() {
                     }
                 }
             })
+    }
+}
+
+@Composable
+fun WelcomeScreen(
+    account: Auth0,
+    viewModel: WelcomeViewModel,
+    login: () -> Unit
+) {
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .padding(horizontal = 24.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .align(Alignment.Center)
+                .fillMaxSize()
+                .padding(24.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "Cherrities",
+                style = MaterialTheme.typography.h4
+            )
+            Text(
+                text = stringResource(R.string.welcome_greeting),
+                style = MaterialTheme.typography.body2.copy(color = Color.Black.copy(alpha = 0.75f)),
+                textAlign = TextAlign.Justify,
+                modifier = Modifier.padding(top = 32.dp)
+            )
+            if (viewModel.error != null) {
+                logout(
+                    account,
+                    LocalContext.current,
+                    LocalContext.current.dataStore
+                )
+                Text(
+                    text = viewModel.error!!,
+                    style = MaterialTheme.typography.body2.copy(color = TextError),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(top = 16.dp)
+                )
+            }
+        }
+        Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 32.dp)
+                .height(56.dp),
+            onClick = {
+                login()
+            }
+        ) {
+            Text(stringResource(R.string.welcome_login))
+        }
     }
 }
