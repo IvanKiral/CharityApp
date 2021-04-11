@@ -54,7 +54,7 @@ object Constants {
         ),
         9 to BadgeData(
             R.string.badge_educational,
-            R.drawable.ic_badge_charity_scholarship
+            R.drawable.ic_badge_scholarship
         ),
         10 to BadgeData(
             R.string.badge_artsAndCulture,
@@ -63,6 +63,26 @@ object Constants {
         11 to BadgeData(
             R.string.badge_streak_month,
             R.drawable.ic_badge_date_month
+        ),
+        12 to BadgeData(
+            R.string.badge_streak_week,
+            R.drawable.ic_badge_date_week
+        ),
+        13 to BadgeData(
+            R.string.badge_gold_medal,
+            R.drawable.ic_badge_gold_medal
+        ),
+        14 to BadgeData(
+            R.string.badge_silver_medal,
+            R.drawable.ic_badge_silver_medal
+        ),
+        15 to BadgeData(
+            R.string.badge_bronze_medal,
+            R.drawable.ic_badge_bronze_medal
+        ),
+        16 to BadgeData(
+            R.string.badge_share,
+            R.drawable.ic_badge_social_media
         ),
     )
 }
