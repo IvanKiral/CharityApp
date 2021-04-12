@@ -26,10 +26,8 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.kiral.charityapp.R
 import com.kiral.charityapp.domain.model.Badge
-import com.kiral.charityapp.ui.profile.ProfileFragmentDirections
 import com.kiral.charityapp.ui.theme.TextBadgesTitle
 import com.kiral.charityapp.ui.theme.TextShowBadges
 import kotlin.math.abs
@@ -37,8 +35,7 @@ import kotlin.math.abs
 @Composable
 fun Badges(
     badges: List<Badge>,
-    profileBadges: IntArray,
-    navController: NavController,
+    navigateToBadges: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -59,11 +56,7 @@ fun Badges(
             text = AnnotatedString(stringResource(R.string.profile_showBadges)),
             style = MaterialTheme.typography.body1.copy(color = TextShowBadges),
             modifier = Modifier.padding(top = 24.dp),
-            onClick = {
-                val action =
-                    ProfileFragmentDirections.actionProfileFragmentToBadgesFragment(profileBadges)
-                navController.navigate(action)
-            }
+            onClick = { navigateToBadges() }
         )
     }
 }

@@ -27,7 +27,6 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.auth0.android.Auth0
@@ -87,8 +86,18 @@ class ProfileFragment : Fragment() {
                         ProfileScreen(
                             viewModel = viewModel,
                             charitiesViewModel = charitiesViewModel,
-                            navController = findNavController(),
                             onBackPressed = requireActivity()::onBackPressed,
+                            navigateToCredits = {
+                                findNavController()
+                                    .navigate(R.id.action_profileFragment_to_creditFragment)
+                            },
+                            navigateToBadges = { profileBadges ->
+                                val action =
+                                    ProfileFragmentDirections.actionProfileFragmentToBadgesFragment(
+                                        profileBadges
+                                    )
+                                findNavController().navigate(action)
+                            },
                             logout = {
                                 Auth.logout(
                                     account,
@@ -111,7 +120,8 @@ class ProfileFragment : Fragment() {
 fun ProfileScreen(
     viewModel: ProfileViewModel,
     charitiesViewModel: CharitiesViewModel,
-    navController: NavController,
+    navigateToBadges: (IntArray) -> Unit,
+    navigateToCredits: () -> Unit,
     logout: () -> Unit,
     onBackPressed: () -> Unit
 ) {
@@ -165,8 +175,7 @@ fun ProfileScreen(
                 )
                 Badges(
                     badges = viewModel.badges,
-                    profileBadges = profile.badges.toIntArray(),
-                    navController = navController,
+                    navigateToBadges = { navigateToBadges(profile.badges.toIntArray()) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .constrainAs(badges) {
@@ -207,9 +216,7 @@ fun ProfileScreen(
                     setCountryDialog = { value -> viewModel.countryDialog = value },
                     setCategoriesDialog = { value -> viewModel.categoriesDialog = value },
                     logout = logout,
-                    navigateToCredits = {
-                                        navController.navigate(R.id.action_profileFragment_to_creditFragment)
-                    },
+                    navigateToCredits = navigateToCredits,
                     modifier = Modifier
                         .fillMaxWidth()
                         .constrainAs(optionsMenu) {
