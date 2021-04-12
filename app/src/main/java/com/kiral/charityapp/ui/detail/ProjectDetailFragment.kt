@@ -20,12 +20,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.kiral.charityapp.R
@@ -65,40 +65,64 @@ class ProjectDetailFragment : Fragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                BaseScreen(
-                    error = viewModel.error,
-                    loading = viewModel.loading,
-                    onRetryClicked = { viewModel.getProject(args.projectId, args.donorId) }
-                ) {
-                    ProjectDetailScreen()
-                }
+                ProjectDetailScreen(
+                    projectId = args.projectId,
+                    donorId = args.donorId,
+                    viewModel = viewModel,
+                    onBackPressed = requireActivity()::onBackPressed,
+                    navigateToDonors = { charityId ->
+                        val action = ProjectDetailFragmentDirections
+                            .actionProjectDetailFragmentToDonorsFragment(
+                                userId = args.donorId,
+                                charityId = charityId,
+                                projectId = args.projectId
+                            )
+                        findNavController().navigate(action)
+                    }
+                )
             }
         }
     }
+}
 
-    @ExperimentalMaterialApi
-    @Composable
-    fun ProjectDetailScreen() {
-        CharityTheme {
+
+@ExperimentalMaterialApi
+@Composable
+fun ProjectDetailScreen(
+    projectId: Int,
+    donorId: Int,
+    viewModel: ProjectDetailViewModel,
+    onBackPressed: () -> Unit,
+    navigateToDonors: (Int) -> Unit,
+) {
+    CharityTheme {
+        BaseScreen(
+            error = viewModel.error,
+            loading = viewModel.loading,
+            onRetryClicked = { viewModel.getProject(projectId, donorId) }
+        ) {
             Column {
                 viewModel.project?.let { p ->
                     DetailScreen(
                         imgSrc = p.charityImage,
                         donorDonated = p.donorDonated,
-                        onClosePressed = requireActivity()::onBackPressed
+                        onClosePressed = onBackPressed
                     ) {
+                        val ctx = LocalContext.current
                         ProjectDetailBody(
                             project = p,
-                            donorId = args.donorId,
+                            donorId = donorId,
                             viewModel = viewModel,
                             sharePhotoButtonClick = {
                                 Utils.sharePhoto(
-                                    activity?.applicationContext!!,
+                                    ctx,
                                     p.charityImage
                                 )
                             },
-                            shareLinkButtonClick = { Utils.shareLink(activity?.applicationContext!!) },
-                            navController = findNavController()
+                            shareLinkButtonClick = { Utils.shareLink(ctx) },
+                            navigateToDonors = {
+                                navigateToDonors(p.charityId)
+                            }
                         )
                     }
                 }
@@ -107,7 +131,6 @@ class ProjectDetailFragment : Fragment() {
     }
 }
 
-
 @Composable
 fun ProjectDetailBody(
     project: Project,
@@ -115,7 +138,7 @@ fun ProjectDetailBody(
     viewModel: ProjectDetailViewModel,
     sharePhotoButtonClick: () -> Unit,
     shareLinkButtonClick: () -> Unit,
-    navController: NavController,
+    navigateToDonors: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Surface(
@@ -184,15 +207,7 @@ fun ProjectDetailBody(
                 modifier = Modifier
                     .padding(top = 24.dp)
                     .fillMaxWidth(),
-                onClick = {
-                    val action = ProjectDetailFragmentDirections
-                        .actionProjectDetailFragmentToDonorsFragment(
-                            userId = donorId,
-                            charityId = project.charityId,
-                            projectId = project.id
-                        )
-                    navController.navigate(action)
-                }
+                onClick = navigateToDonors
             )
 
             DonationSuccessAlertDialog(
