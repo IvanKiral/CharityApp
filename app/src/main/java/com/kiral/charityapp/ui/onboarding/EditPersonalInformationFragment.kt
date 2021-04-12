@@ -27,7 +27,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.kiral.charityapp.R
@@ -56,7 +55,8 @@ class EditPersonalInformationFragment : Fragment() {
             setContent {
                 EditInfoScreen(
                     viewModel = viewModel,
-                    navController = findNavController()
+                    navigate = { findNavController()
+                        .navigate(R.id.action_editPersonalInformationFragment_to_selectCharitiesTypesFragment) }
                 )
             }
         }
@@ -67,7 +67,7 @@ class EditPersonalInformationFragment : Fragment() {
 @Composable
 fun EditInfoScreen(
     viewModel: OnBoardingViewModel,
-    navController: NavController
+    navigate: () -> Unit
 ) {
     val scrollState = rememberScrollState()
 
@@ -120,8 +120,7 @@ fun EditInfoScreen(
                 onClick = {
 
                     if (viewModel.addPersonalInformation())
-                        navController
-                            .navigate(R.id.action_editPersonalInformationFragment_to_selectCharitiesTypesFragment)
+                        navigate()
                     else {
                         Toast.makeText(
                             context,

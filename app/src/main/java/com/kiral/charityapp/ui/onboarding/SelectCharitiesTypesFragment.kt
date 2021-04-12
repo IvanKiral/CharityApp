@@ -26,7 +26,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.kiral.charityapp.R
 import com.kiral.charityapp.ui.components.CharitiesSelector
@@ -47,7 +46,10 @@ class SelectCharitiesTypesFragment : Fragment() {
             setContent {
                 SelectCharitiesScreen(
                     viewModel = viewModel,
-                    navController = findNavController()
+                    navigate = {
+                        findNavController()
+                            .navigate(R.id.action_selectCharitiesTypesFragment_to_setupRegularPaymentsFragment)
+                    }
                 )
             }
         }
@@ -57,7 +59,7 @@ class SelectCharitiesTypesFragment : Fragment() {
 @Composable
 fun SelectCharitiesScreen(
     viewModel: OnBoardingViewModel,
-    navController: NavController
+    navigate: () -> Unit
 ) {
     val scrollState = rememberScrollState()
     CharityTheme {
@@ -96,8 +98,7 @@ fun SelectCharitiesScreen(
                     .height(56.dp),
                 onClick = {
                     viewModel.addCategories()
-                    navController
-                        .navigate(R.id.action_selectCharitiesTypesFragment_to_setupRegularPaymentsFragment)
+                    navigate()
                 }
             ) {
                 Text(

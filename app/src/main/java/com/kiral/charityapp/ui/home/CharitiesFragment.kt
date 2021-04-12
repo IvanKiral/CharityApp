@@ -33,7 +33,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.kiral.charityapp.R
 import com.kiral.charityapp.ui.components.BaseScreen
@@ -62,8 +61,20 @@ class CharitiesFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 CharitiesScreen(
-                    viewModel,
-                    findNavController()
+                    viewModel = viewModel,
+                    navigateToDetail = { itemId ->
+                        val action = CharitiesFragmentDirections
+                            .actionCharitiesFragmentToCharityDetailFragment(itemId, viewModel.userId)
+                        findNavController()
+                            .navigate(action)
+                    },
+                    navigateToProfile = {
+                        val action =
+                            CharitiesFragmentDirections.actionCharitiesFragmentToProfileFragment(
+                                viewModel.userId
+                            )
+                        findNavController().navigate(action)
+                    }
                 )
             }
         }
@@ -74,7 +85,8 @@ class CharitiesFragment : Fragment() {
 @Composable
 fun CharitiesScreen(
     viewModel: CharitiesViewModel,
-    navController: NavController
+    navigateToDetail: (Int) -> Unit,
+    navigateToProfile: () -> Unit,
 ) {
     CharityTheme {
         var tabSelected by remember { mutableStateOf(TabsNames.Charities) }
@@ -86,11 +98,7 @@ fun CharitiesScreen(
                 modifier = Modifier.fillMaxWidth(),
                 filterOn = viewModel.showFilter,
                 onProfileClick = {
-                    val action =
-                        CharitiesFragmentDirections.actionCharitiesFragmentToProfileFragment(
-                            viewModel.userId
-                        )
-                    navController.navigate(action)
+                    navigateToProfile()
                 },
                 onFilterClicked = { viewModel.onFilterChange() },
                 onTabSelected = { tabSelected = it }
@@ -99,7 +107,7 @@ fun CharitiesScreen(
                 when (tabSelected) {
                     TabsNames.Charities -> CharityScreen(
                         viewModel,
-                        navController
+                        navigateToDetail = navigateToDetail
                     )
                     TabsNames.Ranking -> RankingScreen(viewModel)
                 }
@@ -114,7 +122,7 @@ fun CharitiesScreen(
 @Composable
 fun CharityScreen(
     viewModel: CharitiesViewModel,
-    navController: NavController,
+    navigateToDetail: (Int) -> Unit,
 ) {
     BaseScreen(
         loading = viewModel.charitiesLoading,
@@ -129,10 +137,7 @@ fun CharityScreen(
                 .padding(top = 20.dp),
             viewModel = viewModel
         ) { itemId ->
-            val action = CharitiesFragmentDirections
-                .actionCharitiesFragmentToCharityDetailFragment(itemId, viewModel.userId)
-            navController
-                .navigate(action)
+            navigateToDetail(itemId)
         }
     }
 }
