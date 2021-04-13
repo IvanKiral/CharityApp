@@ -104,25 +104,27 @@ constructor(
         if(showFilter){
            return
         }
-
-        charitiesLoading = true
-        val results: MutableList<CharityListItem> = mutableListOf()
-        for(p in 1..page){
-            charityRepository.search(
-                id = userId,
-                page = p,
-                getSelectedCategories()
-            ).onEach { state ->
-                when(state){
-                    is DataState.Success -> {
-                        results.addAll(state.data)
+        if(indexPosition > 0) {
+            charitiesLoading = true
+            val results: MutableList<CharityListItem> = mutableListOf()
+            for (p in 1..page) {
+                charityRepository.search(
+                    id = userId,
+                    page = p,
+                    getSelectedCategories()
+                ).onEach { state ->
+                    when (state) {
+                        is DataState.Success -> {
+                            results.addAll(state.data)
+                        }
+                        else -> {
+                        }
                     }
-                    else -> {}
                 }
-            }
-            if(p == page){ // done
-                charities = results
-                charitiesLoading = false
+                if (p == page) { // done
+                    charities = results
+                    charitiesLoading = false
+                }
             }
         }
     }

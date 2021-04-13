@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.kiral.charityapp.R
 import com.kiral.charityapp.domain.enums.DonationFrequency
@@ -23,12 +24,15 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+const val STATE_PROFILE_USER_KEY = "profile_state_user"
+
 @HiltViewModel
 class ProfileViewModel
 @Inject
 constructor(
     private val application: BaseApplication,
-    private val profileRepository: ProfileRepository
+    private val profileRepository: ProfileRepository,
+    private val state: SavedStateHandle
 ): AndroidViewModel(application) {
     var profile by mutableStateOf<Profile?>(null)
         private set
@@ -63,10 +67,19 @@ constructor(
         viewModelScope.launch {
             countries.value = getCountries(application.baseContext)
         }
+
+        restoreState()
+    }
+
+    private fun restoreState() {
+        state.get<Int>(STATE_PROFILE_USER_KEY)?.let { profileId ->
+            setProfile(profileId)
+        }
     }
 
     fun setProfile(id: Int){
         error = null
+        state.set<Int>(STATE_PROFILE_USER_KEY, id)
         profileRepository.getProfile(id).onEach {  state ->
             when(state){
                 is DataState.Loading -> loading = true
