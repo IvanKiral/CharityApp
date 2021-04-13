@@ -16,6 +16,10 @@ import javax.inject.Inject
 
 //const val KEY_CHARITY = "charity.key"
 
+const val STATE_CHARITY_KEY = "detail_state_charity_id"
+const val STATE_CHARITY_DONOR_KEY = "detail_state_user_id"
+const val STATE_CHARITY_DONATION_KEY = "detail_state_donation_field"
+
 @HiltViewModel
 class CharityDetailViewModel
 @Inject
@@ -37,9 +41,26 @@ constructor(
     var showDonate by mutableStateOf(false)
     var showDonationSuccessDialog by mutableStateOf(false)
 
-    fun getCharity(id: Int, donorId: Int) {
+    init{
+        restoreState()
+    }
+
+    private fun restoreState() {
+        state.get<Int>(STATE_CHARITY_KEY)?.let { charityId ->
+            state.get<Int>(STATE_CHARITY_DONOR_KEY)?.let { donorId ->
+                getCharity(charityId, donorId)
+            }
+        }
+        state.get<Boolean>(STATE_CHARITY_DONATION_KEY)?.let { shown ->
+            showDonate = shown
+        }
+    }
+
+    fun getCharity(id: Int, userid: Int) {
+        state.set(STATE_CHARITY_KEY, id)
+        state.set(STATE_CHARITY_DONOR_KEY, userid)
         error = null
-        charityRepository.get(id, donorId).onEach { state ->
+        charityRepository.get(id, userid).onEach { state ->
             when (state) {
                 is DataState.Loading -> {
                     loading = true
@@ -91,6 +112,7 @@ constructor(
 
     fun onExtraDonateButtonPressed(){
         showDonate = !showDonate
+        state.set(STATE_CHARITY_DONATION_KEY, showDonate)
     }
 
     fun onDonateButtonPressed(donorId: Int, value: String){

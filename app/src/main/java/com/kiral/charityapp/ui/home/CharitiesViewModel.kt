@@ -27,6 +27,7 @@ class CharitiesViewModel
 @Inject
 constructor(
     private val charityRepository: CharityRepository,
+
     val app: Application
 ) : AndroidViewModel(app) {
 
