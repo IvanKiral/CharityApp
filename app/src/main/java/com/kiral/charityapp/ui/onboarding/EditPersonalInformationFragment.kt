@@ -48,9 +48,8 @@ class EditPersonalInformationFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val locale = getCurrentLocale(requireContext())
-        viewModel.country = locale.displayCountry
+        viewModel.setCountryValue(locale.country, locale.displayCountry)
         viewModel.createNewProfile(args.email)
-        viewModel.selectedCountry = locale.country
         return ComposeView(requireContext()).apply {
             setContent {
                 EditInfoScreen(
@@ -90,7 +89,7 @@ fun EditInfoScreen(
                 )
                 FormTextField(
                     text = viewModel.name,
-                    onChange = { value -> viewModel.name = value },
+                    onChange = { value -> viewModel.setNameValue(value) },
                     label = stringResource(R.string.editPersonalInformation_name_label),
                     modifier = Modifier.padding(top = 32
                         .dp, bottom = 8.dp)
@@ -106,8 +105,7 @@ fun EditInfoScreen(
                     countries = viewModel.countries,
                     isShown = viewModel.countryDialog,
                     setDialog = { value -> viewModel.countryDialog = value },
-                    setCountryText = { value -> viewModel.country = value },
-                    setCountry = { value -> viewModel.selectedCountry = value },
+                    setCountry = { iso, name -> viewModel.setCountryValue(iso, name) },
                 )
             }
             val context = LocalContext.current
@@ -118,8 +116,7 @@ fun EditInfoScreen(
                     .padding(bottom = 32.dp)
                     .height(56.dp),
                 onClick = {
-
-                    if (viewModel.addPersonalInformation())
+                    if (viewModel.isNameValid())
                         navigate()
                     else {
                         Toast.makeText(

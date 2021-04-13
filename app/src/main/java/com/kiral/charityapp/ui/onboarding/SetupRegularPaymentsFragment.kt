@@ -73,8 +73,7 @@ fun SetupPaymentsScreen(
         ) {
             Box(modifier = Modifier
                 .clickable {
-                    viewModel.addRegularPayments(false)
-                    viewModel.register()
+                    viewModel.register(true)
                 }
             ) {
                 Text(
@@ -103,7 +102,7 @@ fun SetupPaymentsScreen(
                     SingleChoicePicker(
                         items = viewModel.amountItems.map { i -> "${i.Convert()} €" },
                         selectedItem = viewModel.selectedAmount,
-                        setSelectedItem = { value -> viewModel.selectedAmount = value },
+                        setSelectedItem = { value -> viewModel.setDonationValue(value)},
                         modifier = Modifier
                             .fillMaxWidth(0.5f)
                             .padding(horizontal = 8.dp),
@@ -112,7 +111,7 @@ fun SetupPaymentsScreen(
                     SingleChoicePicker(
                         items = viewModel.intervalItems,
                         selectedItem = viewModel.selectedInterval,
-                        setSelectedItem = { value -> viewModel.selectedInterval = value },
+                        setSelectedItem = { value -> viewModel.setDonationFrequency(value) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 8.dp),
@@ -126,10 +125,7 @@ fun SetupPaymentsScreen(
                     .align(Alignment.BottomCenter)
                     .padding(bottom = 32.dp, start = 24.dp, end = 24.dp)
                     .height(56.dp),
-                onClick = {
-                    viewModel.addRegularPayments(true)
-                    viewModel.register()
-                }
+                onClick = { viewModel.register(false) }
             ) {
                 Text(
                     text = stringResource(id = R.string.navigation_continue),

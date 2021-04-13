@@ -84,6 +84,7 @@ fun SelectCharitiesScreen(
                 CharitiesSelector(
                     categories = stringArrayResource(id = R.array.Categories),
                     categoriesSelected = viewModel.selected,
+                    onItemClick = { index -> viewModel.setCategories(index) },
                     modifier = Modifier
                         .align(Alignment.Start)
                         .padding(top = 32.dp)

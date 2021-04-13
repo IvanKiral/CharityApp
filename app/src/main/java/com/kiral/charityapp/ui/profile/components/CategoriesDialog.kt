@@ -26,7 +26,8 @@ fun CategoriesDialog(
         Row(verticalAlignment = Alignment.CenterVertically) {
             CharitiesSelector(
                 categories = stringArrayResource(id = R.array.Categories),
-                categoriesSelected = categoriesSelected
+                categoriesSelected = categoriesSelected,
+                onItemClick = {}
             )
         }
     }

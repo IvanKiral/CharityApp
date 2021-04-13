@@ -255,8 +255,7 @@ fun ProfileScreenBody(
                 countries = viewModel.countries.value,
                 isShown = viewModel.countryDialog,
                 setDialog = { value -> viewModel.countryDialog = value },
-                setCountryText = { /*TODO*/ },
-                setCountry = { value ->
+                setCountry = { value, _ ->
                     viewModel.setRegion(value)
                     charitiesViewModel.getCharities(1)
                 },

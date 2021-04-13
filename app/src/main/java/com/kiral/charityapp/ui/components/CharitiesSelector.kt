@@ -23,6 +23,7 @@ import com.kiral.charityapp.ui.theme.labelTextStyle
 fun CharitiesSelector(
     categories: Array<String>,
     categoriesSelected: SnapshotStateList<Boolean>,
+    onItemClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
@@ -31,15 +32,7 @@ fun CharitiesSelector(
                 text = categories[i],
                 selected = categoriesSelected[i],
                 onRowClick = {
-                    val selectedSize = categoriesSelected.filter { b -> b }.size
-                    if (selectedSize > 0) {
-                        if (selectedSize > 1) {
-                            categoriesSelected[i] = !categoriesSelected[i]
-                        } else if (selectedSize == 1) {
-                            if (!categoriesSelected[i])
-                                categoriesSelected[i] = !categoriesSelected[i]
-                        }
-                    }
+                    onItemClick(i)
                 }
             )
         }
