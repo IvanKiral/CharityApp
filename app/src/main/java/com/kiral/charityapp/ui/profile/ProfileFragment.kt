@@ -258,7 +258,7 @@ fun ProfileScreenBody(
                 setCountryText = { /*TODO*/ },
                 setCountry = { value ->
                     viewModel.setRegion(value)
-                    charitiesViewModel.getCharities()
+                    charitiesViewModel.getCharities(1)
                 },
             )
             CategoriesDialog(

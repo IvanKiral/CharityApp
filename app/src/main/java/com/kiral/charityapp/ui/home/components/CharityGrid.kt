@@ -23,7 +23,7 @@ fun CharityGrid(
         modifier = modifier
     ) {
         itemsIndexed(lst) { index, item ->
-            viewModel.indexPosition = index
+            viewModel.setPosition(index)
             if ((index + 1) >= (viewModel.page * Constants.CHARITIES_PAGE_SIZE) && !viewModel.charitiesPagingLoading) {
                 viewModel.nextPage()
             }

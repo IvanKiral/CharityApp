@@ -128,7 +128,7 @@ fun CharityScreen(
         loading = viewModel.charitiesLoading,
         error = viewModel.charitiesError,
         onRetryClicked = {
-            viewModel.getCharities()
+            viewModel.getCharities(1)
         }
     ) {
         CharityGrid(

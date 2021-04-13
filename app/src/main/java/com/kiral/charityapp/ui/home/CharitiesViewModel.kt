@@ -7,6 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toMutableStateList
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.kiral.charityapp.domain.model.CharityListItem
 import com.kiral.charityapp.domain.model.LeaderBoardProfile
@@ -22,15 +23,20 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
+
+const val STATE_CHARITIES_PAGE_KEY = "charities_state_pages"
+const val STATE_CHARITIES_FILTER_KEY = "charities_state_filter"
+const val STATE_CHARITIES_CATEGORIES_KEY = "charities_state_categories"
+const val STATE_CHARITIES_POSITION_KEY = "charities_state_position"
+
 @HiltViewModel
 class CharitiesViewModel
 @Inject
 constructor(
     private val charityRepository: CharityRepository,
-
+    private val state: SavedStateHandle,
     val app: Application
 ) : AndroidViewModel(app) {
-
 
     private val USER_ID = intPreferencesKey("user_id")
     var userId: Int = -1
@@ -71,17 +77,61 @@ constructor(
         uId.onEach { id ->
             if (id != -1) {
                 userId = id
-                getCharities()
+                getCharities(page)
                 getLeaderboard()
             }
         }.launchIn(viewModelScope)
+
+        restoreState()
     }
 
-    fun getCharities() {
+
+    //restore state after process death
+    private fun restoreState(){
+        state.get<Int>(STATE_CHARITIES_POSITION_KEY)?.let { position ->
+            setPosition(position)
+        }
+        state.get<Boolean>(STATE_CHARITIES_FILTER_KEY)?.let { filter ->
+            showFilter = filter
+        }
+        state.get<List<Boolean>>(STATE_CHARITIES_CATEGORIES_KEY)?.let { categories ->
+            selectedCategories = categories.toMutableStateList()
+        }
+        state.get<Int>(STATE_CHARITIES_PAGE_KEY)?.let { page ->
+            setPageValue(page)
+        }
+
+        if(showFilter){
+           return
+        }
+
+        charitiesLoading = true
+        val results: MutableList<CharityListItem> = mutableListOf()
+        for(p in 1..page){
+            charityRepository.search(
+                id = userId,
+                page = p,
+                getSelectedCategories()
+            ).onEach { state ->
+                when(state){
+                    is DataState.Success -> {
+                        results.addAll(state.data)
+                    }
+                    else -> {}
+                }
+            }
+            if(p == page){ // done
+                charities = results
+                charitiesLoading = false
+            }
+        }
+    }
+
+    fun getCharities(_page: Int) {
         charitiesError = null
         charityRepository.search(
             userId,
-            page,
+            _page,
             getSelectedCategories()
         ).onEach { state ->
             charitiesLoading = false
@@ -94,7 +144,7 @@ constructor(
                     charitiesError = state.error
                 }
                 is DataState.Loading -> {
-                    if(page == 1){
+                    if(_page == 1){
                         charitiesLoading = true
                     } else {
                        charitiesPagingLoading = true
@@ -107,9 +157,9 @@ constructor(
     fun nextPage() {
         //preventing recomposing so it would call pagination more times
         if ((indexPosition + 1) >= (page * Constants.CHARITIES_PAGE_SIZE)) {
-            page += 1
+            setPageValue(page + 1)
             if (page > 1) {
-                getCharities()
+                getCharities(page)
             }
         }
     }
@@ -136,22 +186,25 @@ constructor(
 
     fun onFilterChange() {
         showFilter = !showFilter
+        state.set(STATE_CHARITIES_FILTER_KEY, showFilter)
         if (!showFilter) {
             reset()
-            getCharities()
+            getCharities(page)
         }
     }
 
     private fun getSelectedCategories(): List<Int> {
         // + 1 because categories on database starts by 1
-        return selectedCategories
+        val result = selectedCategories
             .mapIndexedNotNull { index, v ->
                 if (v) index + 1 else null
             }
+        state.set(STATE_CHARITIES_CATEGORIES_KEY, selectedCategories.toList())
+        return result
     }
 
     private fun reset() {
-        page = 1
+        setPageValue(1)
         charities = listOf()
     }
 
@@ -159,5 +212,15 @@ constructor(
         val tmp = ArrayList(charities)
         tmp.addAll(data)
         charities = tmp
+    }
+
+    fun setPageValue(value: Int){
+        page = value
+        state.set(STATE_CHARITIES_PAGE_KEY, page)
+    }
+
+    fun setPosition(value: Int){
+        indexPosition = value
+        state.set(STATE_CHARITIES_POSITION_KEY, indexPosition)
     }
 }
