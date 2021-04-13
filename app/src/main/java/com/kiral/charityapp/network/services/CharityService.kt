@@ -22,19 +22,19 @@ interface CharityService {
         @Query("categories") categories: List<Int>
     ): Response<CharityListResponse>
 
-    @GET("charity")
+    @GET("charities/{charityId}")
     suspend fun getCharity(
-        @Query("charityId") charityId: Int,
+        @Path("charityId") charityId: Int,
         @Query("donorId") donorId: Int
     ): Response<CharityDto?>
 
-    @GET("project")
+    @GET("projects/{projectId}")
     suspend fun getCharityGoal(
-        @Query("projectId") charityId: Int,
+        @Path("projectId") charityId: Int,
         @Query("donorId") donorId: Int
     ): Response<ProjectDto>
 
-    @GET("charity/{charityId}/donors")
+    @GET("charities/{charityId}/donors")
     suspend fun getCharityDonors(
         @Path("charityId") charityId: Int,
         @Query("userId") userId: Int?,

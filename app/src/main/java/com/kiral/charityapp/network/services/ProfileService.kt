@@ -19,7 +19,7 @@ interface ProfileService {
     @PUT("register")
     suspend fun register(@Body loginDto: ProfileDto): Response<LoginResponse>
 
-    @GET("donor/{donorId}")
+    @GET("users/{donorId}")
     suspend fun getProfile(@Path("donorId") donorId: Int): Response<ProfileDto>
 
     @PUT("user")
