@@ -44,7 +44,6 @@ constructor(
     private var shouldRestoreState = false
 
     var savedPosition: Pair<Int, Int>? = null
-
     var scrollPosition = 0
         private set(value) {
             field = value
@@ -86,6 +85,7 @@ constructor(
         private set
 
     var page by mutableStateOf(1)
+        private set
     var indexPosition = 0
 
     init {
