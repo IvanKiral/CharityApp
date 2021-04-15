@@ -34,6 +34,9 @@ constructor(
     private val profileRepository: ProfileRepository,
     private val state: SavedStateHandle
 ): AndroidViewModel(application) {
+
+    private var profileId: Int = 0
+
     var profile by mutableStateOf<Profile?>(null)
         private set
     var badges = mutableListOf<Badge>()
@@ -64,18 +67,15 @@ constructor(
     var countries = mutableStateOf(mapOf<String, String>())
 
     init {
+        profileId = state.get<Int>("id")!!
+
         viewModelScope.launch {
             countries.value = getCountries(application.baseContext)
         }
 
-        restoreState()
+        setProfile(profileId)
     }
 
-    private fun restoreState() {
-        state.get<Int>(STATE_PROFILE_USER_KEY)?.let { profileId ->
-            setProfile(profileId)
-        }
-    }
 
     fun setProfile(id: Int){
         error = null
@@ -187,9 +187,21 @@ constructor(
         credit = !credit
     }
 
+    fun changeCategory(index: Int){
+        val selectedSize = selectedCategories.filter { b -> b }.size
+        if (selectedSize > 0) {
+            if (selectedSize > 1) {
+                selectedCategories[index] = !selectedCategories[index]
+            } else if (selectedSize == 1) {
+                if (!selectedCategories[index])
+                    selectedCategories[index] = !selectedCategories[index]
+            }
+        }
+    }
+
     private fun makeCategoryString(){
         val categories = selectedCategories.mapIndexedNotNull{ i, v ->
-            if(v) application.resources.getStringArray(R.array.Categories)[i].removeSuffix(" charity") else null
+            if(v) application.resources.getStringArray(R.array.Categories)[i] else null
         }
         categoryString = categories.joinToString { it }
     }

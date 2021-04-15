@@ -64,11 +64,6 @@ class ProfileFragment : Fragment() {
     private val charitiesViewModel: CharitiesViewModel by activityViewModels()
     private val args: ProfileFragmentArgs by navArgs()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel.setProfile(args.id)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -263,6 +258,7 @@ fun ProfileScreenBody(
             CategoriesDialog(
                 shown = viewModel.categoriesDialog,
                 setShowDialog = { viewModel.categoriesDialog = it },
+                onItemClick = { index -> viewModel.changeCategory(index) },
                 categoriesSelected = viewModel.selectedCategories,
                 onConfirmButton = { viewModel.setCategories() }
             )

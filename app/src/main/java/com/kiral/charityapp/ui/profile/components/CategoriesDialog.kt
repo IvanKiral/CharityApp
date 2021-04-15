@@ -14,6 +14,7 @@ import com.kiral.charityapp.ui.components.CharitiesSelector
 fun CategoriesDialog(
     shown: Boolean,
     setShowDialog: (Boolean) -> Unit,
+    onItemClick: (Int) -> Unit,
     categoriesSelected: SnapshotStateList<Boolean>,
     onConfirmButton: () -> Unit
 ) {
@@ -27,7 +28,7 @@ fun CategoriesDialog(
             CharitiesSelector(
                 categories = stringArrayResource(id = R.array.Categories),
                 categoriesSelected = categoriesSelected,
-                onItemClick = {}
+                onItemClick = onItemClick
             )
         }
     }
