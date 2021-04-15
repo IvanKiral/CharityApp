@@ -18,18 +18,19 @@ import com.kiral.charityapp.utils.Constants
 import com.kiral.charityapp.utils.Constants.CATEGORIES_NUMBER
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
 const val STATE_CHARITIES_PAGE_KEY = "charities_state_pages"
 const val STATE_CHARITIES_USER_KEY = "charities_state_user"
 const val STATE_CHARITIES_FILTER_KEY = "charities_state_filter"
 const val STATE_CHARITIES_CATEGORIES_KEY = "charities_state_categories"
-const val STATE_CHARITIES_POSITION_KEY = "charities_state_position"
+const val STATE_CHARITIES_ITEM_POSITION_KEY = "charities_state_item_position"
+const val STATE_CHARITIES_ITEM_POSITION_OFFSET_KEY = "charities_state_item_offset_position"
 
 @HiltViewModel
 class CharitiesViewModel
@@ -39,6 +40,22 @@ constructor(
     private val state: SavedStateHandle,
     val app: Application
 ) : AndroidViewModel(app) {
+
+    private var shouldRestoreState = false
+
+    var savedPosition: Pair<Int, Int>? = null
+
+    var scrollPosition = 0
+        private set(value) {
+            field = value
+            state.set(STATE_CHARITIES_ITEM_POSITION_KEY, value)
+        }
+
+    var scrollOffset = 0
+        private set(value) {
+            field = value
+            state.set(STATE_CHARITIES_ITEM_POSITION_OFFSET_KEY, value)
+        }
 
     private val USER_ID = intPreferencesKey("user_id")
     var userId: Int = -1
@@ -72,8 +89,11 @@ constructor(
     var indexPosition = 0
 
     init {
-        state.get<Int>(STATE_CHARITIES_POSITION_KEY)?.let { position ->
-            setPosition(position)
+        state.get<Int>(STATE_CHARITIES_ITEM_POSITION_KEY)?.let{ position ->
+            scrollPosition = position
+        }
+        state.get<Int>(STATE_CHARITIES_ITEM_POSITION_OFFSET_KEY)?.let{ offset ->
+            scrollOffset = offset
         }
         state.get<Boolean>(STATE_CHARITIES_FILTER_KEY)?.let { filter ->
             showFilter = filter
@@ -82,6 +102,7 @@ constructor(
             selectedCategories = categories.toMutableStateList()
         }
         state.get<Int>(STATE_CHARITIES_PAGE_KEY)?.let { page ->
+            shouldRestoreState = true
             setPageValue(page)
         }
         state.get<Int>(STATE_CHARITIES_USER_KEY)?.let { user ->
@@ -96,7 +117,7 @@ constructor(
             if (id != -1) {
                 userId = id
                 state.set(STATE_CHARITIES_USER_KEY, userId)
-                if (indexPosition == 0) {
+                if (!shouldRestoreState) {
                     getCharities(page)
                 } else {
                     restoreState()
@@ -104,8 +125,6 @@ constructor(
                 getLeaderboard()
             }
         }.launchIn(viewModelScope)
-
-
     }
 
 
@@ -114,30 +133,28 @@ constructor(
         if (showFilter) {
             return
         }
-        if (indexPosition > 0) {
+        viewModelScope.launch {
             charitiesLoading = true
             val results: MutableList<CharityListItem> = mutableListOf()
-            viewModelScope.launch {
-                for (p in 1..page) {
-                    val x = charityRepository.search(
-                        id = userId,
-                        page = p,
-                        getSelectedCategories()
-                    ).onEach { state ->
-                        when (state) {
-                            is DataState.Success -> {
-                                results.addAll(state.data)
-                                charities = results
-                            }
-                            else -> {
-                            }
-                        }
-                    }.launchIn(viewModelScope)
-                    x.join()
+            repeat(page) { p ->
+                charityRepository.search(
+                    id = userId,
+                    page = p + 1,
+                    getSelectedCategories()
+                ).collect { state ->
+                    when (state) {
+                        is DataState.Success -> { results.addAll(state.data) }
+                        else -> { }
+                    }
                 }
-                charitiesLoading = false
+                if(p == page - 1){
+                    savedPosition = Pair(scrollPosition, scrollOffset)
+                    charities = results
+                    charitiesLoading = false
+                }
             }
         }
+        shouldRestoreState = false
     }
 
     fun getCharities(_page: Int) {
@@ -232,8 +249,13 @@ constructor(
         state.set(STATE_CHARITIES_PAGE_KEY, page)
     }
 
-    fun setPosition(value: Int) {
+    fun setPosition(
+        value: Int,
+        scrollPosition: Int,
+        scrollOffset: Int
+    ) {
         indexPosition = value
-        state.set(STATE_CHARITIES_POSITION_KEY, indexPosition)
+        this.scrollPosition = scrollPosition
+        this.scrollOffset = scrollOffset
     }
 }

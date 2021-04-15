@@ -1,6 +1,5 @@
 package com.kiral.charityapp.ui.donors
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -73,10 +72,8 @@ constructor(
         }
         state.get<Int>(STATE_DONORS_POSITION_KEY)?.let { position ->
             itemPosition = position
-            Log.i("appdebug", "position $itemPosition")
         }
         state.get<Int>(STATE_DONORS_PAGE_KEY)?.let { p ->
-            Log.i("appdebug", "saved page $p")
             setPageValue(p)
         }
         state.get<Boolean>(STATE_DONORS_FILTER_KEY)?.let { show ->
@@ -97,10 +94,7 @@ constructor(
         } else{
             getCharityDonors(charityId!!, page, userId!!, projectId!!)
         }
-
-
     }
-
 
     fun getCharityDonors(
         charityId: Int,
@@ -193,7 +187,6 @@ constructor(
                 ).collect { state ->
                     when (state) {
                         is DataState.Success -> {
-                            Log.i("AppDebug", "state size ${state.data.size}")
                             results.addAll(state.data)
                         }
                         else -> { }

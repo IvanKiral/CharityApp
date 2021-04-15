@@ -15,12 +15,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,6 +45,7 @@ import com.kiral.charityapp.ui.home.components.CharityAppBar
 import com.kiral.charityapp.ui.home.components.CharityGrid
 import com.kiral.charityapp.ui.theme.CharityTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 enum class TabsNames {
     Charities, Ranking
@@ -131,13 +134,22 @@ fun CharityScreen(
             viewModel.getCharities(1)
         }
     ) {
+        val scope = rememberCoroutineScope()
+        val state = rememberLazyListState()
         CharityGrid(
             lst = viewModel.charities,
+            state = state,
             modifier = Modifier
                 .padding(top = 20.dp),
             viewModel = viewModel
         ) { itemId ->
             navigateToDetail(itemId)
+        }
+        viewModel.savedPosition?.let { (position, offset) ->
+            scope.launch {
+                state.scrollToItem(position, offset)
+            }
+            viewModel.savedPosition = null
         }
     }
 }
