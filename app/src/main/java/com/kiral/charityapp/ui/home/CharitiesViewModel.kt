@@ -21,10 +21,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
 const val STATE_CHARITIES_PAGE_KEY = "charities_state_pages"
+const val STATE_CHARITIES_USER_KEY = "charities_state_user"
 const val STATE_CHARITIES_FILTER_KEY = "charities_state_filter"
 const val STATE_CHARITIES_CATEGORIES_KEY = "charities_state_categories"
 const val STATE_CHARITIES_POSITION_KEY = "charities_state_position"
@@ -70,24 +72,6 @@ constructor(
     var indexPosition = 0
 
     init {
-        val uId: Flow<Int> = app.dataStore.data
-            .map { preferences ->
-                preferences[USER_ID] ?: -1
-            }
-        uId.onEach { id ->
-            if (id != -1) {
-                userId = id
-                getCharities(page)
-                getLeaderboard()
-            }
-        }.launchIn(viewModelScope)
-
-        restoreState()
-    }
-
-
-    //restore state after process death
-    private fun restoreState(){
         state.get<Int>(STATE_CHARITIES_POSITION_KEY)?.let { position ->
             setPosition(position)
         }
@@ -100,31 +84,58 @@ constructor(
         state.get<Int>(STATE_CHARITIES_PAGE_KEY)?.let { page ->
             setPageValue(page)
         }
-
-        if(showFilter){
-           return
+        state.get<Int>(STATE_CHARITIES_USER_KEY)?.let { user ->
+            userId = user
         }
-        if(indexPosition > 0) {
+
+        val uId: Flow<Int> = app.dataStore.data
+            .map { preferences ->
+                preferences[USER_ID] ?: -1
+            }
+        uId.onEach { id ->
+            if (id != -1) {
+                userId = id
+                state.set(STATE_CHARITIES_USER_KEY, userId)
+                if (indexPosition == 0) {
+                    getCharities(page)
+                } else {
+                    restoreState()
+                }
+                getLeaderboard()
+            }
+        }.launchIn(viewModelScope)
+
+
+    }
+
+
+    //restore state after process death
+    private fun restoreState() {
+        if (showFilter) {
+            return
+        }
+        if (indexPosition > 0) {
             charitiesLoading = true
             val results: MutableList<CharityListItem> = mutableListOf()
-            for (p in 1..page) {
-                charityRepository.search(
-                    id = userId,
-                    page = p,
-                    getSelectedCategories()
-                ).onEach { state ->
-                    when (state) {
-                        is DataState.Success -> {
-                            results.addAll(state.data)
+            viewModelScope.launch {
+                for (p in 1..page) {
+                    val x = charityRepository.search(
+                        id = userId,
+                        page = p,
+                        getSelectedCategories()
+                    ).onEach { state ->
+                        when (state) {
+                            is DataState.Success -> {
+                                results.addAll(state.data)
+                                charities = results
+                            }
+                            else -> {
+                            }
                         }
-                        else -> {
-                        }
-                    }
+                    }.launchIn(viewModelScope)
+                    x.join()
                 }
-                if (p == page) { // done
-                    charities = results
-                    charitiesLoading = false
-                }
+                charitiesLoading = false
             }
         }
     }
@@ -146,10 +157,10 @@ constructor(
                     charitiesError = state.error
                 }
                 is DataState.Loading -> {
-                    if(_page == 1){
+                    if (_page == 1) {
                         charitiesLoading = true
                     } else {
-                       charitiesPagingLoading = true
+                        charitiesPagingLoading = true
                     }
                 }
             }
@@ -210,18 +221,18 @@ constructor(
         charities = listOf()
     }
 
-    private fun appendCharities(data: List<CharityListItem>){
+    private fun appendCharities(data: List<CharityListItem>) {
         val tmp = ArrayList(charities)
         tmp.addAll(data)
         charities = tmp
     }
 
-    fun setPageValue(value: Int){
+    fun setPageValue(value: Int) {
         page = value
         state.set(STATE_CHARITIES_PAGE_KEY, page)
     }
 
-    fun setPosition(value: Int){
+    fun setPosition(value: Int) {
         indexPosition = value
         state.set(STATE_CHARITIES_POSITION_KEY, indexPosition)
     }

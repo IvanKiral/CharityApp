@@ -12,11 +12,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
@@ -38,6 +40,7 @@ import com.kiral.charityapp.utils.Convert
 import com.kiral.charityapp.utils.Utils.loadPicture
 import com.kiral.charityapp.utils.makeGravatarLink
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class DonorsFragment : Fragment() {
@@ -49,12 +52,6 @@ class DonorsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewModel.getCharityDonors(
-            charityId = args.charityId,
-            page = 1,
-            userId = args.userId,
-            projectId = args.projectId
-        )
         return ComposeView(requireContext()).apply {
             setContent {
                 CharityTheme {
@@ -90,10 +87,13 @@ fun DonorsScreen(
     onBackPressed: () -> Unit
 ) {
     val donorList = viewModel.charityDonors
+    val scope = rememberCoroutineScope()
+    val state = rememberLazyListState()
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
         LazyColumn(
+            state = state,
             modifier = Modifier.fillMaxSize(),
         ) {
             item {
@@ -141,7 +141,11 @@ fun DonorsScreen(
                 )
             }
             itemsIndexed(donorList) { index, donor ->
-                viewModel.indexPosition = index
+                viewModel.setPosition(
+                    index,
+                    state.firstVisibleItemIndex,
+                    state.firstVisibleItemScrollOffset
+                )
                 if ((index + 1) >= (viewModel.page * DONORS_PAGE_SIZE) && !viewModel.loading) {
                     viewModel.nextPage(
                         charityId = charityId,
@@ -171,6 +175,15 @@ fun DonorsScreen(
 
             }
         }
+        if(viewModel.savedPosition != null){
+            scope.launch {
+                viewModel.savedPosition?.let { (position, offset) ->
+                    state.scrollToItem(position, offset)
+                }
+                viewModel.savedPosition = null
+            }
+        }
+
         if (viewModel.loading) {
             CircularProgressIndicator(
                 modifier = Modifier
