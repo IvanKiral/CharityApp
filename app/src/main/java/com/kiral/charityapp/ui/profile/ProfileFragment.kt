@@ -251,8 +251,10 @@ fun ProfileScreenBody(
                 isShown = viewModel.countryDialog,
                 setDialog = { value -> viewModel.countryDialog = value },
                 setCountry = { value, _ ->
-                    viewModel.setRegion(value)
-                    charitiesViewModel.getCharities(1)
+                    viewModel.setRegion(value) {
+                        charitiesViewModel.reset()
+                        charitiesViewModel.getCharities(1)
+                    }
                 },
             )
             CategoriesDialog(

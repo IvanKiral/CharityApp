@@ -93,7 +93,7 @@ class CharityRepositoryImpl(
                 emit(DataState.Success(true))
             }
             else{
-             emit(DataState.Error(assetProvider.networkPaymentError()))
+             emit(DataState.Error(assetProvider.notEnoughCredit()))
             }
         } catch (e: Throwable) {
             emit(DataState.Error(assetProvider.networkPaymentError()))

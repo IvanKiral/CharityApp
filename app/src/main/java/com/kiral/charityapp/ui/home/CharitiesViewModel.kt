@@ -14,6 +14,7 @@ import com.kiral.charityapp.domain.model.LeaderBoardProfile
 import com.kiral.charityapp.network.DataState
 import com.kiral.charityapp.repositories.charities.CharityRepository
 import com.kiral.charityapp.ui.dataStore
+import com.kiral.charityapp.ui.onboarding.STATE_ONBOARDING_CATEGORIES_KEY
 import com.kiral.charityapp.utils.Constants
 import com.kiral.charityapp.utils.Constants.CATEGORIES_NUMBER
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -233,7 +234,11 @@ constructor(
         return result
     }
 
-    private fun reset() {
+    fun reset() {
+        scrollOffset = 0
+        scrollPosition = 0
+        charitiesLoading = false
+        charitiesError = null
         setPageValue(1)
         charities = listOf()
     }
@@ -257,5 +262,18 @@ constructor(
         indexPosition = value
         this.scrollPosition = scrollPosition
         this.scrollOffset = scrollOffset
+    }
+
+    fun setCategories(index: Int){
+        val selectedSize = selectedCategories.filter { b -> b }.size
+        if (selectedSize > 0) {
+            if (selectedSize > 1) {
+                selectedCategories[index] = !selectedCategories[index]
+            } else if (selectedSize == 1) {
+                if (!selectedCategories[index])
+                    selectedCategories[index] = !selectedCategories[index]
+            }
+        }
+        state.set(STATE_ONBOARDING_CATEGORIES_KEY, selectedCategories.toList())
     }
 }

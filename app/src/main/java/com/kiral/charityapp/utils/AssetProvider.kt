@@ -14,4 +14,6 @@ constructor(
     fun userNotFound() = context.resources.getString(R.string.network_userNotFound)
 
     fun networkPaymentError() = context.resources.getString(R.string.network_payment_error)
+
+    fun notEnoughCredit() = context.resources.getString(R.string.Error_NotEnoughCredit)
 }

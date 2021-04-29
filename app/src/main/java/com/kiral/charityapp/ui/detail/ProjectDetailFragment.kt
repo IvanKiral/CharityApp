@@ -218,6 +218,7 @@ fun ProjectDetailBody(
             )
 
             DonationFailedAlertDialog(
+                description = viewModel.donationError,
                 shown = viewModel.shouldShowDonationFailedDialog(),
                 setShowDialog = { viewModel.donationError = null }
             )

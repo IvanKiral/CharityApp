@@ -50,7 +50,7 @@ object Constants {
         ),
         8 to BadgeData(
             R.string.badge_health,
-            R.drawable.ic_badge_charity_art
+            R.drawable.ic_badge_charity_health
         ),
         9 to BadgeData(
             R.string.badge_educational,

@@ -17,7 +17,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -124,12 +123,6 @@ fun WelcomeScreen(
             Text(
                 text = "Cherrities",
                 style = MaterialTheme.typography.h4
-            )
-            Text(
-                text = stringResource(R.string.welcome_greeting),
-                style = MaterialTheme.typography.body2.copy(color = Color.Black.copy(alpha = 0.75f)),
-                textAlign = TextAlign.Justify,
-                modifier = Modifier.padding(top = 32.dp)
             )
             if (viewModel.error != null) {
                 logout(

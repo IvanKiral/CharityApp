@@ -128,7 +128,10 @@ constructor(
         }
     }
 
-    fun setRegion(value: String){
+    fun setRegion(
+        value: String,
+        setCharities: () -> Unit
+    ){
         profile?.let { p ->
             profileRepository.updateRegion(p.id, value).onEach { state ->
                 when(state){
@@ -137,6 +140,7 @@ constructor(
                         profile = profile?.copy(
                             region = value
                         )
+                        setCharities()
                     }
                     else -> {}
                 }

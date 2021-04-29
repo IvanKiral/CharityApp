@@ -216,7 +216,7 @@ fun FilterScreen(
             categories = stringArrayResource(id = R.array.Categories),
             categoriesSelected = viewModel.selectedCategories,
             modifier = Modifier.padding(top = 32.dp),
-            onItemClick = {}
+            onItemClick = { index -> viewModel.setCategories(index) }
         )
     }
 }

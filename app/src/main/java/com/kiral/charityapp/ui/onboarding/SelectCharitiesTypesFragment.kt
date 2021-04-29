@@ -19,6 +19,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
@@ -79,6 +80,15 @@ fun SelectCharitiesScreen(
                     text = stringResource(R.string.selectCharitiesTypes_title),
                     style = MaterialTheme.typography.h5,
                     textAlign = TextAlign.Center,
+                )
+
+                Text(
+                    text = stringResource(R.string.SelectCharitiesTypesFragment_description),
+                    style = MaterialTheme.typography.body2.copy(Color.Black.copy(alpha = 0.6f)),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .align(Alignment.Start)
+                        .padding(top = 16.dp)
                 )
 
                 CharitiesSelector(

@@ -35,7 +35,7 @@
     <string name="detail_project_peopleDonated">donated to this project.</string>
     <string name="detail_project_raised">Raised</string>
     <string name="detail_userDonated">You donated %1s</string>
-    <string name="donationField_textFieldLabel">Your amount</string>
+    <string name="donationField_textFieldLabel">format: 10.00</string>
     <string name="donor_userDonations_icon_description">donor show users donations icon</string>
     <string name="donors_heartIcon_description">heart icon</string>
     <string name="donors_icon_description">donor badge icon</string>
@@ -68,9 +68,9 @@
     <string name="profile_yourBadges">Your Badges</string>
     <string name="profileImage_imageDescription">profile image</string>
     <string name="selectCharitiesTypes_title">Select charities types</string>
-    <string name="setupRegularPayments_title">Setup regular Payments</string>
+    <string name="setupRegularPayments_title">Setup regular donations</string>
     <string name="welcome_greeting">It\'s good to have you here! Start donating to charities by login into the app</string>
-    <string name="welcome_login">Login into application</string>
+    <string name="welcome_login">Login</string>
     <string name="credit_freepik">Icons made by https://www.freepik.com from www.flaticon.com</string>
     <string name="profile_option_credits">Credits</string>
     <string name="network_payment_error">Oops! Something went wrong! Please try your payment later</string>
@@ -92,6 +92,8 @@
     <string name="badge_bronze_medal">Be the 3rd in the leaderboard in a current week</string>
     <string name="badge_share">Share a charity/donation on a social media</string>
     <string name="credit_title">Credits</string>
+    <string name="SelectCharitiesTypesFragment_description">These categories will be used when donating by regular payments</string>
+    <string name="Error_NotEnoughCredit">You do not have enough credit! Please add credit and try again.</string>
 
 
     <string-array name="Categories">

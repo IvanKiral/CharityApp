@@ -14,8 +14,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
-//const val KEY_CHARITY = "charity.key"
-
 const val STATE_CHARITY_KEY = "detail_state_charity_id"
 const val STATE_CHARITY_DONOR_KEY = "detail_state_user_id"
 const val STATE_CHARITY_DONATION_KEY = "detail_state_donation_field"
