@@ -59,6 +59,7 @@ constructor(
     var selectedFrequency by mutableStateOf(0)
 
     var selectedCategories = List(CATEGORIES_NUMBER) {false}.toMutableStateList()
+    var selectedCategoriesBackup = selectedCategories.toMutableList()
     var categoryString by mutableStateOf("")
 
     var categoriesDialog by mutableStateOf(false)
@@ -229,6 +230,18 @@ constructor(
                     else -> { }
                 }
             }.launchIn(viewModelScope)
+        }
+    }
+
+    fun onCategoriesDialogDismiss(){
+        categoriesDialog = false
+        selectedCategories = selectedCategoriesBackup.toMutableStateList()
+    }
+
+    fun setCategoriesDialogValue(value: Boolean){
+        categoriesDialog = value
+        if(categoriesDialog){
+            selectedCategoriesBackup = selectedCategories.toMutableList()
         }
     }
 }

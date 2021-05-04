@@ -13,7 +13,7 @@ import com.kiral.charityapp.ui.components.CharitiesSelector
 fun CategoriesDialog(
     title: String,
     shown: Boolean,
-    setShowDialog: (Boolean) -> Unit,
+    onDismiss: () -> Unit,
     onItemClick: (Int) -> Unit,
     categoriesSelected: SnapshotStateList<Boolean>,
     onConfirmButton: () -> Unit
@@ -21,7 +21,7 @@ fun CategoriesDialog(
     AlertDialogWithChoice(
         title = title,
         shown = shown,
-        setShowDialog = setShowDialog,
+        onDismiss = onDismiss,
         onConfirmButton = onConfirmButton
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {

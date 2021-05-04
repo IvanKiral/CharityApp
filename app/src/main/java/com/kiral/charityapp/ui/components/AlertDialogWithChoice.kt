@@ -22,16 +22,14 @@ import com.kiral.charityapp.R
 fun AlertDialogWithChoice(
     title: String,
     shown: Boolean,
-    setShowDialog: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
+    onDismiss: () -> Unit = {},
     onConfirmButton: () -> Unit = {},
     boxContent: @Composable () -> Unit = {}
 ) {
     if (shown) {
         AlertDialog(
-            onDismissRequest = {
-                setShowDialog(false)
-            },
+            onDismissRequest = onDismiss,
             title = {
                 Text(
                     title,
@@ -47,7 +45,7 @@ fun AlertDialogWithChoice(
                         .padding(8.dp),
                     horizontalArrangement = Arrangement.End
                 ) {
-                    Button(onClick = { setShowDialog(false) }) {
+                    Button(onClick = { onDismiss() }) {
                         Text(
                             text = stringResource(R.string.alertDialog_cancel),
                             style = MaterialTheme.typography.button.copy(fontSize = 14.sp)

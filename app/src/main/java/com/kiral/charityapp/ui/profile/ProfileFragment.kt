@@ -233,11 +233,9 @@ fun ProfileScreenBody(
                 isSwitched = profile.regularDonationActive,
                 categories = viewModel.categoryString,
                 switchFunction = { value -> viewModel.setActive(value) },
-                setDonationDialog = { value ->
-                    viewModel.regularDonationDialog = value
-                },
+                setDonationDialog = { value -> viewModel.regularDonationDialog = value },
                 setCountryDialog = { value -> viewModel.countryDialog = value },
-                setCategoriesDialog = { value -> viewModel.categoriesDialog = value },
+                setCategoriesDialog = { value -> viewModel.setCategoriesDialogValue(value)},
                 logout = logout,
                 navigateToCredits = navigateToCredits,
                 modifier = Modifier
@@ -260,7 +258,7 @@ fun ProfileScreenBody(
             CategoriesDialog(
                 title = stringResource(R.string.categoriesDialog_title),
                 shown = viewModel.categoriesDialog,
-                setShowDialog = { viewModel.categoriesDialog = it },
+                onDismiss = { viewModel.onCategoriesDialogDismiss() },
                 onItemClick = { index -> viewModel.changeCategory(index) },
                 categoriesSelected = viewModel.selectedCategories,
                 onConfirmButton = { viewModel.setCategories() }
@@ -268,7 +266,7 @@ fun ProfileScreenBody(
             AlertDialogWithChoice(
                 title = stringResource(R.string.profile_alertDialog_title),
                 shown = viewModel.regularDonationDialog,
-                setShowDialog = { value -> viewModel.regularDonationDialog = value },
+                onDismiss = { viewModel.regularDonationDialog = false },
                 onConfirmButton = { viewModel.setRegularPayment() }
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {

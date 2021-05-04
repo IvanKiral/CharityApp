@@ -72,6 +72,7 @@ constructor(
 
     private var categoriesList = MutableList(CATEGORIES_NUMBER) { true }
     var selectedCategories = categoriesList.toMutableStateList()
+    var selectedCategoriesBackup = selectedCategories.toMutableList()
 
     var showFilter by mutableStateOf(false)
     var filterIconHighlighted by mutableStateOf(false)
@@ -219,6 +220,14 @@ constructor(
 
     fun changeShowFilter(){
         showFilter = !showFilter
+        if(showFilter){
+            selectedCategoriesBackup = selectedCategories.toMutableList()
+        }
+    }
+
+    fun onCategoriesDialogDismiss(){
+        showFilter = false
+        selectedCategories = selectedCategoriesBackup.toMutableStateList()
     }
 
     fun onFilterChange() {

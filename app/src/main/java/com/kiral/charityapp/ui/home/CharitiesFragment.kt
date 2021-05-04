@@ -144,7 +144,7 @@ fun CharityScreen(
         CategoriesDialog(
             title = stringResource(R.string.CharitiesFragment_CategoriesDialogTitle),
             shown = viewModel.showFilter,
-            setShowDialog = { viewModel.changeShowFilter() },
+            onDismiss = {viewModel.onCategoriesDialogDismiss()},
             onItemClick = { index -> viewModel.setCategories(index) },
             categoriesSelected = viewModel.selectedCategories,
             onConfirmButton = { viewModel.onFilterChange() }
