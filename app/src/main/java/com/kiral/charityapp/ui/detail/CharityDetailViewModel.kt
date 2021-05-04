@@ -96,7 +96,7 @@ constructor(
                         charity = charity?.copy(
                             donorDonated = donorDonated + value,
                             raised = raised + value,
-                            peopleDonated = peopleDonated + 1
+                            peopleDonated = if(donorDonated == 0.0) peopleDonated + 1 else peopleDonated
                         )
                     }
                     is DataState.Error -> {
