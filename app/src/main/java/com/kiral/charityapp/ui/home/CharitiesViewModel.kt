@@ -74,6 +74,7 @@ constructor(
     var selectedCategories = categoriesList.toMutableStateList()
 
     var showFilter by mutableStateOf(false)
+    var filterIconHighlighted by mutableStateOf(false)
 
     var donorRank by mutableStateOf<Int?>(null)
         private set
@@ -101,6 +102,7 @@ constructor(
         }
         state.get<List<Boolean>>(STATE_CHARITIES_CATEGORIES_KEY)?.let { categories ->
             selectedCategories = categories.toMutableStateList()
+            filterIconHighlighted = selectedCategories.contains(false)
         }
         state.get<Int>(STATE_CHARITIES_PAGE_KEY)?.let { page ->
             shouldRestoreState = true
@@ -215,8 +217,13 @@ constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun onFilterChange() {
+    fun changeShowFilter(){
         showFilter = !showFilter
+    }
+
+    fun onFilterChange() {
+        changeShowFilter()
+        filterIconHighlighted = selectedCategories.contains(false)
         state.set(STATE_CHARITIES_FILTER_KEY, showFilter)
         if (!showFilter) {
             reset()

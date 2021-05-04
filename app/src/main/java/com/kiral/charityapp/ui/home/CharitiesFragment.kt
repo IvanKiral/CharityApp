@@ -92,11 +92,11 @@ fun CharitiesScreen(
             CharityAppBar(
                 tabSelected = tabSelected,
                 modifier = Modifier.fillMaxWidth(),
-                filterOn = viewModel.showFilter,
+                filterOn = viewModel.filterIconHighlighted,
                 onProfileClick = {
                     navigateToProfile()
                 },
-                onFilterClicked = { viewModel.onFilterChange() },
+                onFilterClicked = { viewModel.changeShowFilter() },
                 onTabSelected = { tabSelected = it }
             )
             when (tabSelected) {
@@ -144,7 +144,7 @@ fun CharityScreen(
         CategoriesDialog(
             title = stringResource(R.string.CharitiesFragment_CategoriesDialogTitle),
             shown = viewModel.showFilter,
-            setShowDialog = { viewModel.onFilterChange() },
+            setShowDialog = { viewModel.changeShowFilter() },
             onItemClick = { index -> viewModel.setCategories(index) },
             categoriesSelected = viewModel.selectedCategories,
             onConfirmButton = { viewModel.onFilterChange() }
