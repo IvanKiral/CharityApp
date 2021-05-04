@@ -18,20 +18,20 @@ interface CharityService {
     @GET("charities")
     suspend fun getCharities(
         @Query("page") page: Int,
-        @Query("donorId") donorId: Int,
+        @Query("userId") userId: Int,
         @Query("categories") categories: List<Int>
     ): Response<CharityListResponse>
 
     @GET("charities/{charityId}")
     suspend fun getCharity(
         @Path("charityId") charityId: Int,
-        @Query("donorId") donorId: Int
+        @Query("userId") userId: Int
     ): Response<CharityDto?>
 
     @GET("projects/{projectId}")
     suspend fun getCharityGoal(
         @Path("projectId") charityId: Int,
-        @Query("donorId") donorId: Int
+        @Query("userId") userId: Int
     ): Response<ProjectDto>
 
     @GET("charities/{charityId}/donors")

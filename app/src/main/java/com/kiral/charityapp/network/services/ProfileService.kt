@@ -19,8 +19,8 @@ interface ProfileService {
     @PUT("register")
     suspend fun register(@Body loginDto: ProfileDto): Response<LoginResponse>
 
-    @GET("users/{donorId}")
-    suspend fun getProfile(@Path("donorId") donorId: Int): Response<ProfileDto>
+    @GET("users/{userId}")
+    suspend fun getProfile(@Path("userId") userId: Int): Response<ProfileDto>
 
     @PUT("user")
     suspend fun updateProfile(@Body profileDto: ProfilePostDto): Response<Unit>
