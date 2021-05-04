@@ -48,10 +48,7 @@ fun DetailHeader(
         ) {
             if (donorDonated > 0) {
                 DonationBox(
-                    text = stringResource(
-                        id = R.string.detail_userDonated,
-                        donorDonated.Convert()
-                    ),
+                    text = "${stringResource(id = R.string.detail_userDonated, donorDonated.Convert())}€",
                     backgroundColor = Color.Black.copy(alpha = 0.5f),
                 )
             }

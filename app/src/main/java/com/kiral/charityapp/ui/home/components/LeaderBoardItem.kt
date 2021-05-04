@@ -62,7 +62,7 @@ fun LeaderBoardItem(
                     .padding(start = 16.dp)
             )
             Text(
-                text = item.donated.Convert(),
+                text = "${item.donated.Convert()}€",
                 style = MaterialTheme.typography.body1,
                 modifier = Modifier
                     .fillMaxWidth()
