@@ -5,12 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -24,13 +19,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
@@ -38,11 +29,10 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.kiral.charityapp.R
 import com.kiral.charityapp.ui.components.BaseScreen
-import com.kiral.charityapp.ui.components.CharitiesSelector
-import com.kiral.charityapp.ui.components.ClickableIcon
 import com.kiral.charityapp.ui.components.LeaderBoardItem
 import com.kiral.charityapp.ui.home.components.CharityAppBar
 import com.kiral.charityapp.ui.home.components.CharityGrid
+import com.kiral.charityapp.ui.profile.components.CategoriesDialog
 import com.kiral.charityapp.ui.theme.CharityTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -67,7 +57,10 @@ class CharitiesFragment : Fragment() {
                     viewModel = viewModel,
                     navigateToDetail = { itemId ->
                         val action = CharitiesFragmentDirections
-                            .actionCharitiesFragmentToCharityDetailFragment(itemId, viewModel.userId)
+                            .actionCharitiesFragmentToCharityDetailFragment(
+                                itemId,
+                                viewModel.userId
+                            )
                         findNavController()
                             .navigate(action)
                     },
@@ -106,16 +99,12 @@ fun CharitiesScreen(
                 onFilterClicked = { viewModel.onFilterChange() },
                 onTabSelected = { tabSelected = it }
             )
-            if (!viewModel.showFilter) {
-                when (tabSelected) {
-                    TabsNames.Charities -> CharityScreen(
-                        viewModel,
-                        navigateToDetail = navigateToDetail
-                    )
-                    TabsNames.Ranking -> RankingScreen(viewModel)
-                }
-            } else {
-                FilterScreen(viewModel)
+            when (tabSelected) {
+                TabsNames.Charities -> CharityScreen(
+                    viewModel,
+                    navigateToDetail = navigateToDetail
+                )
+                TabsNames.Ranking -> RankingScreen(viewModel)
             }
         }
     }
@@ -151,6 +140,15 @@ fun CharityScreen(
             }
             viewModel.savedPosition = null
         }
+
+        CategoriesDialog(
+            title = stringResource(R.string.CharitiesFragment_CategoriesDialogTitle),
+            shown = viewModel.showFilter,
+            setShowDialog = { viewModel.onFilterChange() },
+            onItemClick = { index -> viewModel.setCategories(index) },
+            categoriesSelected = viewModel.selectedCategories,
+            onConfirmButton = { viewModel.onFilterChange() }
+        )
     }
 }
 
@@ -165,7 +163,7 @@ fun RankingScreen(
             viewModel.getLeaderboard()
         }
     ) {
-        Column() {
+        Column {
             Text(
                 text = "Rank: ${viewModel.donorRank}",
                 style = MaterialTheme.typography.h5,
@@ -183,40 +181,5 @@ fun RankingScreen(
                 }
             }
         }
-    }
-}
-
-@Composable
-fun FilterScreen(
-    viewModel: CharitiesViewModel
-) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-    ) {
-        Spacer(modifier = Modifier.fillMaxHeight(0.05f))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = stringResource(R.string.charities_filter_title),
-                style = MaterialTheme.typography.h5,
-            )
-            ClickableIcon(
-                icon = ImageVector.vectorResource(id = R.drawable.ic_close_black),
-                contentDescription = stringResource(id = R.string.back_icon_description),
-                onIconClicked = {
-                    viewModel.onFilterChange()
-                },
-                size = 24.dp
-            )
-        }
-        CharitiesSelector(
-            categories = stringArrayResource(id = R.array.Categories),
-            categoriesSelected = viewModel.selectedCategories,
-            modifier = Modifier.padding(top = 32.dp),
-            onItemClick = { index -> viewModel.setCategories(index) }
-        )
     }
 }

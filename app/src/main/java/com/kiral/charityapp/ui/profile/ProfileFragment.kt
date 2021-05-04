@@ -258,6 +258,7 @@ fun ProfileScreenBody(
                 },
             )
             CategoriesDialog(
+                title = stringResource(R.string.categoriesDialog_title),
                 shown = viewModel.categoriesDialog,
                 setShowDialog = { viewModel.categoriesDialog = it },
                 onItemClick = { index -> viewModel.changeCategory(index) },
