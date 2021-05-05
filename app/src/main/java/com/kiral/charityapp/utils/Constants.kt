@@ -14,8 +14,8 @@ object Constants {
 
     val GRAVATAR_LINK = "https://www.gravatar.com/avatar/"
 
-    const val DONORS_PAGE_SIZE = 5
-    const val CHARITIES_PAGE_SIZE = 4
+    const val DONORS_PAGE_SIZE = 20
+    const val CHARITIES_PAGE_SIZE = 20
 
     const val CATEGORIES_NUMBER = 5
 
