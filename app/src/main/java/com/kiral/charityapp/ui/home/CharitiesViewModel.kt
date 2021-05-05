@@ -204,8 +204,8 @@ constructor(
             when (state) {
                 is DataState.Success -> {
                     leaderboardLoading = false
-                    leaderboard = state.data
-                    donorRank = 1
+                    leaderboard = state.data.donors
+                    donorRank = state.data.rank
                 }
                 is DataState.Loading -> {
                     leaderboardLoading = true

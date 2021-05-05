@@ -3,7 +3,7 @@ package com.kiral.charityapp.repositories.charities
 import com.kiral.charityapp.domain.model.Charity
 import com.kiral.charityapp.domain.model.CharityListItem
 import com.kiral.charityapp.domain.model.Donor
-import com.kiral.charityapp.domain.model.LeaderBoardProfile
+import com.kiral.charityapp.domain.model.LeaderBoard
 import com.kiral.charityapp.domain.model.Project
 import com.kiral.charityapp.network.DataState
 import com.kiral.charityapp.network.dtos.AddBadgeDto
@@ -125,12 +125,15 @@ class CharityRepositoryImpl(
         }
     }
 
-    override fun getLeaderboard(userId: Int): Flow<DataState<List<LeaderBoardProfile>>> = flow {
+    override fun getLeaderboard(userId: Int): Flow<DataState<LeaderBoard>> = flow {
         try {
             emit(DataState.Loading)
             val response = networkService.getLeaderboard(userId)
             if (response.isSuccessful) {
-                emit(DataState.Success(leaderboardMapper.mapFromDomainModelList(response.body()!!.donors)))
+                val result = LeaderBoard(
+                    rank = response.body()!!.rank,
+                    donors = leaderboardMapper.mapFromDomainModelList(response.body()!!.donors))
+                emit(DataState.Success(result))
             } else {
                 emit(DataState.Error(assetProvider.networkError()))
             }
