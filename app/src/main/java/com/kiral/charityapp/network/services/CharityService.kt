@@ -1,5 +1,6 @@
 package com.kiral.charityapp.network.services
 
+import com.kiral.charityapp.network.dtos.AddBadgeDto
 import com.kiral.charityapp.network.dtos.CharityDto
 import com.kiral.charityapp.network.dtos.DonationDto
 import com.kiral.charityapp.network.dtos.ProjectDto
@@ -49,5 +50,10 @@ interface CharityService {
     suspend fun getLeaderboard(
         @Path("userId") userId: Int,
     ): Response<LeaderboardResponse>
+
+    @PUT("user/add_badge")
+    suspend fun addBadge(
+        @Body badgeBody: AddBadgeDto
+    ): Response<Int>
 
 }

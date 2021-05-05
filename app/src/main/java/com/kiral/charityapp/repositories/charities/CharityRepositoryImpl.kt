@@ -6,6 +6,7 @@ import com.kiral.charityapp.domain.model.Donor
 import com.kiral.charityapp.domain.model.LeaderBoardProfile
 import com.kiral.charityapp.domain.model.Project
 import com.kiral.charityapp.network.DataState
+import com.kiral.charityapp.network.dtos.AddBadgeDto
 import com.kiral.charityapp.network.dtos.DonationDto
 import com.kiral.charityapp.network.mappers.CharityListItemMapper
 import com.kiral.charityapp.network.mappers.CharityMapper
@@ -28,12 +29,16 @@ class CharityRepositoryImpl(
     private val networkService: CharityService,
     private val assetProvider: AssetProvider
 ) : CharityRepository {
-    override fun search(id: Int, page:Int, categories: List<Int>): Flow<DataState<List<CharityListItem>>> =
+    override fun search(
+        id: Int,
+        page: Int,
+        categories: List<Int>
+    ): Flow<DataState<List<CharityListItem>>> =
         flow {
             try {
                 emit(DataState.Loading)
                 val response = networkService.getCharities(page, id, categories)
-                if(response.isSuccessful){
+                if (response.isSuccessful) {
                     emit(DataState.Success(charityListMapper.mapToDomainModelList(response.body()!!.charities)))
                 } else {
                     emit(DataState.Error(assetProvider.networkError()))
@@ -47,7 +52,7 @@ class CharityRepositoryImpl(
         try {
             emit(DataState.Loading)
             val response = networkService.getCharity(id, donorId)
-            if(response.isSuccessful) {
+            if (response.isSuccessful) {
                 emit(DataState.Success(charityMapper.mapToDomainModel(response.body()!!)))
             } else {
                 emit(DataState.Error(assetProvider.networkError()))
@@ -62,7 +67,7 @@ class CharityRepositoryImpl(
             emit(DataState.Loading)
             delay(1000)
             val response = networkService.getCharityGoal(id, donorId)
-            if(response.isSuccessful) {
+            if (response.isSuccessful) {
                 emit(DataState.Success(charityGoalMapper.mapToDomainModel(response.body()!!)))
             } else {
                 emit(DataState.Error(assetProvider.networkError()))
@@ -89,11 +94,10 @@ class CharityRepositoryImpl(
                     sum = value
                 )
             )
-            if(result.isSuccessful){
+            if (result.isSuccessful) {
                 emit(DataState.Success(true))
-            }
-            else{
-             emit(DataState.Error(assetProvider.notEnoughCredit()))
+            } else {
+                emit(DataState.Error(assetProvider.notEnoughCredit()))
             }
         } catch (e: Throwable) {
             emit(DataState.Error(assetProvider.networkPaymentError()))
@@ -105,12 +109,13 @@ class CharityRepositoryImpl(
         userId: Int?,
         page: Int,
         projectId: Int
-    ): Flow<DataState<List<Donor>>> =  flow {
+    ): Flow<DataState<List<Donor>>> = flow {
         try {
             emit(DataState.Loading)
-            val response = if(projectId == -1) networkService.getCharityDonors(charityId, userId, page, null)
+            val response =
+                if (projectId == -1) networkService.getCharityDonors(charityId, userId, page, null)
                 else networkService.getCharityDonors(charityId, userId, page, projectId)
-            if(response.isSuccessful){
+            if (response.isSuccessful) {
                 emit(DataState.Success(donorsMapper.mapToDomainModelList(response.body()!!.donors)))
             } else {
                 emit(DataState.Error(assetProvider.networkError()))
@@ -124,8 +129,27 @@ class CharityRepositoryImpl(
         try {
             emit(DataState.Loading)
             val response = networkService.getLeaderboard(userId)
-            if(response.isSuccessful){
+            if (response.isSuccessful) {
                 emit(DataState.Success(leaderboardMapper.mapFromDomainModelList(response.body()!!.donors)))
+            } else {
+                emit(DataState.Error(assetProvider.networkError()))
+            }
+        } catch (e: Throwable) {
+            emit(DataState.Error(assetProvider.networkError()))
+        }
+    }
+
+    override fun addBadge(userId: Int, badgeId: Int): Flow<DataState<Int>> = flow {
+        try {
+            emit(DataState.Loading)
+            val response = networkService.addBadge(
+                AddBadgeDto(
+                    userId = userId,
+                    badgeId = badgeId
+                )
+            )
+            if (response.isSuccessful) {
+                emit(DataState.Success(response.code()))
             } else {
                 emit(DataState.Error(assetProvider.networkError()))
             }

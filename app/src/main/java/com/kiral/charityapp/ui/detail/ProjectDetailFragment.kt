@@ -114,12 +114,16 @@ fun ProjectDetailScreen(
                             donorId = donorId,
                             viewModel = viewModel,
                             sharePhotoButtonClick = {
+                                viewModel.addBadge(donorId)
                                 Utils.sharePhoto(
                                     ctx,
                                     p.charityImage
                                 )
                             },
-                            shareLinkButtonClick = { Utils.shareLink(ctx) },
+                            shareLinkButtonClick = {
+                                viewModel.addBadge(donorId)
+                                Utils.shareLink(ctx)
+                            },
                             navigateToDonors = {
                                 navigateToDonors(p.charityId)
                             }

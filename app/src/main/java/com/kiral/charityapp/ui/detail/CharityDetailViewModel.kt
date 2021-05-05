@@ -39,7 +39,7 @@ constructor(
     var showDonate by mutableStateOf(false)
     var showDonationSuccessDialog by mutableStateOf(false)
 
-    init{
+    init {
         restoreState()
     }
 
@@ -96,7 +96,7 @@ constructor(
                         charity = charity?.copy(
                             donorDonated = donorDonated + value,
                             raised = raised + value,
-                            peopleDonated = if(donorDonated == 0.0) peopleDonated + 1 else peopleDonated
+                            peopleDonated = if (donorDonated == 0.0) peopleDonated + 1 else peopleDonated
                         )
                     }
                     is DataState.Error -> {
@@ -108,16 +108,30 @@ constructor(
         }
     }
 
-    fun onExtraDonateButtonPressed(){
+    fun addBadge(userId: Int) {
+        charityRepository.addBadge(
+            userId = userId,
+            badgeId = 16
+        ).onEach { state ->
+            when (state) {
+                is DataState.Success -> {
+                }
+                else -> {
+                }
+            }
+        }.launchIn(viewModelScope)
+    }
+
+    fun onExtraDonateButtonPressed() {
         showDonate = !showDonate
         state.set(STATE_CHARITY_DONATION_KEY, showDonate)
     }
 
-    fun onDonateButtonPressed(donorId: Int, value: String){
+    fun onDonateButtonPressed(donorId: Int, value: String) {
         makeDonation(donorId, value.toDouble())
     }
 
-    fun setDonationSuccessDialog(value: Boolean){
+    fun setDonationSuccessDialog(value: Boolean) {
         showDonationSuccessDialog = value
     }
 

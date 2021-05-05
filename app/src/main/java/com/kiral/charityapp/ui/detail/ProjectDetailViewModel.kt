@@ -105,6 +105,20 @@ constructor(
         }
     }
 
+    fun addBadge(userId: Int) {
+        charityRepository.addBadge(
+            userId = userId,
+            badgeId = 16
+        ).onEach { state ->
+            when (state) {
+                is DataState.Success -> {
+                }
+                else -> {
+                }
+            }
+        }.launchIn(viewModelScope)
+    }
+
     fun onExtraDonateButtonPressed(){
         showDonate = !showDonate
         state.set(STATE_PROJECT_DONATION_KEY, showDonate)

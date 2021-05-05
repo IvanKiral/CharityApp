@@ -133,12 +133,16 @@ fun CharityDetailScreen(
                         navigateToDonors = navigateToDonors,
                         navigateToProject = navigateToProject,
                         sharePhotoButtonClick = {
+                            viewModel.addBadge(donorId)
                             Utils.sharePhoto(
                                 ctx,
                                 c.imgSrc
                             )
                         },
-                        shareLinkButtonClick = { Utils.shareLink(ctx) }
+                        shareLinkButtonClick = {
+                            viewModel.addBadge(donorId)
+                            Utils.shareLink(ctx)
+                        }
                     )
                 }
             }
