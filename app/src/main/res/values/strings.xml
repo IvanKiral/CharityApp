@@ -95,6 +95,8 @@
     <string name="SelectCharitiesTypesFragment_description">These categories will be used when donating by regular payments</string>
     <string name="Error_NotEnoughCredit">You do not have enough credit! Please add credit and try again.</string>
     <string name="CharitiesFragment_CategoriesDialogTitle">Filter categories</string>
+    <string name="Onboarding_birthdayHint">Your birthday</string>
+    <string name="EditPersonalInformation_ToastBirthday">Please set up your valid date.</string>
 
 
     <string-array name="Categories">

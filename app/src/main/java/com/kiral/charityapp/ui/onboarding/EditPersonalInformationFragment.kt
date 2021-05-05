@@ -1,9 +1,11 @@
 package com.kiral.charityapp.ui.onboarding
 
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.DatePicker
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -75,6 +77,7 @@ fun EditInfoScreen(
             .fillMaxSize()
             .padding(horizontal = 24.dp)
         ) {
+            val ctx = LocalContext.current
             Column(
                 modifier = Modifier
                     .align(Alignment.Center)
@@ -101,6 +104,19 @@ fun EditInfoScreen(
                     viewModel.countryDialog = true
                 }
 
+                BoxedText(
+                    text = viewModel.birthdayFieldText,
+                    modifier = Modifier.padding(vertical = 8.dp)
+                ) {
+                    val datePickerDialog = DatePickerDialog(
+                        ctx, { datePicker: DatePicker, year: Int, month: Int, day: Int ->
+                            viewModel.setBirthday(day, month, year)
+                        },
+                        viewModel.year, viewModel.month, viewModel.day
+                    )
+                    datePickerDialog.show()
+                }
+
                 CountryDialog(
                     countries = viewModel.countries,
                     isShown = viewModel.countryDialog,
@@ -116,12 +132,12 @@ fun EditInfoScreen(
                     .padding(bottom = 32.dp)
                     .height(56.dp),
                 onClick = {
-                    if (viewModel.isNameValid())
+                    if (viewModel.validateForm())
                         navigate()
                     else {
                         Toast.makeText(
                             context,
-                            context.getString(R.string.editPersonalInformation_toastText),
+                            viewModel.toastMessage,
                             Toast.LENGTH_SHORT
                         ).show()
                     }

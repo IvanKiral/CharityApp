@@ -1,6 +1,7 @@
 package com.kiral.charityapp.network.dtos
 
 import com.google.gson.annotations.SerializedName
+import java.util.*
 
 data class ProfileDto(
     @SerializedName("id")
@@ -21,6 +22,9 @@ data class ProfileDto(
     @SerializedName("categories")
     val categories: List<Int>,
 
+    @SerializedName("birthday")
+    val birthday: Date,
+
     @SerializedName("donations")
     val donations: Int,
 
@@ -33,6 +37,6 @@ data class ProfileDto(
     @SerializedName("regularDonationFrequency")
     val repeatFrequency: Int,
 
-    @SerializedName("badges")
+    @SerializedName("userBadges")
     val badges: List<Int>
 )

@@ -16,7 +16,7 @@ interface ProfileService {
     @POST("login")
     suspend fun login(@Body loginDto: LoginDto): Response<LoginResponse>
 
-    @PUT("register")
+    @PUT("users")
     suspend fun register(@Body loginDto: ProfileDto): Response<LoginResponse>
 
     @GET("users/{userId}")

@@ -9,6 +9,7 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.kiral.charityapp.R
 import com.kiral.charityapp.domain.enums.DonationFrequency
 import com.kiral.charityapp.domain.model.Profile
 import com.kiral.charityapp.network.DataState
@@ -22,6 +23,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 const val STATE_ONBOARDING_NAME_KEY = "onboarding_state_name"
@@ -59,6 +61,12 @@ constructor(
     var selectedCountry by mutableStateOf("")
         private set
 
+    val c = Calendar.getInstance()
+    var year = c.get(Calendar.YEAR)
+    var month = c.get(Calendar.MONTH)
+    var day = c.get(Calendar.DAY_OF_MONTH)
+    var birthdayFieldText by mutableStateOf(application.getString(R.string.Onboarding_birthdayHint))
+
     private var categoriesList = List ( CATEGORIES_NUMBER ) { true }
     var selected = categoriesList.toMutableStateList()
         private set
@@ -74,6 +82,8 @@ constructor(
     var countryDialog by mutableStateOf(false)
 
     var countries by mutableStateOf(mapOf<String, String>())
+
+    var toastMessage = ""
 
     init {
         viewModelScope.launch {
@@ -109,6 +119,7 @@ constructor(
             email = email,
             name = "",
             donations = 0,
+            birthday = Date(),
             categories = listOf(),
             region = "",
             credit = 0.0,
@@ -139,6 +150,7 @@ constructor(
         addPersonalInformation()
         addCategories()
         addRegularPayments(!skip)
+        addBirthday()
         profileRepository.register(profile).onEach { state ->
             when (state) {
                 is DataState.Loading -> {
@@ -157,8 +169,19 @@ constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun isNameValid(): Boolean{
-        return name.isNotBlank()
+    fun validateForm(): Boolean{
+        val cal = Calendar.getInstance()
+        cal.set(year, month, day)
+        val givenDate = cal.time
+        if(name.isBlank()){
+            toastMessage = application.getString(R.string.editPersonalInformation_toastText)
+            return false
+        }
+        if(givenDate.compareTo(c.time) >= 0){
+            toastMessage = application.getString(R.string.EditPersonalInformation_ToastBirthday)
+            return false
+        }
+        return true
     }
 
     fun setNameValue(value: String){
@@ -193,6 +216,19 @@ constructor(
     fun setDonationFrequency(value: Int){
         selectedInterval = value
         state.set(STATE_ONBOARDING_DONATION_VALUE_KEY, selectedInterval)
+    }
+
+    fun setBirthday(day: Int, month: Int, year: Int){
+        this.day = day
+        this.month = month
+        this.year = year
+        birthdayFieldText = "${day}.${month+1}.$year"
+    }
+
+    fun addBirthday(){
+        val calendar = Calendar.getInstance()
+        calendar.set(year, month, day)
+        profile.birthday = calendar.time
     }
 
     private suspend fun writeId(id: Int) {
