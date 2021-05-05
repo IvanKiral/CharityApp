@@ -104,7 +104,10 @@ fun CharitiesScreen(
                     viewModel,
                     navigateToDetail = navigateToDetail
                 )
-                TabsNames.Ranking -> RankingScreen(viewModel)
+                TabsNames.Ranking -> {
+                    viewModel.getLeaderboard()
+                    RankingScreen(viewModel)
+                }
             }
         }
     }
@@ -144,7 +147,7 @@ fun CharityScreen(
         CategoriesDialog(
             title = stringResource(R.string.CharitiesFragment_CategoriesDialogTitle),
             shown = viewModel.showFilter,
-            onDismiss = {viewModel.onCategoriesDialogDismiss()},
+            onDismiss = { viewModel.onCategoriesDialogDismiss() },
             onItemClick = { index -> viewModel.setCategories(index) },
             categoriesSelected = viewModel.selectedCategories,
             onConfirmButton = { viewModel.onFilterChange() }
