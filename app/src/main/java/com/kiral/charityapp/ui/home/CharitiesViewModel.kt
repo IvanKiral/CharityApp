@@ -13,6 +13,7 @@ import com.kiral.charityapp.domain.model.CharityListItem
 import com.kiral.charityapp.domain.model.LeaderBoardProfile
 import com.kiral.charityapp.network.DataState
 import com.kiral.charityapp.repositories.charities.CharityRepository
+import com.kiral.charityapp.repositories.profile.ProfileRepository
 import com.kiral.charityapp.ui.dataStore
 import com.kiral.charityapp.ui.onboarding.STATE_ONBOARDING_CATEGORIES_KEY
 import com.kiral.charityapp.utils.Constants
@@ -38,6 +39,7 @@ class CharitiesViewModel
 @Inject
 constructor(
     private val charityRepository: CharityRepository,
+    private val profileRepository: ProfileRepository,
     private val state: SavedStateHandle,
     val app: Application
 ) : AndroidViewModel(app) {
@@ -81,6 +83,7 @@ constructor(
         private set
     var leaderboard by mutableStateOf<List<LeaderBoardProfile>>(ArrayList())
         private set
+    var showRankUpDialog by mutableStateOf(false)
 
     var leaderboardError by mutableStateOf<String?>(null)
         private set
@@ -126,9 +129,22 @@ constructor(
                 } else {
                     restoreState()
                 }
+                login()
                 getLeaderboard()
             }
         }.launchIn(viewModelScope)
+    }
+
+    private fun login() {
+        profileRepository
+            .getRankUp(userId)
+            .onEach { state -> when(state){
+                is DataState.Success -> {
+                    showRankUpDialog = state.data
+                }
+                else -> {}
+            } }
+            .launchIn(viewModelScope)
     }
 
 

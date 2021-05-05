@@ -37,4 +37,8 @@ interface ProfileRepository{
         id: Int,
         credit: Double,
     ): Flow<DataState<Boolean>>
+
+    fun getRankUp(
+        userId: Int
+    ): Flow<DataState<Boolean>>
 }

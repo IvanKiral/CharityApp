@@ -173,4 +173,18 @@ class ProfileRepositoryImpl(
             emit(DataState.Error(assetProvider.networkError()))
         }
     }
+
+    override fun getRankUp(userId: Int): Flow<DataState<Boolean>> = flow {
+        try {
+            emit(DataState.Loading)
+            val response = profileService.getRankUp(userId = userId)
+            if (response.isSuccessful) {
+                emit(DataState.Success(response.body()!!.rankUp))
+            } else {
+                emit(DataState.Error(assetProvider.networkError()))
+            }
+        } catch (e: IOException) {
+            emit(DataState.Error(assetProvider.networkError()))
+        }
+    }
 }

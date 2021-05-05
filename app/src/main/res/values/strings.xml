@@ -97,6 +97,8 @@
     <string name="CharitiesFragment_CategoriesDialogTitle">Filter categories</string>
     <string name="Onboarding_birthdayHint">Your birthday</string>
     <string name="EditPersonalInformation_ToastBirthday">Please set up your valid date.</string>
+    <string name="RankUpDialog_Title">Congratulation! You have made it to the next level!</string>
+    <string name="RankUpDialog_description">Do you want to share about your rank up?</string>
 
 
     <string-array name="Categories">

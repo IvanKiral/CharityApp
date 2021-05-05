@@ -21,6 +21,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -32,8 +33,10 @@ import com.kiral.charityapp.ui.components.BaseScreen
 import com.kiral.charityapp.ui.components.LeaderBoardItem
 import com.kiral.charityapp.ui.home.components.CharityAppBar
 import com.kiral.charityapp.ui.home.components.CharityGrid
+import com.kiral.charityapp.ui.home.components.RankUpDialog
 import com.kiral.charityapp.ui.profile.components.CategoriesDialog
 import com.kiral.charityapp.ui.theme.CharityTheme
+import com.kiral.charityapp.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -119,6 +122,7 @@ fun CharityScreen(
     viewModel: CharitiesViewModel,
     navigateToDetail: (Int) -> Unit,
 ) {
+    val ctx = LocalContext.current
     BaseScreen(
         loading = viewModel.charitiesLoading,
         error = viewModel.charitiesError,
@@ -151,6 +155,12 @@ fun CharityScreen(
             onItemClick = { index -> viewModel.setCategories(index) },
             categoriesSelected = viewModel.selectedCategories,
             onConfirmButton = { viewModel.onFilterChange() }
+        )
+
+        RankUpDialog(
+            shown = viewModel.showRankUpDialog,
+            setShowDialog = { value -> viewModel.showRankUpDialog = value },
+            shareLinkButtonClick = { Utils.shareLink(ctx) }
         )
     }
 }
