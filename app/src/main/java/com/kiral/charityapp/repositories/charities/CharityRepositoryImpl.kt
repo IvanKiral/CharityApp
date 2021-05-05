@@ -113,8 +113,8 @@ class CharityRepositoryImpl(
         try {
             emit(DataState.Loading)
             val response =
-                if (projectId == -1) networkService.getCharityDonors(charityId, userId, page, null)
-                else networkService.getCharityDonors(charityId, userId, page, projectId)
+                if (projectId == -1) networkService.getCharityDonors(charityId, userId, page)
+                else networkService.getProjectDonors(projectId, userId, page)
             if (response.isSuccessful) {
                 emit(DataState.Success(donorsMapper.mapToDomainModelList(response.body()!!.donors)))
             } else {

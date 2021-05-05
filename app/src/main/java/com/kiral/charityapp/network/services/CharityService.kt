@@ -40,7 +40,13 @@ interface CharityService {
         @Path("charityId") charityId: Int,
         @Query("userId") userId: Int?,
         @Query("page") page: Int,
-        @Query("projectId") projectId: Int?
+    ): Response<DonorsResponse>
+
+    @GET("projects/{projectId}/donors")
+    suspend fun getProjectDonors(
+        @Path("projectId") projectId: Int,
+        @Query("userId") userId: Int?,
+        @Query("page") page: Int,
     ): Response<DonorsResponse>
 
     @PUT("donate")
