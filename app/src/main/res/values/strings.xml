@@ -99,6 +99,7 @@
     <string name="EditPersonalInformation_ToastBirthday">Please set up your valid date.</string>
     <string name="RankUpDialog_Title">Congratulation! You have made it to the next level!</string>
     <string name="RankUpDialog_description">Do you want to share about your rank up?</string>
+    <string name="WelcomeScreen_LogoDescription">cherrities logo</string>
 
 
     <string-array name="Categories">
