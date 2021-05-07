@@ -31,7 +31,7 @@ fun createNotification(
 ){
     val channelId = "${context.packageName}-${context.getString(R.string.app_name)}"
     val notificationBuilder = NotificationCompat.Builder(context, channelId).apply {
-        setSmallIcon(R.drawable.ic_selected)
+        setSmallIcon(R.drawable.ic_logo)
         setContentTitle(title)
         setContentText(text)
         priority = NotificationCompat.PRIORITY_DEFAULT
@@ -44,4 +44,43 @@ fun createNotification(
     }
     val notificationManager = NotificationManagerCompat.from(context)
     notificationManager.notify(notificationId, notificationBuilder.build())
+}
+
+fun InvokeSummaryNotification(
+    context: Context,
+    notificationId: Int,
+    value: Double
+){
+    createNotification(
+        context = context,
+        notificationId = notificationId,
+        title = context.getString(R.string.Notification_SummaryTitle),
+        text = context.getString(R.string.Notification_SummaryText, value)
+    )
+}
+
+fun InvokeNoCreditNotification(
+    context: Context,
+    notificationId: Int,
+){
+    createNotification(
+        context = context,
+        notificationId = notificationId,
+        title = context.getString(R.string.Notification_NoCreditTitle),
+        text = context.getString(R.string.Notification_NoCreditText)
+    )
+}
+
+fun InvokeRegularDonationNotification(
+    context: Context,
+    notificationId: Int,
+    value: Double,
+    charityName: String
+){
+    createNotification(
+        context = context,
+        notificationId = notificationId,
+        title = context.getString(R.string.Notification_RegularDonationTitle),
+        text = context.getString(R.string.Notification_RegularDonationText, value, charityName)
+    )
 }

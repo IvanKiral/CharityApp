@@ -100,6 +100,12 @@
     <string name="RankUpDialog_Title">Congratulation! You have made it to the next level!</string>
     <string name="RankUpDialog_description">Do you want to share about your rank up?</string>
     <string name="WelcomeScreen_LogoDescription">cherrities logo</string>
+    <string name="Notification_SummaryTitle">Weekly donations summary available</string>
+    <string name="Notification_SummaryText">You donated %1.2f€ this week. Check the full summary in the app. Thank you for your contribution</string>
+    <string name="Notification_NoCreditTitle">No credit left</string>
+    <string name="Notification_NoCreditText">Add more credit to your account, if you want to donate to your favourite charities</string>
+    <string name="Notification_RegularDonationTitle">Auto-Donation submitted</string>
+    <string name="Notification_RegularDonationText">You just donated %1.2f€ to %2s using the auto-donation. Thank you for your contribution!</string>
 
 
     <string-array name="Categories">
