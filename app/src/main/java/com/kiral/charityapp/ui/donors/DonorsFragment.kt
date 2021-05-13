@@ -36,8 +36,8 @@ import com.kiral.charityapp.ui.components.ErrorScreen
 import com.kiral.charityapp.ui.donors.components.ProfileCard
 import com.kiral.charityapp.ui.theme.CharityTheme
 import com.kiral.charityapp.utils.Constants.DONORS_PAGE_SIZE
-import com.kiral.charityapp.utils.Convert
 import com.kiral.charityapp.utils.Utils.loadPicture
+import com.kiral.charityapp.utils.convert
 import com.kiral.charityapp.utils.makeGravatarLink
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -164,7 +164,7 @@ fun DonorsScreen(
                     },
                     name = donor.name,
                     badges = donor.badges,
-                    donated = donor.donated.Convert(),
+                    donated = donor.donated.convert(),
                     modifier = Modifier.padding(
                         start = 16.dp,
                         end = 16.dp,

@@ -46,7 +46,7 @@ fun createNotification(
     notificationManager.notify(notificationId, notificationBuilder.build())
 }
 
-fun InvokeSummaryNotification(
+fun invokeSummaryNotification(
     context: Context,
     notificationId: Int,
     value: Double
@@ -59,7 +59,7 @@ fun InvokeSummaryNotification(
     )
 }
 
-fun InvokeNoCreditNotification(
+fun invokeNoCreditNotification(
     context: Context,
     notificationId: Int,
 ){
@@ -71,7 +71,7 @@ fun InvokeNoCreditNotification(
     )
 }
 
-fun InvokeRegularDonationNotification(
+fun invokeRegularDonationNotification(
     context: Context,
     notificationId: Int,
     value: Double,

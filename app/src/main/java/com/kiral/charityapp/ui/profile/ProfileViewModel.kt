@@ -214,7 +214,7 @@ constructor(
 
     fun addCredit(value: String){
         profile?.let { p ->
-            val profile_credit = p.credit
+            val profileCredit = p.credit
             profileRepository.addCredit(
                 p.id, value.toDouble()
             ).onEach { state ->
@@ -225,7 +225,7 @@ constructor(
                     is DataState.Success -> {
                         creditLoading = false
                         profile = profile?.copy(
-                            credit = profile_credit + value.toDouble()
+                            credit = profileCredit + value.toDouble()
                         )
                     }
                     else -> { }

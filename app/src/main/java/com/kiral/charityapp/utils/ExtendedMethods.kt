@@ -65,7 +65,7 @@ fun Bitmap.toGrayscale(): Bitmap {
     return bmpGrayscale
 }
 
-fun Double.Convert(): String{
+fun Double.convert(): String{
     val format = DecimalFormat("#,###.##")
     val formatSymbols = DecimalFormatSymbols()
     formatSymbols.decimalSeparator = '.'
@@ -84,10 +84,10 @@ fun String.makeGravatarLink(): String{
 
 fun String.md5(): String {
     val md = MessageDigest.getInstance("MD5")
-    return HexBinary(md.digest(toByteArray()))
+    return hexBinary(md.digest(toByteArray()))
 }
 
-fun HexBinary(data: ByteArray): String {
+fun hexBinary(data: ByteArray): String {
     val r = StringBuilder(data.size * 2)
     data.forEach { b ->
         val i = b.toInt()

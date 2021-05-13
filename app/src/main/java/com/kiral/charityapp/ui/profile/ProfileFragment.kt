@@ -48,8 +48,8 @@ import com.kiral.charityapp.ui.profile.components.ProfilePicture
 import com.kiral.charityapp.ui.theme.CharityTheme
 import com.kiral.charityapp.ui.theme.DividerColor
 import com.kiral.charityapp.utils.Auth
-import com.kiral.charityapp.utils.Convert
 import com.kiral.charityapp.utils.Utils.loadPicture
+import com.kiral.charityapp.utils.convert
 import com.kiral.charityapp.utils.makeGravatarLink
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -204,7 +204,7 @@ fun ProfileScreenBody(
                     }
             )
             Boxes(
-                credit = "${profile.credit.Convert()} €",
+                credit = "${profile.credit.convert()} €",
                 donations = profile.donations.toString(),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -271,7 +271,7 @@ fun ProfileScreenBody(
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     SingleChoicePicker(
-                        items = viewModel.moneyValues.map { v -> v.Convert() + " €" },
+                        items = viewModel.moneyValues.map { v -> v.convert() + " €" },
                         selectedItem = viewModel.selectedMoney,
                         setSelectedItem = { value -> viewModel.selectedMoney = value },
                         textAlignment = Alignment.End

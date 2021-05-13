@@ -28,7 +28,7 @@ constructor(
     var shouldNavigateToHomeFragment by mutableStateOf(false)
     var shouldNavigateToEditPersonalInformationFragment by mutableStateOf(false)
 
-    var donor_id: Int? = null
+    var donorId: Int? = null
 
     var loading by mutableStateOf(false)
     var error by mutableStateOf<String?>(null)
@@ -46,7 +46,7 @@ constructor(
                 }
                 is DataState.Success -> {
                     writeId(state.data)
-                    donor_id = state.data
+                    donorId = state.data
                     shouldNavigateToHomeFragment = true
                 }
                 is DataState.HttpsErrorCode -> {

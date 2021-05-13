@@ -33,7 +33,7 @@ import androidx.navigation.fragment.findNavController
 import com.kiral.charityapp.R
 import com.kiral.charityapp.ui.components.SingleChoicePicker
 import com.kiral.charityapp.ui.theme.CharityTheme
-import com.kiral.charityapp.utils.Convert
+import com.kiral.charityapp.utils.convert
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -100,7 +100,7 @@ fun SetupPaymentsScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     SingleChoicePicker(
-                        items = viewModel.amountItems.map { i -> "${i.Convert()} €" },
+                        items = viewModel.amountItems.map { i -> "${i.convert()} €" },
                         selectedItem = viewModel.selectedAmount,
                         setSelectedItem = { value -> viewModel.setDonationValue(value)},
                         modifier = Modifier

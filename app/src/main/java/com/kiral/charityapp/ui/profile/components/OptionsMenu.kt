@@ -23,7 +23,7 @@ import com.kiral.charityapp.ui.theme.CherryRed
 import com.kiral.charityapp.ui.theme.DividerColor
 import com.kiral.charityapp.ui.theme.TextOptionSubtitle
 import com.kiral.charityapp.ui.theme.TextOptionTitle
-import com.kiral.charityapp.utils.Convert
+import com.kiral.charityapp.utils.convert
 import java.util.*
 
 @Composable
@@ -47,7 +47,7 @@ fun OptionsMenu(
 
         Option(
             title = stringResource(R.string.profile_regularDonations),
-            description = "${regularDonationValue.Convert()} €/${DonationFrequency.values()[regularDonationFrequency]}",
+            description = "${regularDonationValue.convert()} €/${DonationFrequency.values()[regularDonationFrequency]}",
             hasSwitch = true,
             isSwitched = isSwitched,
             switchFunction = switchFunction,

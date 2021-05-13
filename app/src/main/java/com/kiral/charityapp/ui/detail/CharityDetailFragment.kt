@@ -49,8 +49,8 @@ import com.kiral.charityapp.ui.theme.CharityTheme
 import com.kiral.charityapp.ui.theme.InformationBoxRed
 import com.kiral.charityapp.ui.theme.InformationBoxRedBorder
 import com.kiral.charityapp.ui.utils.buildInformationText
-import com.kiral.charityapp.utils.Convert
 import com.kiral.charityapp.utils.Utils
+import com.kiral.charityapp.utils.convert
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -217,7 +217,7 @@ fun CharityDetailBody(
             )
 
             DonationRow(
-                price = "${charity.raised.Convert()}€",
+                price = "${charity.raised.convert()}€",
                 modifier = Modifier.padding(top = 16.dp),
                 onButtonClick = {
                     viewModel.onExtraDonateButtonPressed()
