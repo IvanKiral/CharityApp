@@ -54,17 +54,20 @@ fun DonationField(
                         value = value,
                         enabled = !loading,
                         onValueChange = { str ->
-                            setValue(str)
-                            if (str.checkCurrencyFormat())
-                                setError(false)
-                            else
-                                setError(true)
+                            if(str.length < 7) {
+                                setValue(str)
+                                if (str.checkCurrencyFormat())
+                                    setError(false)
+                                else
+                                    setError(true)
+                            }
                         },
                         colors = TextFieldDefaults.outlinedTextFieldColors(
                             focusedBorderColor = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.disabled),
                             focusedLabelColor = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.disabled)
                         ),
                         isError = error,
+                        singleLine = true,
                         textStyle = MaterialTheme.typography.body2,
                         modifier = Modifier.fillMaxWidth(0.6f),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
