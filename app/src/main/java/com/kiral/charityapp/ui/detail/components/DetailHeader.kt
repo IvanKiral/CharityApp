@@ -17,7 +17,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.kiral.charityapp.R
-import com.kiral.charityapp.ui.components.DonationBox
 import com.kiral.charityapp.utils.Utils
 import com.kiral.charityapp.utils.convert
 
@@ -27,7 +26,7 @@ fun DetailHeader(
     donorDonated: Double,
     onBackPressed: () -> Unit
 ) {
-    Box() {
+    Box {
         imgSrc.let { src ->
             val image = Utils.loadPicture(url = src, defaultImage = R.drawable.ic_loading_photo)
             image.value?.let { img ->

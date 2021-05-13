@@ -33,11 +33,11 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.kiral.charityapp.R
 import com.kiral.charityapp.ui.components.BaseScreen
-import com.kiral.charityapp.ui.components.LeaderBoardItem
+import com.kiral.charityapp.ui.components.CategoriesDialog
 import com.kiral.charityapp.ui.home.components.CharityAppBar
 import com.kiral.charityapp.ui.home.components.CharityGrid
+import com.kiral.charityapp.ui.home.components.LeaderBoardItem
 import com.kiral.charityapp.ui.home.components.RankUpDialog
-import com.kiral.charityapp.ui.profile.components.CategoriesDialog
 import com.kiral.charityapp.ui.theme.CharityTheme
 import com.kiral.charityapp.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint

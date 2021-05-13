@@ -154,10 +154,10 @@ object Utils {
 
     @Suppress("DEPRECATION")
     fun getCurrentLocale(context: Context): Locale {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            return context.getResources().getConfiguration().getLocales().get(0)
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            context.getResources().getConfiguration().getLocales().get(0)
         } else {
-            return context.getResources().getConfiguration().locale
+            context.getResources().getConfiguration().locale
         }
     }
 }

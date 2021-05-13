@@ -61,7 +61,7 @@ constructor(
     var selectedCountry by mutableStateOf("")
         private set
 
-    val c = Calendar.getInstance()
+    val c: Calendar = Calendar.getInstance()
     var year = c.get(Calendar.YEAR)
     var month = c.get(Calendar.MONTH)
     var day = c.get(Calendar.DAY_OF_MONTH)
@@ -130,7 +130,7 @@ constructor(
         )
     }
 
-    fun addPersonalInformation(){
+    private fun addPersonalInformation(){
         profile.name = name
         profile.region = selectedCountry
     }
@@ -140,7 +140,7 @@ constructor(
             .mapIndexedNotNull { index, v -> if (v) index + 1 else null }
     }
 
-    fun addRegularPayments(active: Boolean) {
+    private fun addRegularPayments(active: Boolean) {
         profile.regularDonationActive = active
         profile.regularDonationFrequency = selectedInterval
         profile.regularDonationValue = amountItems[selectedAmount]
@@ -177,7 +177,7 @@ constructor(
             toastMessage = application.getString(R.string.editPersonalInformation_toastText)
             return false
         }
-        if(givenDate.compareTo(c.time) >= 0){
+        if(givenDate >= c.time){
             toastMessage = application.getString(R.string.EditPersonalInformation_ToastBirthday)
             return false
         }
@@ -225,7 +225,7 @@ constructor(
         birthdayFieldText = "${day}.${month+1}.$year"
     }
 
-    fun addBirthday(){
+    private fun addBirthday(){
         val calendar = Calendar.getInstance()
         calendar.set(year, month, day)
         profile.birthday = calendar.time

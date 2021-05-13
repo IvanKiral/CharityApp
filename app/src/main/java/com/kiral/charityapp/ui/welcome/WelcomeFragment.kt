@@ -121,7 +121,7 @@ fun WelcomeScreen(
                 .align(Alignment.Center)
                 .fillMaxSize()
                 .padding(24.dp)
-                .offset(y = -25.dp),
+                .offset(y = (-25).dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

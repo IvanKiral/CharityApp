@@ -37,11 +37,11 @@ import com.kiral.charityapp.R
 import com.kiral.charityapp.domain.model.Charity
 import com.kiral.charityapp.ui.components.BaseScreen
 import com.kiral.charityapp.ui.components.DonationField
-import com.kiral.charityapp.ui.components.DonationRow
 import com.kiral.charityapp.ui.components.ExpandableText
 import com.kiral.charityapp.ui.components.InformationBox
 import com.kiral.charityapp.ui.detail.components.DetailScreen
 import com.kiral.charityapp.ui.detail.components.DonationFailedAlertDialog
+import com.kiral.charityapp.ui.detail.components.DonationRow
 import com.kiral.charityapp.ui.detail.components.DonationSuccessAlertDialog
 import com.kiral.charityapp.ui.detail.components.ProjectsList
 import com.kiral.charityapp.ui.theme.BottomSheetShape

@@ -34,6 +34,7 @@ import com.kiral.charityapp.R
 import com.kiral.charityapp.domain.model.Profile
 import com.kiral.charityapp.ui.components.AlertDialogWithChoice
 import com.kiral.charityapp.ui.components.BaseScreen
+import com.kiral.charityapp.ui.components.CategoriesDialog
 import com.kiral.charityapp.ui.components.ClickableIcon
 import com.kiral.charityapp.ui.components.CountryDialog
 import com.kiral.charityapp.ui.components.DonationField
@@ -42,7 +43,6 @@ import com.kiral.charityapp.ui.dataStore
 import com.kiral.charityapp.ui.home.CharitiesViewModel
 import com.kiral.charityapp.ui.profile.components.Badges
 import com.kiral.charityapp.ui.profile.components.Boxes
-import com.kiral.charityapp.ui.profile.components.CategoriesDialog
 import com.kiral.charityapp.ui.profile.components.OptionsMenu
 import com.kiral.charityapp.ui.profile.components.ProfilePicture
 import com.kiral.charityapp.ui.theme.CharityTheme
