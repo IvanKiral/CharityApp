@@ -11,6 +11,7 @@ import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.FileProvider
 import com.bumptech.glide.Glide
@@ -32,7 +33,7 @@ object Utils {
         url: String,
         @DrawableRes defaultImage: Int
     ): MutableState<Bitmap?> {
-        val state: MutableState<Bitmap?> = mutableStateOf(null)
+        val state: MutableState<Bitmap?> = remember { mutableStateOf(null) }
         // show some image when loading is long
         Glide.with(LocalContext.current)
             .asBitmap()
@@ -62,7 +63,7 @@ object Utils {
     fun loadPicture(
         @DrawableRes drawable: Int
     ): MutableState<Bitmap?> {
-        val state: MutableState<Bitmap?> = mutableStateOf(null)
+        val state: MutableState<Bitmap?> = remember { mutableStateOf(null) }
         Glide.with(LocalContext.current)
             .asBitmap()
             .load(drawable)
