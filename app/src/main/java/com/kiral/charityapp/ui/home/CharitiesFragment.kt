@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -19,6 +21,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
@@ -130,32 +133,42 @@ fun CharityScreen(
             viewModel.getCharities(1)
         }
     ) {
-        val scope = rememberCoroutineScope()
-        val state = rememberLazyListState()
-        CharityGrid(
-            lst = viewModel.charities,
-            state = state,
-            modifier = Modifier
-                .padding(top = 20.dp),
-            viewModel = viewModel
-        ) { itemId ->
-            navigateToDetail(itemId)
-        }
-        viewModel.savedPosition?.let { (position, offset) ->
-            scope.launch {
-                state.scrollToItem(position, offset)
+        if(viewModel.charities.isNotEmpty()) {
+            val scope = rememberCoroutineScope()
+            val state = rememberLazyListState()
+            CharityGrid(
+                lst = viewModel.charities,
+                state = state,
+                modifier = Modifier
+                    .padding(top = 20.dp),
+                viewModel = viewModel
+            ) { itemId ->
+                navigateToDetail(itemId)
             }
-            viewModel.savedPosition = null
-        }
+            viewModel.savedPosition?.let { (position, offset) ->
+                scope.launch {
+                    state.scrollToItem(position, offset)
+                }
+                viewModel.savedPosition = null
+            }
 
-        CategoriesDialog(
-            title = stringResource(R.string.CharitiesFragment_CategoriesDialogTitle),
-            shown = viewModel.showFilter,
-            onDismiss = { viewModel.onCategoriesDialogDismiss() },
-            onItemClick = { index -> viewModel.setCategories(index) },
-            categoriesSelected = viewModel.selectedCategories,
-            onConfirmButton = { viewModel.onFilterChange() }
-        )
+            CategoriesDialog(
+                title = stringResource(R.string.CharitiesFragment_CategoriesDialogTitle),
+                shown = viewModel.showFilter,
+                onDismiss = { viewModel.onCategoriesDialogDismiss() },
+                onItemClick = { index -> viewModel.setCategories(index) },
+                categoriesSelected = viewModel.selectedCategories,
+                onConfirmButton = { viewModel.onFilterChange() }
+            )
+        }
+        else{
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.fillMaxSize()
+            ){
+                Text(text = stringResource(R.string.CharitiesFragment_NoCharities))
+            }
+        }
 
         RankUpDialog(
             shown = viewModel.showRankUpDialog,
