@@ -7,6 +7,6 @@ data class LeaderboardResponse(
     @SerializedName("rank")
     val rank: Int,
 
-    @SerializedName("donors")
+    @SerializedName("users")
     val donors: List<LeaderboardDto>
 )

@@ -220,7 +220,7 @@ constructor(
             when (state) {
                 is DataState.Success -> {
                     leaderboardLoading = false
-                    leaderboard = state.data.donors
+                    leaderboard = state.data.donors.sortedBy { donor -> -donor.donated }
                     donorRank = state.data.rank
                 }
                 is DataState.Loading -> {

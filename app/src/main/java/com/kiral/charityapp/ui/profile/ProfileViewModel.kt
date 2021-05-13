@@ -87,6 +87,7 @@ constructor(
                 is DataState.Success -> {
                     loading = false
                     profile = state.data
+                    profile?.id = id
                     profile?.categories?.forEach{v -> selectedCategories[v - 1] = true }
                     makeCategoryString()
                     profile?.let { p ->

@@ -10,6 +10,7 @@ import com.kiral.charityapp.network.responses.LeaderboardResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -49,8 +50,8 @@ interface CharityService {
         @Query("page") page: Int,
     ): Response<DonorsResponse>
 
-    @PUT("donate")
-    suspend fun donate(@Body donation: DonationDto): Response<DonorsResponse>
+    @POST("donate")
+    suspend fun donate(@Body donation: DonationDto): Response<Unit>
 
     @GET("leaderboard/{userId}")
     suspend fun getLeaderboard(

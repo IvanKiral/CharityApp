@@ -7,7 +7,7 @@ data class CharityProject(
 
 data class Charity(
     val imgSrc: String,
-    val id: Int,
+    var id: Int,
     val name: String,
     val address: String,
     val description: String,

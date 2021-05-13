@@ -65,6 +65,7 @@ constructor(
                 }
                 is DataState.Success -> {
                     charity = state.data
+                    charity?.id = id
                     loading = false
                 }
                 is DataState.Error -> {

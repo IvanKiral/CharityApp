@@ -1,8 +1,8 @@
 package com.kiral.charityapp.repositories.profile
 
-import android.util.Log
 import com.kiral.charityapp.domain.model.Profile
 import com.kiral.charityapp.network.DataState
+import com.kiral.charityapp.network.dtos.AddCreditDto
 import com.kiral.charityapp.network.dtos.LoginDto
 import com.kiral.charityapp.network.dtos.ProfilePostDto
 import com.kiral.charityapp.network.mappers.ProfileMapper
@@ -34,7 +34,6 @@ class ProfileRepositoryImpl(
                 }
             }
         } catch (e: IOException) {
-            Log.i("AppDebug", "ERROR ${e.localizedMessage}  ${e.message}")
             emit(DataState.Error(assetProvider.networkError()))
         }
     }
@@ -158,8 +157,8 @@ class ProfileRepositoryImpl(
     override fun addCredit(id: Int, credit: Double): Flow<DataState<Boolean>> = flow {
         try {
             emit(DataState.Loading)
-            val response = profileService.updateProfile(
-                ProfilePostDto(
+            val response = profileService.addCredit(
+                AddCreditDto(
                     userId = id,
                     credit = credit,
                 )
