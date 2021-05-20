@@ -18,21 +18,28 @@ fun buildInformationText(
     donorDonated: Double,
     postfix: String
 ): AnnotatedString {
+    var tmpPeopleDonated  = peopleDonated
+    if(donorDonated > 0.0){
+        tmpPeopleDonated--
+    }
+
     val has = stringResource(id = R.string.detail_peopleDonated_has)
     val have = stringResource(id = R.string.detail_peopleDonated_have)
     val peopleDonatedZero = stringResource(id = R.string.detail_peopleDonated_prefix_zero)
     val peopleDonatedPrefix = LocalContext.current.resources
         .getQuantityString (
             R.plurals.detail_peopleDonated_prefix,
-            peopleDonated,
-            peopleDonated
+            tmpPeopleDonated,
+            tmpPeopleDonated
         )
     val peopleDonatedAnd = stringResource(id = R.string.detail_peopleDonated_and)
     val peopleDonatedYou = stringResource(id = R.string.detail_peopleDonated_you)
 
+
+
     return buildAnnotatedString {
         when {
-            peopleDonated > 0 -> {
+            tmpPeopleDonated > 0 -> {
                 append("$peopleDonatedPrefix ")
                 if (donorDonated > 0) {
                     append("$peopleDonatedAnd ")
@@ -41,7 +48,7 @@ fun buildInformationText(
                     }
                     append("$have ")
                 } else {
-                    if(peopleDonated == 1)
+                    if(tmpPeopleDonated == 1)
                         append("$has ")
                     else
                         append("$have ")
