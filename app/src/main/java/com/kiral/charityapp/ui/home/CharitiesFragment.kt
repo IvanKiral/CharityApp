@@ -191,7 +191,7 @@ fun RankingScreen(
     ) {
         Column {
             Text(
-                text = "Rank: ${viewModel.donorRank}",
+                text = stringResource(R.string.CharitiesScreen_rank, viewModel.donorRank.toString()),
                 style = MaterialTheme.typography.h5,
                 modifier = Modifier
                     .fillMaxWidth()

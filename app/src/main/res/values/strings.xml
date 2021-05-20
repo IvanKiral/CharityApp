@@ -107,6 +107,7 @@
     <string name="Notification_RegularDonationTitle">Auto-Donation submitted</string>
     <string name="Notification_RegularDonationText">You just donated %1.2f€ to %2s using the auto-donation. Thank you for your contribution!</string>
     <string name="CharitiesFragment_NoCharities">No charities to view</string>
+    <string name="CharitiesScreen_rank">Level: %1s</string>
 
 
     <string-array name="Categories">
