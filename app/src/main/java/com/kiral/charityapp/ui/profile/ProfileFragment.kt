@@ -81,10 +81,10 @@ class ProfileFragment : Fragment() {
                         findNavController()
                             .navigate(R.id.action_profileFragment_to_creditFragment)
                     },
-                    navigateToBadges = { profileBadges ->
+                    navigateToBadges = {
                         val action =
                             ProfileFragmentDirections.actionProfileFragmentToBadgesFragment(
-                                profileBadges
+                                viewModel.profile!!.badges.toIntArray()
                             )
                         findNavController().navigate(action)
                     },
@@ -109,7 +109,7 @@ fun ProfileScreen(
     viewModel: ProfileViewModel,
     donorId: Int,
     charitiesViewModel: CharitiesViewModel,
-    navigateToBadges: (IntArray) -> Unit,
+    navigateToBadges: () -> Unit,
     navigateToCredits: () -> Unit,
     logout: () -> Unit,
     onBackPressed: () -> Unit
@@ -142,7 +142,7 @@ fun ProfileScreenBody(
     profile: Profile,
     viewModel: ProfileViewModel,
     charitiesViewModel: CharitiesViewModel,
-    navigateToBadges: (IntArray) -> Unit,
+    navigateToBadges: () -> Unit,
     navigateToCredits: () -> Unit,
     logout: () -> Unit,
     onBackPressed: () -> Unit
@@ -196,7 +196,9 @@ fun ProfileScreenBody(
             )
             Badges(
                 badges = viewModel.badges,
-                navigateToBadges = { navigateToBadges(profile.badges.toIntArray()) },
+                navigateToBadges = {
+                       navigateToBadges()
+                                   },
                 modifier = Modifier
                     .fillMaxWidth()
                     .constrainAs(badges) {

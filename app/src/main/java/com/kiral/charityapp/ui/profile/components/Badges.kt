@@ -56,7 +56,9 @@ fun Badges(
             text = AnnotatedString(stringResource(R.string.profile_showBadges)),
             style = MaterialTheme.typography.body1.copy(color = TextShowBadges),
             modifier = Modifier.padding(top = 24.dp),
-            onClick = { navigateToBadges() }
+            onClick = {
+                navigateToBadges()
+            }
         )
     }
 }
