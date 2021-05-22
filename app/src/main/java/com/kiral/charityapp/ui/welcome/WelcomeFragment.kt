@@ -91,7 +91,7 @@ class WelcomeFragment : Fragment() {
 
         WebAuthProvider.login(account)
             .withScheme("demo")
-            .withScope("openid profile email")
+            .withScope("openid profile email public_profile")
             .start(requireContext(), object : Callback<Credentials, AuthenticationException> {
                 override fun onFailure(error: AuthenticationException) {}
 
