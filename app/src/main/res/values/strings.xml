@@ -1,7 +1,7 @@
 <resources>
     <string name="alertDialog_cancel">Cancel</string>
     <string name="alertDialog_confirm">Confirm</string>
-    <string name="app_name">CharityApp</string>
+    <string name="app_name">Cherrities</string>
     <string name="back_icon_description">back icon</string>
     <string name="badges_badgeIconDescription">badge icon</string>
     <string name="badges_title">Your badges</string>
