@@ -62,8 +62,12 @@ object NetworkModule{
         return Retrofit.Builder()
             .baseUrl(address)
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
-            .client(OkHttpClient().newBuilder().addInterceptor(HttpLoggingInterceptor().setLevel(
-                HttpLoggingInterceptor.Level.BODY)).build())
+            .client(OkHttpClient()
+                .newBuilder()
+                .addInterceptor(HttpLoggingInterceptor()
+                    .setLevel(
+                HttpLoggingInterceptor.Level.BODY))
+                .build())
             .build()
             .create(CharityService::class.java)
     }
@@ -74,8 +78,11 @@ object NetworkModule{
         return Retrofit.Builder()
             .baseUrl(address)
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().setDateFormat("yyyy-MM-dd").create()))
-            .client(OkHttpClient().newBuilder().addInterceptor(HttpLoggingInterceptor().setLevel(
-                HttpLoggingInterceptor.Level.BODY)).build())
+            .client(OkHttpClient()
+                .newBuilder()
+                .addInterceptor(HttpLoggingInterceptor()
+                    .setLevel(HttpLoggingInterceptor.Level.BODY))
+                .build())
             .build()
             .create(ProfileService::class.java)
     }
