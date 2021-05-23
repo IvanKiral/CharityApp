@@ -17,6 +17,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 val address = PrivateConstants.address
@@ -64,6 +65,10 @@ object NetworkModule{
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
             .client(OkHttpClient()
                 .newBuilder()
+                .callTimeout(15, TimeUnit.SECONDS)
+                .connectTimeout(15, TimeUnit.SECONDS)
+                .readTimeout(15, TimeUnit.SECONDS)
+                .writeTimeout(15, TimeUnit.SECONDS)
                 .addInterceptor(HttpLoggingInterceptor()
                     .setLevel(
                 HttpLoggingInterceptor.Level.BODY))
@@ -80,6 +85,10 @@ object NetworkModule{
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().setDateFormat("yyyy-MM-dd").create()))
             .client(OkHttpClient()
                 .newBuilder()
+                .callTimeout(15, TimeUnit.SECONDS)
+                .connectTimeout(15, TimeUnit.SECONDS)
+                .readTimeout(15, TimeUnit.SECONDS)
+                .writeTimeout(15, TimeUnit.SECONDS)
                 .addInterceptor(HttpLoggingInterceptor()
                     .setLevel(HttpLoggingInterceptor.Level.BODY))
                 .build())
