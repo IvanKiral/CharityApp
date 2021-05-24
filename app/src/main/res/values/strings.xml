@@ -10,7 +10,7 @@
     <string name="detail_buttonExtraDonation">Extra Donation</string>
     <string name="detail_donate">Donate</string>
     <string name="detail_donationFailed_confirm">Understood</string>
-    <string name="detail_donationFailed_error">An error has occurred! Please try again later.</string>
+    <string name="detail_donationFailed_error">An error has occurred! Please try again.</string>
     <string name="detail_donationSuccess_confirm">Okay</string>
     <string name="detail_donationSuccess_description">Do you want to share about your contribution?</string>
     <string name="detail_donationSuccess_shareLink">Share link…</string>
@@ -51,8 +51,8 @@
     <string name="charities_tab_rankings">Rankings</string>
     <string name="charitiesSelector_iconDescription">selected icon</string>
     <string name="navigation_continue">Continue</string>
-    <string name="network_error">An error has occurred! Please retry later.</string>
-    <string name="network_registerError">Could not register! Please try again later</string>
+    <string name="network_error">An error has occurred! Please retry.</string>
+    <string name="network_registerError">Could not register! Please try again.</string>
     <string name="network_userNotFound">No profile with that id</string>
     <string name="profile_alertDialog_title">Choose value and frequency of regular donations</string>
     <string name="profile_badge_icon_description">badge icon</string>
@@ -73,7 +73,7 @@
     <string name="welcome_login">Login</string>
     <string name="credit_freepik">Icons made by https://www.freepik.com from www.flaticon.com</string>
     <string name="profile_option_credits">Credits</string>
-    <string name="network_payment_error">Oops! Something went wrong! Please try your payment later</string>
+    <string name="network_payment_error">Oops! Something went wrong! Please try again your payment.</string>
 
     <string name="badge_donated_1">You have donated 1€</string>
     <string name="badge_donated_10">You have donated 10€</string>

@@ -9,6 +9,7 @@ import com.kiral.charityapp.network.mappers.ProfileMapper
 import com.kiral.charityapp.network.services.ProfileService
 import com.kiral.charityapp.utils.AssetProvider
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import java.io.IOException
 
@@ -17,7 +18,7 @@ class ProfileRepositoryImpl(
     private val profileMapper: ProfileMapper,
     private val assetProvider: AssetProvider
 ) : ProfileRepository {
-    override fun login(email: String): Flow<DataState<Int>> = flow {
+    override fun login(email: String, retry: Int): Flow<DataState<Int>> = flow {
         try {
             emit(DataState.Loading)
             val response = profileService.login(LoginDto(email = email))
@@ -34,7 +35,12 @@ class ProfileRepositoryImpl(
                 }
             }
         } catch (e: IOException) {
-            emit(DataState.Error(assetProvider.networkError()))
+            if(retry > 0){
+                emitAll(login(email, retry - 1))
+            }
+            else {
+                emit(DataState.Error(assetProvider.networkError()))
+            }
         }
     }
 
