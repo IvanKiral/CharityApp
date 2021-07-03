@@ -1,7 +1,7 @@
 <resources>
     <string name="alertDialog_cancel">Cancel</string>
     <string name="alertDialog_confirm">Confirm</string>
-    <string name="app_name">CharityApp</string>
+    <string name="app_name">Cherrities</string>
     <string name="back_icon_description">back icon</string>
     <string name="badges_badgeIconDescription">badge icon</string>
     <string name="badges_title">Your badges</string>
@@ -10,7 +10,7 @@
     <string name="detail_buttonExtraDonation">Extra Donation</string>
     <string name="detail_donate">Donate</string>
     <string name="detail_donationFailed_confirm">Understood</string>
-    <string name="detail_donationFailed_error">An error has occurred! Please try again later.</string>
+    <string name="detail_donationFailed_error">An error has occurred! Please try again.</string>
     <string name="detail_donationSuccess_confirm">Okay</string>
     <string name="detail_donationSuccess_description">Do you want to share about your contribution?</string>
     <string name="detail_donationSuccess_shareLink">Share link…</string>
@@ -35,12 +35,12 @@
     <string name="detail_project_peopleDonated">donated to this project.</string>
     <string name="detail_project_raised">Raised</string>
     <string name="detail_userDonated">You donated %1s</string>
-    <string name="donationField_textFieldLabel">Your amount</string>
+    <string name="donationField_textFieldLabel">format: 10.00</string>
     <string name="donor_userDonations_icon_description">donor show users donations icon</string>
     <string name="donors_heartIcon_description">heart icon</string>
     <string name="donors_icon_description">donor badge icon</string>
     <string name="editPersonalInformation_name_label">Type your name</string>
-    <string name="editPersonalInformation_title">Edit personal information</string>
+    <string name="editPersonalInformation_title">Something about you</string>
     <string name="editPersonalInformation_toastText">Please fill up your name</string>
     <string name="errorScreen_retry">Retry</string>
     <string name="expandableText_less">Less</string>
@@ -51,8 +51,8 @@
     <string name="charities_tab_rankings">Rankings</string>
     <string name="charitiesSelector_iconDescription">selected icon</string>
     <string name="navigation_continue">Continue</string>
-    <string name="network_error">An error has occurred! Please retry later.</string>
-    <string name="network_registerError">Could not register! Please try again later</string>
+    <string name="network_error">An error has occurred! Please retry.</string>
+    <string name="network_registerError">Could not register! Please try again.</string>
     <string name="network_userNotFound">No profile with that id</string>
     <string name="profile_alertDialog_title">Choose value and frequency of regular donations</string>
     <string name="profile_badge_icon_description">badge icon</string>
@@ -68,22 +68,47 @@
     <string name="profile_yourBadges">Your Badges</string>
     <string name="profileImage_imageDescription">profile image</string>
     <string name="selectCharitiesTypes_title">Select charities types</string>
-    <string name="setupRegularPayments_title">Setup regular Payments</string>
+    <string name="setupRegularPayments_title">Setup regular donations</string>
     <string name="welcome_greeting">It\'s good to have you here! Start donating to charities by login into the app</string>
-    <string name="welcome_login">Login into application</string>
-    <string name="network_payment_error">Oops! Something went wrong! Please try your payment later</string>
+    <string name="welcome_login">Login</string>
+    <string name="credit_freepik">Icons made by https://www.freepik.com from www.flaticon.com</string>
+    <string name="profile_option_credits">Credits</string>
+    <string name="network_payment_error">Oops! Something went wrong! Please try again your payment.</string>
 
-    <string name="badge_donated_1">You have donated 1</string>
-    <string name="badge_donated_10">You have donated 10</string>
-    <string name="badge_donated_100">You have donated 100</string>
-    <string name="badge_donated_1000">You have donated 1000</string>
+    <string name="badge_donated_1">You have donated 1€</string>
+    <string name="badge_donated_10">You have donated 10€</string>
+    <string name="badge_donated_100">You have donated 100€</string>
+    <string name="badge_donated_1000">You have donated 1000€</string>
     <string name="badge_donated_all">You have donated to all charities</string>
     <string name="badge_environmental">You have donated to environmental charity</string>
     <string name="badge_animal">You have donated to animal charity</string>
     <string name="badge_health">You have donated to health charity</string>
     <string name="badge_educational">You have donated educational charity</string>
     <string name="badge_artsAndCulture">You have donated arts and culture charity</string>
-    <string name="badge_streak_month">You have reached one month streak</string>
+    <string name="badge_streak_month">One month streak</string>
+    <string name="badge_streak_week">One week streak</string>
+    <string name="badge_gold_medal">Be the 1st in the leaderboard in a current week</string>
+    <string name="badge_silver_medal">Be the 2nd in the leaderboard in a current week</string>
+    <string name="badge_bronze_medal">Be the 3rd in the leaderboard in a current week</string>
+    <string name="badge_share">Share a charity/donation on a social media</string>
+    <string name="credit_title">Credits</string>
+    <string name="SelectCharitiesTypesFragment_description">These categories will be used when donating by regular payments</string>
+    <string name="Error_NotEnoughCredit">You do not have enough credit! Please add credit and try again.</string>
+    <string name="CharitiesFragment_CategoriesDialogTitle">Filter categories</string>
+    <string name="Onboarding_birthdayHint">Your birthday</string>
+    <string name="EditPersonalInformation_ToastBirthday">Please set up your valid date.</string>
+    <string name="RankUpDialog_Title">Congratulation! You have made it to the next level!</string>
+    <string name="RankUpDialog_description">Do you want to share about your rank up?</string>
+    <string name="WelcomeScreen_LogoDescription">cherrities logo</string>
+    <string name="Notification_SummaryTitle">Weekly donations summary available</string>
+    <string name="Notification_SummaryText">You donated %1.2f€ this week. Check the full summary in the app. Thank you for your contribution</string>
+    <string name="Notification_NoCreditTitle">No credit left</string>
+    <string name="Notification_NoCreditText">Add more credit to your account, if you want to donate to your favourite charities</string>
+    <string name="Notification_RegularDonationTitle">Auto-Donation submitted</string>
+    <string name="Notification_RegularDonationText">You just donated %1.2f€ to %2s using the auto-donation. Thank you for your contribution!</string>
+    <string name="CharitiesFragment_NoCharities">No charities to view</string>
+    <string name="CharitiesScreen_rank">Level: %1s</string>
+
 
     <string-array name="Categories">
         <item>Environmental</item>

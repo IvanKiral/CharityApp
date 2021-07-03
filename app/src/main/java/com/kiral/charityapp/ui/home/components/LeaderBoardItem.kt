@@ -1,4 +1,4 @@
-package com.kiral.charityapp.ui.components
+package com.kiral.charityapp.ui.home.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,8 +17,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kiral.charityapp.R
 import com.kiral.charityapp.domain.model.LeaderBoardProfile
-import com.kiral.charityapp.utils.Convert
+import com.kiral.charityapp.ui.components.ProfileImageWithBorder
 import com.kiral.charityapp.utils.Utils
+import com.kiral.charityapp.utils.convert
 import com.kiral.charityapp.utils.makeGravatarLink
 
 @Composable
@@ -62,7 +63,7 @@ fun LeaderBoardItem(
                     .padding(start = 16.dp)
             )
             Text(
-                text = item.donated.Convert(),
+                text = "${item.donated.convert()}€",
                 style = MaterialTheme.typography.body1,
                 modifier = Modifier
                     .fillMaxWidth()

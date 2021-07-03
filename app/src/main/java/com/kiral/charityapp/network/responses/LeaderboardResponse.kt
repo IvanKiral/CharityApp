@@ -4,6 +4,9 @@ import com.google.gson.annotations.SerializedName
 import com.kiral.charityapp.network.dtos.LeaderboardDto
 
 data class LeaderboardResponse(
-    @SerializedName("donors")
+    @SerializedName("rank")
+    val rank: Int,
+
+    @SerializedName("users")
     val donors: List<LeaderboardDto>
 )

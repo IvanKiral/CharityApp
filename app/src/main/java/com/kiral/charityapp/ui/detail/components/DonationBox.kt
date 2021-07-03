@@ -1,4 +1,4 @@
-package com.kiral.charityapp.ui.components
+package com.kiral.charityapp.ui.detail.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

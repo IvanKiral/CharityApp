@@ -3,7 +3,7 @@ package com.kiral.charityapp.repositories.charities
 import com.kiral.charityapp.domain.model.Charity
 import com.kiral.charityapp.domain.model.CharityListItem
 import com.kiral.charityapp.domain.model.Donor
-import com.kiral.charityapp.domain.model.LeaderBoardProfile
+import com.kiral.charityapp.domain.model.LeaderBoard
 import com.kiral.charityapp.domain.model.Project
 import com.kiral.charityapp.network.DataState
 import kotlinx.coroutines.flow.Flow
@@ -19,5 +19,7 @@ interface CharityRepository {
 
     fun getCharityDonors(charityId: Int, userId: Int?, page: Int, projectId: Int): Flow<DataState<List<Donor>>>
 
-    fun getLeaderboard(userId: Int): Flow<DataState<List<LeaderBoardProfile>>>
+    fun getLeaderboard(userId: Int): Flow<DataState<LeaderBoard>>
+
+    fun addBadge(userId: Int, badgeId: Int): Flow<DataState<Int>>
 }

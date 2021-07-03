@@ -101,7 +101,7 @@ fun ProfileCard(
                         .padding(top = 8.dp),
                 )
                 Text(
-                    text = donated,
+                    text = "$donated€",
                     style = MaterialTheme.typography.body1.copy(color = TextOptionSubtitle),
                     modifier = Modifier.padding(top = 8.dp)
                 )

@@ -1,9 +1,12 @@
 package com.kiral.charityapp.network.services
 
+import com.kiral.charityapp.network.dtos.AddCreditDto
 import com.kiral.charityapp.network.dtos.LoginDto
 import com.kiral.charityapp.network.dtos.ProfileDto
 import com.kiral.charityapp.network.dtos.ProfilePostDto
 import com.kiral.charityapp.network.responses.LoginResponse
+import com.kiral.charityapp.network.responses.RankUpResponse
+import com.kiral.charityapp.network.responses.RegisterResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -16,12 +19,22 @@ interface ProfileService {
     @POST("login")
     suspend fun login(@Body loginDto: LoginDto): Response<LoginResponse>
 
-    @PUT("register")
-    suspend fun register(@Body loginDto: ProfileDto): Response<LoginResponse>
+    @POST("users")
+    suspend fun register(@Body loginDto: ProfileDto): Response<RegisterResponse>
 
-    @GET("donor/{donorId}")
-    suspend fun getProfile(@Path("donorId") donorId: Int): Response<ProfileDto>
+    @GET("users/{userId}")
+    suspend fun getProfile(@Path("userId") userId: Int): Response<ProfileDto>
 
-    @PUT("user")
+    @PUT("users")
     suspend fun updateProfile(@Body profileDto: ProfilePostDto): Response<Unit>
+
+    @GET("rank/{userId}")
+    suspend fun getRankUp(
+        @Path("userId") userId: Int
+    ): Response<RankUpResponse>
+
+    @PUT("/user/add_credit")
+    suspend fun addCredit(
+        @Body addCreditDto: AddCreditDto
+    ): Response<Unit>
 }

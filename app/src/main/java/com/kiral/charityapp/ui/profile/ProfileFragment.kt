@@ -27,13 +27,14 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.auth0.android.Auth0
 import com.kiral.charityapp.R
+import com.kiral.charityapp.domain.model.Profile
 import com.kiral.charityapp.ui.components.AlertDialogWithChoice
 import com.kiral.charityapp.ui.components.BaseScreen
+import com.kiral.charityapp.ui.components.CategoriesDialog
 import com.kiral.charityapp.ui.components.ClickableIcon
 import com.kiral.charityapp.ui.components.CountryDialog
 import com.kiral.charityapp.ui.components.DonationField
@@ -42,14 +43,13 @@ import com.kiral.charityapp.ui.dataStore
 import com.kiral.charityapp.ui.home.CharitiesViewModel
 import com.kiral.charityapp.ui.profile.components.Badges
 import com.kiral.charityapp.ui.profile.components.Boxes
-import com.kiral.charityapp.ui.profile.components.CategoriesDialog
 import com.kiral.charityapp.ui.profile.components.OptionsMenu
 import com.kiral.charityapp.ui.profile.components.ProfilePicture
 import com.kiral.charityapp.ui.theme.CharityTheme
 import com.kiral.charityapp.ui.theme.DividerColor
 import com.kiral.charityapp.utils.Auth
-import com.kiral.charityapp.utils.Convert
 import com.kiral.charityapp.utils.Utils.loadPicture
+import com.kiral.charityapp.utils.convert
 import com.kiral.charityapp.utils.makeGravatarLink
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -64,11 +64,6 @@ class ProfileFragment : Fragment() {
     private val charitiesViewModel: CharitiesViewModel by activityViewModels()
     private val args: ProfileFragmentArgs by navArgs()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel.setProfile(args.id)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -76,32 +71,34 @@ class ProfileFragment : Fragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                CharityTheme {
-                    BaseScreen(
-                        loading = viewModel.loading,
-                        error = viewModel.error,
-                        onRetryClicked = {
-                            viewModel.setProfile(args.id)
+
+                ProfileScreen(
+                    viewModel = viewModel,
+                    donorId = args.id,
+                    charitiesViewModel = charitiesViewModel,
+                    onBackPressed = requireActivity()::onBackPressed,
+                    navigateToCredits = {
+                        findNavController()
+                            .navigate(R.id.action_profileFragment_to_creditFragment)
+                    },
+                    navigateToBadges = {
+                        val action =
+                            ProfileFragmentDirections.actionProfileFragmentToBadgesFragment(
+                                viewModel.profile!!.badges.toIntArray()
+                            )
+                        findNavController().navigate(action)
+                    },
+                    logout = {
+                        Auth.logout(
+                            account,
+                            requireContext(),
+                            context.dataStore,
+                        ) {
+                            findNavController()
+                                .navigate(R.id.action_profileFragment_to_welcomeFragment)
                         }
-                    ) {
-                        ProfileScreen(
-                            viewModel = viewModel,
-                            charitiesViewModel = charitiesViewModel,
-                            navController = findNavController(),
-                            onBackPressed = requireActivity()::onBackPressed,
-                            logout = {
-                                Auth.logout(
-                                    account,
-                                    requireContext(),
-                                    context.dataStore,
-                                ) {
-                                    findNavController()
-                                        .navigate(R.id.action_profileFragment_to_welcomeFragment)
-                                }
-                            }
-                        )
                     }
-                }
+                )
             }
         }
     }
@@ -110,148 +107,186 @@ class ProfileFragment : Fragment() {
 @Composable
 fun ProfileScreen(
     viewModel: ProfileViewModel,
+    donorId: Int,
     charitiesViewModel: CharitiesViewModel,
-    navController: NavController,
+    navigateToBadges: () -> Unit,
+    navigateToCredits: () -> Unit,
     logout: () -> Unit,
     onBackPressed: () -> Unit
 ) {
-    viewModel.profile?.let { profile ->
-        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-            ConstraintLayout(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 32.dp),
-            ) {
-                val (profilePicture, back, divider, badges, donationField, boxRow, optionsMenu) = createRefs()
-                val baseline = createGuidelineFromTop(300.dp)
-
-                ClickableIcon(
-                    icon = ImageVector.vectorResource(id = R.drawable.ic_back),
-                    onIconClicked = onBackPressed,
-                    contentDescription = stringResource(id = R.string.back_icon_description),
-                    modifier = Modifier
-                        .constrainAs(back) {
-                            top.linkTo(parent.top, margin = 16.dp)
-                            start.linkTo(parent.start)
-                        }
-                        .offset(x = (-16).dp),
-                    size = 18.dp
-                )
-                ProfilePicture(
-                    name = profile.name,
-                    imageBitmap = profile.email.let { e ->
-                        val img = loadPicture(
-                            url = e.makeGravatarLink(),
-                            defaultImage = R.drawable.ic_loading_photo
-                        )
-                        img.value?.asImageBitmap()
-                    },
-                    imageSize = 128.dp,
-                    modifier = Modifier.constrainAs(profilePicture) {
-                        top.linkTo(parent.top)
-                        bottom.linkTo(baseline)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                    }
-                )
-                Divider(
-                    thickness = 1.dp,
-                    color = DividerColor,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .constrainAs(divider) {
-                            bottom.linkTo(baseline, margin = 8.dp)
-                        }
-                )
-                Badges(
-                    badges = viewModel.badges,
-                    profileBadges = profile.badges.toIntArray(),
-                    navController = navController,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .constrainAs(badges) {
-                            top.linkTo(baseline, margin = 24.dp)
-                        }
-                )
-                Boxes(
-                    credit = "${profile.credit.Convert()} €",
-                    donations = profile.donations.toString(),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .constrainAs(boxRow) {
-                            top.linkTo(badges.bottom, margin = 24.dp)
-                        },
-                    addButtonClick = { viewModel.onAddButtonClick() }
-                )
-                Box(
-                    modifier = Modifier
-                        .constrainAs(donationField) {
-                            top.linkTo(boxRow.bottom)
-                        }
-                ) {
-                    DonationField(
-                        loading = viewModel.creditLoading,
-                        shown = viewModel.credit,
-                        buttonText = stringResource(R.string.profile_donationField_add),
-                        onButtonClick = { value -> viewModel.addCredit(value) }
-                    )
-                }
-                OptionsMenu(
-                    regularDonationValue = profile.regularDonationValue,
-                    regularDonationFrequency = profile.regularDonationFrequency,
-                    region = profile.region,
-                    isSwitched = profile.regularDonationActive,
-                    categories = viewModel.categoryString,
-                    switchFunction = { value -> viewModel.setActive(value) },
-                    setDonationDialog = { value -> viewModel.regularDonationDialog = value },
-                    setCountryDialog = { value -> viewModel.countryDialog = value },
-                    setCategoriesDialog = { value -> viewModel.categoriesDialog = value },
+    CharityTheme {
+        BaseScreen(
+            loading = viewModel.loading,
+            error = viewModel.error,
+            onRetryClicked = {
+                viewModel.setProfile(donorId)
+            }
+        ) {
+            viewModel.profile?.let { profile ->
+                ProfileScreenBody(
+                    profile = profile,
+                    viewModel = viewModel,
+                    charitiesViewModel = charitiesViewModel,
+                    navigateToBadges = navigateToBadges,
+                    navigateToCredits = navigateToCredits,
                     logout = logout,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .constrainAs(optionsMenu) {
-                            top.linkTo(donationField.bottom)
-                        },
+                    onBackPressed = onBackPressed
                 )
-                CountryDialog(
-                    countries = viewModel.countries.value,
-                    isShown = viewModel.countryDialog,
-                    setDialog = { value -> viewModel.countryDialog = value },
-                    setCountryText = { /*TODO*/ },
-                    setCountry = { value ->
-                        viewModel.setRegion(value)
-                        charitiesViewModel.getCharities()
-                    },
-                )
-                CategoriesDialog(
-                    shown = viewModel.categoriesDialog,
-                    setShowDialog = { viewModel.categoriesDialog = it },
-                    categoriesSelected = viewModel.selectedCategories,
-                    onConfirmButton = { viewModel.setCategories() }
-                )
-                AlertDialogWithChoice(
-                    title = stringResource(R.string.profile_alertDialog_title),
-                    shown = viewModel.regularDonationDialog,
-                    setShowDialog = { value -> viewModel.regularDonationDialog = value },
-                    onConfirmButton = { viewModel.setRegularPayment() }
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        SingleChoicePicker(
-                            items = viewModel.moneyValues.map { v -> v.Convert() + " €" },
-                            selectedItem = viewModel.selectedMoney,
-                            setSelectedItem = { value -> viewModel.selectedMoney = value },
-                            textAlignment = Alignment.End
-                        )
-                        SingleChoicePicker(
-                            items = viewModel.frequencyValues,
-                            selectedItem = viewModel.selectedFrequency,
-                            setSelectedItem = { value ->
-                                viewModel.selectedFrequency = value
-                            },
-                            textAlignment = Alignment.Start,
-                            modifier = Modifier.padding(start = 8.dp)
-                        )
+            }
+        }
+    }
+}
+
+@Composable
+fun ProfileScreenBody(
+    profile: Profile,
+    viewModel: ProfileViewModel,
+    charitiesViewModel: CharitiesViewModel,
+    navigateToBadges: () -> Unit,
+    navigateToCredits: () -> Unit,
+    logout: () -> Unit,
+    onBackPressed: () -> Unit
+){
+    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+        ConstraintLayout(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 32.dp),
+        ) {
+            val (profilePicture, back, divider, badges, donationField, boxRow, optionsMenu) = createRefs()
+            val baseline = createGuidelineFromTop(300.dp)
+
+            ClickableIcon(
+                icon = ImageVector.vectorResource(id = R.drawable.ic_back),
+                onIconClicked = onBackPressed,
+                contentDescription = stringResource(id = R.string.back_icon_description),
+                modifier = Modifier
+                    .constrainAs(back) {
+                        top.linkTo(parent.top, margin = 16.dp)
+                        start.linkTo(parent.start)
                     }
+                    .offset(x = (-16).dp),
+                size = 18.dp
+            )
+            ProfilePicture(
+                name = profile.name,
+                imageBitmap = profile.email.let { e ->
+                    val img = loadPicture(
+                        url = e.makeGravatarLink(),
+                        defaultImage = R.drawable.ic_loading_photo
+                    )
+                    img.value?.asImageBitmap()
+                },
+                imageSize = 128.dp,
+                modifier = Modifier.constrainAs(profilePicture) {
+                    top.linkTo(parent.top)
+                    bottom.linkTo(baseline)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                }
+            )
+            Divider(
+                thickness = 1.dp,
+                color = DividerColor,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .constrainAs(divider) {
+                        bottom.linkTo(baseline, margin = 8.dp)
+                    }
+            )
+            Badges(
+                badges = viewModel.badges,
+                navigateToBadges = {
+                       navigateToBadges()
+                                   },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .constrainAs(badges) {
+                        top.linkTo(baseline, margin = 24.dp)
+                    }
+            )
+            Boxes(
+                credit = "${profile.credit.convert()} €",
+                donations = profile.donations.toString(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .constrainAs(boxRow) {
+                        top.linkTo(badges.bottom, margin = 24.dp)
+                    },
+                addButtonClick = { viewModel.onAddButtonClick() }
+            )
+            Box(
+                modifier = Modifier
+                    .constrainAs(donationField) {
+                        top.linkTo(boxRow.bottom)
+                    }
+            ) {
+                DonationField(
+                    loading = viewModel.creditLoading,
+                    shown = viewModel.credit,
+                    buttonText = stringResource(R.string.profile_donationField_add),
+                    onButtonClick = { value -> viewModel.addCredit(value) }
+                )
+            }
+            OptionsMenu(
+                regularDonationValue = profile.regularDonationValue,
+                regularDonationFrequency = profile.regularDonationFrequency,
+                region = profile.region,
+                isSwitched = profile.regularDonationActive,
+                categories = viewModel.categoryString,
+                switchFunction = { value -> viewModel.setActive(value) },
+                setDonationDialog = { value -> viewModel.regularDonationDialog = value },
+                setCountryDialog = { value -> viewModel.countryDialog = value },
+                setCategoriesDialog = { value -> viewModel.setCategoriesDialogValue(value)},
+                logout = logout,
+                navigateToCredits = navigateToCredits,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .constrainAs(optionsMenu) {
+                        top.linkTo(donationField.bottom)
+                    },
+            )
+            CountryDialog(
+                countries = viewModel.countries.value,
+                isShown = viewModel.countryDialog,
+                setDialog = { value -> viewModel.countryDialog = value },
+                setCountry = { value, _ ->
+                    viewModel.setRegion(value) {
+                        charitiesViewModel.reset()
+                        charitiesViewModel.getCharities(1)
+                    }
+                },
+            )
+            CategoriesDialog(
+                title = stringResource(R.string.categoriesDialog_title),
+                shown = viewModel.categoriesDialog,
+                onDismiss = { viewModel.onCategoriesDialogDismiss() },
+                onItemClick = { index -> viewModel.changeCategory(index) },
+                categoriesSelected = viewModel.selectedCategories,
+                onConfirmButton = { viewModel.setCategories() }
+            )
+            AlertDialogWithChoice(
+                title = stringResource(R.string.profile_alertDialog_title),
+                shown = viewModel.regularDonationDialog,
+                onDismiss = { viewModel.regularDonationDialog = false },
+                onConfirmButton = { viewModel.setRegularPayment() }
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    SingleChoicePicker(
+                        items = viewModel.moneyValues.map { v -> v.convert() + " €" },
+                        selectedItem = viewModel.selectedMoney,
+                        setSelectedItem = { value -> viewModel.selectedMoney = value },
+                        textAlignment = Alignment.End
+                    )
+                    SingleChoicePicker(
+                        items = viewModel.frequencyValues,
+                        selectedItem = viewModel.selectedFrequency,
+                        setSelectedItem = { value ->
+                            viewModel.selectedFrequency = value
+                        },
+                        textAlignment = Alignment.Start,
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
                 }
             }
         }

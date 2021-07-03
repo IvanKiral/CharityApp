@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -17,6 +19,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
@@ -24,7 +27,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.kiral.charityapp.R
 import com.kiral.charityapp.ui.components.CharitiesSelector
@@ -45,7 +47,10 @@ class SelectCharitiesTypesFragment : Fragment() {
             setContent {
                 SelectCharitiesScreen(
                     viewModel = viewModel,
-                    navController = findNavController()
+                    navigate = {
+                        findNavController()
+                            .navigate(R.id.action_selectCharitiesTypesFragment_to_setupRegularPaymentsFragment)
+                    }
                 )
             }
         }
@@ -55,41 +60,56 @@ class SelectCharitiesTypesFragment : Fragment() {
 @Composable
 fun SelectCharitiesScreen(
     viewModel: OnBoardingViewModel,
-    navController: NavController
+    navigate: () -> Unit
 ) {
     val scrollState = rememberScrollState()
     CharityTheme {
-        Column(
-            modifier = Modifier
-                .padding(horizontal = 32.dp)
-                .verticalScroll(scrollState),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 24.dp)
         ) {
-
-            Text(
-                text = stringResource(R.string.selectCharitiesTypes_title),
-                style = MaterialTheme.typography.h5,
-                textAlign = TextAlign.Center,
-            )
-
-            CharitiesSelector(
-                categories = stringArrayResource(id = R.array.Categories),
-                categoriesSelected = viewModel.selected,
+            Column(
                 modifier = Modifier
-                    .align(Alignment.Start)
-                    .padding(top = 64.dp)
-            )
+                    .align(Alignment.Center)
+                    .verticalScroll(scrollState),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+
+                Text(
+                    text = stringResource(R.string.selectCharitiesTypes_title),
+                    style = MaterialTheme.typography.h5,
+                    textAlign = TextAlign.Center,
+                )
+
+                Text(
+                    text = stringResource(R.string.SelectCharitiesTypesFragment_description),
+                    style = MaterialTheme.typography.body2.copy(Color.Black.copy(alpha = 0.6f)),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .align(Alignment.Start)
+                        .padding(top = 16.dp)
+                )
+
+                CharitiesSelector(
+                    categories = stringArrayResource(id = R.array.Categories),
+                    categoriesSelected = viewModel.selected,
+                    onItemClick = { index -> viewModel.setCategories(index) },
+                    modifier = Modifier
+                        .align(Alignment.Start)
+                        .padding(top = 32.dp)
+                )
+            }
 
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 32.dp)
-                    .height(64.dp),
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 32.dp)
+                    .height(56.dp),
                 onClick = {
                     viewModel.addCategories()
-                    navController
-                        .navigate(R.id.action_selectCharitiesTypesFragment_to_setupRegularPaymentsFragment)
+                    navigate()
                 }
             ) {
                 Text(

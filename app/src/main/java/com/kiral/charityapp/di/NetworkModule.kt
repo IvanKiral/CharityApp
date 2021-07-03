@@ -13,8 +13,11 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 val address = PrivateConstants.address
@@ -60,6 +63,16 @@ object NetworkModule{
         return Retrofit.Builder()
             .baseUrl(address)
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
+            .client(OkHttpClient()
+                .newBuilder()
+                .callTimeout(15, TimeUnit.SECONDS)
+                .connectTimeout(15, TimeUnit.SECONDS)
+                .readTimeout(15, TimeUnit.SECONDS)
+                .writeTimeout(15, TimeUnit.SECONDS)
+                .addInterceptor(HttpLoggingInterceptor()
+                    .setLevel(
+                HttpLoggingInterceptor.Level.BODY))
+                .build())
             .build()
             .create(CharityService::class.java)
     }
@@ -69,7 +82,16 @@ object NetworkModule{
     fun provideProfileService(): ProfileService {
         return Retrofit.Builder()
             .baseUrl(address)
-            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
+            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().setDateFormat("yyyy-MM-dd").create()))
+            .client(OkHttpClient()
+                .newBuilder()
+                .callTimeout(15, TimeUnit.SECONDS)
+                .connectTimeout(15, TimeUnit.SECONDS)
+                .readTimeout(15, TimeUnit.SECONDS)
+                .writeTimeout(15, TimeUnit.SECONDS)
+                .addInterceptor(HttpLoggingInterceptor()
+                    .setLevel(HttpLoggingInterceptor.Level.BODY))
+                .build())
             .build()
             .create(ProfileService::class.java)
     }

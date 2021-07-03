@@ -16,6 +16,7 @@ import com.kiral.charityapp.R
 
 @Composable
 fun DonationFailedAlertDialog(
+    description: String?,
     shown: Boolean,
     setShowDialog: (Boolean) -> Unit,
 ) {
@@ -30,6 +31,12 @@ fun DonationFailedAlertDialog(
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth(),
                     style = MaterialTheme.typography.h5.copy(fontSize = 20.sp)
+                )
+            },
+            text = {
+                Text(
+                    text = description!!,
+                    style = MaterialTheme.typography.body2
                 )
             },
             buttons = {

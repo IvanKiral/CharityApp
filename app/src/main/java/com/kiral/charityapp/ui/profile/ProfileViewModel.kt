@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.kiral.charityapp.R
 import com.kiral.charityapp.domain.enums.DonationFrequency
@@ -23,13 +24,19 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+const val STATE_PROFILE_USER_KEY = "profile_state_user"
+
 @HiltViewModel
 class ProfileViewModel
 @Inject
 constructor(
     private val application: BaseApplication,
-    private val profileRepository: ProfileRepository
+    private val profileRepository: ProfileRepository,
+    private val state: SavedStateHandle
 ): AndroidViewModel(application) {
+
+    private var profileId: Int = 0
+
     var profile by mutableStateOf<Profile?>(null)
         private set
     var badges = mutableListOf<Badge>()
@@ -52,6 +59,7 @@ constructor(
     var selectedFrequency by mutableStateOf(0)
 
     var selectedCategories = List(CATEGORIES_NUMBER) {false}.toMutableStateList()
+    var selectedCategoriesBackup = selectedCategories.toMutableList()
     var categoryString by mutableStateOf("")
 
     var categoriesDialog by mutableStateOf(false)
@@ -60,19 +68,26 @@ constructor(
     var countries = mutableStateOf(mapOf<String, String>())
 
     init {
+        profileId = state.get<Int>("id")!!
+
         viewModelScope.launch {
             countries.value = getCountries(application.baseContext)
         }
+
+        setProfile(profileId)
     }
+
 
     fun setProfile(id: Int){
         error = null
+        state.set<Int>(STATE_PROFILE_USER_KEY, id)
         profileRepository.getProfile(id).onEach {  state ->
             when(state){
                 is DataState.Loading -> loading = true
                 is DataState.Success -> {
                     loading = false
                     profile = state.data
+                    profile?.id = id
                     profile?.categories?.forEach{v -> selectedCategories[v - 1] = true }
                     makeCategoryString()
                     profile?.let { p ->
@@ -115,7 +130,10 @@ constructor(
         }
     }
 
-    fun setRegion(value: String){
+    fun setRegion(
+        value: String,
+        setCharities: () -> Unit
+    ){
         profile?.let { p ->
             profileRepository.updateRegion(p.id, value).onEach { state ->
                 when(state){
@@ -124,6 +142,7 @@ constructor(
                         profile = profile?.copy(
                             region = value
                         )
+                        setCharities()
                     }
                     else -> {}
                 }
@@ -174,16 +193,28 @@ constructor(
         credit = !credit
     }
 
+    fun changeCategory(index: Int){
+        val selectedSize = selectedCategories.filter { b -> b }.size
+        if (selectedSize > 0) {
+            if (selectedSize > 1) {
+                selectedCategories[index] = !selectedCategories[index]
+            } else if (selectedSize == 1) {
+                if (!selectedCategories[index])
+                    selectedCategories[index] = !selectedCategories[index]
+            }
+        }
+    }
+
     private fun makeCategoryString(){
         val categories = selectedCategories.mapIndexedNotNull{ i, v ->
-            if(v) application.resources.getStringArray(R.array.Categories)[i].removeSuffix(" charity") else null
+            if(v) application.resources.getStringArray(R.array.Categories)[i] else null
         }
         categoryString = categories.joinToString { it }
     }
 
     fun addCredit(value: String){
         profile?.let { p ->
-            val profile_credit = p.credit
+            val profileCredit = p.credit
             profileRepository.addCredit(
                 p.id, value.toDouble()
             ).onEach { state ->
@@ -194,12 +225,24 @@ constructor(
                     is DataState.Success -> {
                         creditLoading = false
                         profile = profile?.copy(
-                            credit = profile_credit + value.toDouble()
+                            credit = profileCredit + value.toDouble()
                         )
                     }
                     else -> { }
                 }
             }.launchIn(viewModelScope)
+        }
+    }
+
+    fun onCategoriesDialogDismiss(){
+        categoriesDialog = false
+        selectedCategories = selectedCategoriesBackup.toMutableStateList()
+    }
+
+    fun setCategoriesDialogValue(value: Boolean){
+        categoriesDialog = value
+        if(categoriesDialog){
+            selectedCategoriesBackup = selectedCategories.toMutableList()
         }
     }
 }

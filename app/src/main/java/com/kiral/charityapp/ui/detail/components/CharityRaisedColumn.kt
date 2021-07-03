@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.sp
 import com.kiral.charityapp.R
 import com.kiral.charityapp.ui.components.ProgressBar
 import com.kiral.charityapp.ui.theme.TextDonationGray
-import com.kiral.charityapp.utils.Convert
+import com.kiral.charityapp.utils.convert
 
 @Composable
 fun CharityRaisedColumn(
@@ -43,14 +43,14 @@ fun CharityRaisedColumn(
             verticalAlignment = Alignment.Bottom
         ) {
             Text(
-                text = actualSum.Convert(),
+                text = actualSum.convert(),
                 style = MaterialTheme.typography.body1.copy(
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold
                 )
             )
             Text(
-                text = " / " + goalSum.Convert() + "€",
+                text = " / " + goalSum.convert() + "€",
                 style = MaterialTheme.typography.body1
             )
         }

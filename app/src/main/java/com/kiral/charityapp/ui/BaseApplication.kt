@@ -10,5 +10,4 @@ import dagger.hilt.android.HiltAndroidApp
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
 @HiltAndroidApp
-class BaseApplication: Application(){
-}
+class BaseApplication: Application()

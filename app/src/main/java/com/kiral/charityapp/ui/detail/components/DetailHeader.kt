@@ -17,9 +17,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.kiral.charityapp.R
-import com.kiral.charityapp.ui.components.DonationBox
-import com.kiral.charityapp.utils.Convert
 import com.kiral.charityapp.utils.Utils
+import com.kiral.charityapp.utils.convert
 
 @Composable
 fun DetailHeader(
@@ -27,9 +26,9 @@ fun DetailHeader(
     donorDonated: Double,
     onBackPressed: () -> Unit
 ) {
-    Box() {
+    Box {
         imgSrc.let { src ->
-            val image = Utils.loadPicture(url = src, defaultImage = R.drawable.children)
+            val image = Utils.loadPicture(url = src, defaultImage = R.drawable.ic_loading_photo)
             image.value?.let { img ->
                 Image(
                     bitmap = img.asImageBitmap(),
@@ -48,10 +47,7 @@ fun DetailHeader(
         ) {
             if (donorDonated > 0) {
                 DonationBox(
-                    text = stringResource(
-                        id = R.string.detail_userDonated,
-                        donorDonated.Convert()
-                    ),
+                    text = "${stringResource(id = R.string.detail_userDonated, donorDonated.convert())}€",
                     backgroundColor = Color.Black.copy(alpha = 0.5f),
                 )
             }

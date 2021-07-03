@@ -5,7 +5,7 @@ import com.kiral.charityapp.network.DataState
 import kotlinx.coroutines.flow.Flow
 
 interface ProfileRepository{
-    fun login(email: String): Flow<DataState<Int>>
+    fun login(email: String, retry: Int = 1): Flow<DataState<Int>>
 
     fun register(profile: Profile): Flow<DataState<Int>>
 
@@ -36,5 +36,9 @@ interface ProfileRepository{
     fun addCredit(
         id: Int,
         credit: Double,
+    ): Flow<DataState<Boolean>>
+
+    fun getRankUp(
+        userId: Int
     ): Flow<DataState<Boolean>>
 }

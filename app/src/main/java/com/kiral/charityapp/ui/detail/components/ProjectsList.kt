@@ -10,16 +10,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.kiral.charityapp.R
 import com.kiral.charityapp.domain.model.CharityProject
-import com.kiral.charityapp.ui.detail.CharityDetailFragmentDirections
 
 @Composable
 fun ProjectsList(
-    donorId: Int,
     projects: List<CharityProject>,
-    navController: NavController,
+    navigateToProject: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
@@ -31,14 +28,7 @@ fun ProjectsList(
             ClickableText(
                 text = AnnotatedString(project.name),
                 style = MaterialTheme.typography.h5,
-                onClick = {
-                    val action = CharityDetailFragmentDirections
-                        .actionCharityDetailFragmentToProjectDetailFragment(
-                            project.id,
-                            donorId
-                        )
-                    navController.navigate(action)
-                },
+                onClick = { navigateToProject(project.id) },
                 modifier = Modifier.padding(top = 12.dp)
             )
         }

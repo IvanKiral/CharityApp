@@ -23,7 +23,7 @@ import com.kiral.charityapp.ui.theme.CherryRed
 import com.kiral.charityapp.ui.theme.DividerColor
 import com.kiral.charityapp.ui.theme.TextOptionSubtitle
 import com.kiral.charityapp.ui.theme.TextOptionTitle
-import com.kiral.charityapp.utils.Convert
+import com.kiral.charityapp.utils.convert
 import java.util.*
 
 @Composable
@@ -38,6 +38,7 @@ fun OptionsMenu(
     switchFunction: (Boolean) -> Unit,
     setDonationDialog: (Boolean) -> Unit,
     setCategoriesDialog: (Boolean) -> Unit,
+    navigateToCredits: () -> Unit,
     logout: () -> Unit
 ) {
     Column(
@@ -46,7 +47,7 @@ fun OptionsMenu(
 
         Option(
             title = stringResource(R.string.profile_regularDonations),
-            description = "${regularDonationValue.Convert()} €/${DonationFrequency.values()[regularDonationFrequency]}",
+            description = "${regularDonationValue.convert()} €/${DonationFrequency.values()[regularDonationFrequency]}",
             hasSwitch = true,
             isSwitched = isSwitched,
             switchFunction = switchFunction,
@@ -78,6 +79,14 @@ fun OptionsMenu(
             modifier = Modifier.fillMaxWidth(),
             onClick = {
                 logout()
+            }
+        )
+        Option(
+            title = stringResource(R.string.profile_option_credits),
+            description = "",
+            modifier = Modifier.fillMaxWidth(),
+            onClick = {
+                navigateToCredits()
             }
         )
         Divider(

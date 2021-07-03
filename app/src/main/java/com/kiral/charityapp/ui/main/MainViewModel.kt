@@ -5,12 +5,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.viewModelScope
-import com.kiral.charityapp.network.DataState
 import com.kiral.charityapp.repositories.profile.ProfileRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @HiltViewModel
@@ -29,24 +25,24 @@ constructor(
         private set
     var userId: Int? = null
 
-    fun getProfileId(email: String) {
-        error = null
-        profileRepository.login(email).onEach { state ->
-            when (state) {
-                is DataState.Success -> {
-                    userId = state.data
-                    loading = false
-                    error = null
-                    navigateToCharitiesFragment = true
-                }
-                is DataState.Loading -> {
-                    loading = true
-                }
-                is DataState.Error -> {
-                    error = state.error
-                }
-            }
-
-        }.launchIn(viewModelScope)
-    }
+//    fun getProfileId(email: String) {
+//        error = null
+//        profileRepository.login(email).onEach { state ->
+//            when (state) {
+//                is DataState.Success -> {
+//                    userId = state.data
+//                    loading = false
+//                    error = null
+//                    navigateToCharitiesFragment = true
+//                }
+//                is DataState.Loading -> {
+//                    loading = true
+//                }
+//                is DataState.Error -> {
+//                    error = state.error
+//                }
+//            }
+//
+//        }.launchIn(viewModelScope)
+//    }
 }

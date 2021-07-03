@@ -3,6 +3,7 @@ package com.kiral.charityapp.ui.detail
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kiral.charityapp.domain.model.Project
@@ -13,11 +14,16 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
+const val STATE_PROJECT_KEY = "project_state_charity_id"
+const val STATE_PROJECT_USER_KEY = "project_state_user_id"
+const val STATE_PROJECT_DONATION_KEY = "project_state_donation_field"
+
 @HiltViewModel
 class ProjectDetailViewModel
 @Inject
 constructor(
-    private val charityRepository: CharityRepository
+    private val charityRepository: CharityRepository,
+    private val state: SavedStateHandle,
 ) : ViewModel() {
     var project by mutableStateOf<Project?>(null)
         private set
@@ -32,6 +38,22 @@ constructor(
 
     var showDonate by mutableStateOf(false)
     var showDonationSuccessDialog by mutableStateOf(false)
+
+
+    init{
+        restoreState()
+    }
+
+    private fun restoreState() {
+        state.get<Int>(STATE_PROJECT_KEY)?.let { charityId ->
+            state.get<Int>(STATE_PROJECT_USER_KEY)?.let { userId ->
+                getProject(charityId, userId)
+            }
+        }
+        state.get<Boolean>(STATE_PROJECT_DONATION_KEY)?.let { shown ->
+            showDonate = shown
+        }
+    }
 
     fun getProject(id: Int, userId: Int) {
         error = null
@@ -52,13 +74,13 @@ constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun makeDonation(donorId: Int, value: Double) {
+    fun makeDonation(userId: Int, value: Double) {
         project?.let { currentProject ->
             val donorDonated = currentProject.donorDonated
             val actualSum = currentProject.actualSum
             charityRepository.makeDonationToCharity(
                 charityId = currentProject.charityId,
-                donorId = donorId,
+                donorId = userId,
                 projectId = currentProject.id,
                 value = value
             ).onEach { state ->
@@ -83,8 +105,23 @@ constructor(
         }
     }
 
+    fun addBadge(userId: Int) {
+        charityRepository.addBadge(
+            userId = userId,
+            badgeId = 16
+        ).onEach { state ->
+            when (state) {
+                is DataState.Success -> {
+                }
+                else -> {
+                }
+            }
+        }.launchIn(viewModelScope)
+    }
+
     fun onExtraDonateButtonPressed(){
         showDonate = !showDonate
+        state.set(STATE_PROJECT_DONATION_KEY, showDonate)
     }
 
     fun onDonateButtonPressed(donorId: Int, value: String){

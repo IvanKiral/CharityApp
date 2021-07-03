@@ -7,6 +7,6 @@ data class DonorsResponse(
     @SerializedName("count")
     val count: Int,
 
-    @SerializedName("donors")
+    @SerializedName("users")
     val donors: List<DonorDto>
 )

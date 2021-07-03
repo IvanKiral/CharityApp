@@ -33,7 +33,7 @@ import androidx.navigation.fragment.findNavController
 import com.kiral.charityapp.R
 import com.kiral.charityapp.ui.components.SingleChoicePicker
 import com.kiral.charityapp.ui.theme.CharityTheme
-import com.kiral.charityapp.utils.Convert
+import com.kiral.charityapp.utils.convert
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -68,12 +68,12 @@ fun SetupPaymentsScreen(
     val scrollState = rememberScrollState()
     CharityTheme {
         Box(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
         ) {
             Box(modifier = Modifier
                 .clickable {
-                    viewModel.addRegularPayments(false)
-                    viewModel.register()
+                    viewModel.register(true)
                 }
             ) {
                 Text(
@@ -84,7 +84,7 @@ fun SetupPaymentsScreen(
             }
             Column(
                 modifier = Modifier
-                    .padding(horizontal = 32.dp)
+                    .padding(horizontal = 24.dp)
                     .verticalScroll(scrollState)
                     .align(Alignment.Center),
                 verticalArrangement = Arrangement.Center,
@@ -100,9 +100,9 @@ fun SetupPaymentsScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     SingleChoicePicker(
-                        items = viewModel.amountItems.map { i -> "${i.Convert()} €" },
+                        items = viewModel.amountItems.map { i -> "${i.convert()} €" },
                         selectedItem = viewModel.selectedAmount,
-                        setSelectedItem = { value -> viewModel.selectedAmount = value },
+                        setSelectedItem = { value -> viewModel.setDonationValue(value)},
                         modifier = Modifier
                             .fillMaxWidth(0.5f)
                             .padding(horizontal = 8.dp),
@@ -111,43 +111,40 @@ fun SetupPaymentsScreen(
                     SingleChoicePicker(
                         items = viewModel.intervalItems,
                         selectedItem = viewModel.selectedInterval,
-                        setSelectedItem = { value -> viewModel.selectedInterval = value },
+                        setSelectedItem = { value -> viewModel.setDonationFrequency(value) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 8.dp),
                         textAlignment = Alignment.Start
                     )
                 }
+            }
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 32.dp, start = 24.dp, end = 24.dp)
+                    .height(56.dp),
+                onClick = { viewModel.register(false) }
+            ) {
+                Text(
+                    text = stringResource(id = R.string.navigation_continue),
+                    style = MaterialTheme.typography.button
+                )
+            }
 
-                Button(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp)
-                        .height(64.dp),
-                    onClick = {
-                        viewModel.addRegularPayments(true)
-                        viewModel.register()
-                    }
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.navigation_continue),
-                        style = MaterialTheme.typography.button
-                    )
-                }
-
-                if(viewModel.loading){
-                    CircularProgressIndicator(
-                        modifier = Modifier.padding(top = 16.dp)
-                    )
-                }
-                else if(viewModel.error != null){
-                    Text(
-                        viewModel.error!!,
-                        textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.body2.copy(color = Color.Red),
-                        modifier = Modifier.padding(top = 16.dp)
-                    )
-                }
+            if(viewModel.loading){
+                CircularProgressIndicator(
+                    modifier = Modifier.padding(top = 16.dp)
+                )
+            }
+            else if(viewModel.error != null){
+                Text(
+                    viewModel.error!!,
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.body2.copy(color = Color.Red),
+                    modifier = Modifier.padding(top = 16.dp)
+                )
             }
         }
     }

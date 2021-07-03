@@ -5,44 +5,43 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.kiral.charityapp.R
 import com.kiral.charityapp.ui.components.BaseScreen
-import com.kiral.charityapp.ui.components.CharitiesSelector
-import com.kiral.charityapp.ui.components.ClickableIcon
-import com.kiral.charityapp.ui.components.LeaderBoardItem
+import com.kiral.charityapp.ui.components.CategoriesDialog
 import com.kiral.charityapp.ui.home.components.CharityAppBar
 import com.kiral.charityapp.ui.home.components.CharityGrid
+import com.kiral.charityapp.ui.home.components.LeaderBoardItem
+import com.kiral.charityapp.ui.home.components.RankUpDialog
 import com.kiral.charityapp.ui.theme.CharityTheme
+import com.kiral.charityapp.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 enum class TabsNames {
     Charities, Ranking
@@ -61,8 +60,23 @@ class CharitiesFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 CharitiesScreen(
-                    viewModel,
-                    findNavController()
+                    viewModel = viewModel,
+                    navigateToDetail = { itemId ->
+                        val action = CharitiesFragmentDirections
+                            .actionCharitiesFragmentToCharityDetailFragment(
+                                itemId,
+                                viewModel.userId
+                            )
+                        findNavController()
+                            .navigate(action)
+                    },
+                    navigateToProfile = {
+                        val action =
+                            CharitiesFragmentDirections.actionCharitiesFragmentToProfileFragment(
+                                viewModel.userId
+                            )
+                        findNavController().navigate(action)
+                    }
                 )
             }
         }
@@ -73,7 +87,8 @@ class CharitiesFragment : Fragment() {
 @Composable
 fun CharitiesScreen(
     viewModel: CharitiesViewModel,
-    navController: NavController
+    navigateToDetail: (Int) -> Unit,
+    navigateToProfile: () -> Unit,
 ) {
     CharityTheme {
         var tabSelected by remember { mutableStateOf(TabsNames.Charities) }
@@ -83,27 +98,22 @@ fun CharitiesScreen(
             CharityAppBar(
                 tabSelected = tabSelected,
                 modifier = Modifier.fillMaxWidth(),
-                filterOn = viewModel.showFilter,
+                filterOn = viewModel.filterIconHighlighted,
                 onProfileClick = {
-                    val action =
-                        CharitiesFragmentDirections.actionCharitiesFragmentToProfileFragment(
-                            viewModel.userId
-                        )
-                    navController.navigate(action)
+                    navigateToProfile()
                 },
-                onFilterClicked = { viewModel.onFilterChange() },
+                onFilterClicked = { viewModel.changeShowFilter() },
                 onTabSelected = { tabSelected = it }
             )
-            if (!viewModel.showFilter) {
-                when (tabSelected) {
-                    TabsNames.Charities -> CharityScreen(
-                        viewModel,
-                        navController
-                    )
-                    TabsNames.Ranking -> RankingScreen(viewModel)
+            when (tabSelected) {
+                TabsNames.Charities -> CharityScreen(
+                    viewModel,
+                    navigateToDetail = navigateToDetail
+                )
+                TabsNames.Ranking -> {
+                    viewModel.getLeaderboard()
+                    RankingScreen(viewModel)
                 }
-            } else {
-                FilterScreen(viewModel)
             }
         }
     }
@@ -113,26 +123,58 @@ fun CharitiesScreen(
 @Composable
 fun CharityScreen(
     viewModel: CharitiesViewModel,
-    navController: NavController,
+    navigateToDetail: (Int) -> Unit,
 ) {
+    val ctx = LocalContext.current
     BaseScreen(
         loading = viewModel.charitiesLoading,
         error = viewModel.charitiesError,
         onRetryClicked = {
-            viewModel.getCharities()
+            viewModel.getCharities(1)
         }
     ) {
-        CharityGrid(
-            lst = viewModel.charities,
-            modifier = Modifier
-                .padding(top = 20.dp),
-            viewModel = viewModel
-        ) { itemId ->
-            val action = CharitiesFragmentDirections
-                .actionCharitiesFragmentToCharityDetailFragment(itemId, viewModel.userId)
-            navController
-                .navigate(action)
+        if(viewModel.charities.isNotEmpty()) {
+            val scope = rememberCoroutineScope()
+            val state = rememberLazyListState()
+            CharityGrid(
+                lst = viewModel.charities,
+                state = state,
+                modifier = Modifier
+                    .padding(top = 20.dp),
+                viewModel = viewModel
+            ) { itemId ->
+                navigateToDetail(itemId)
+            }
+            viewModel.savedPosition?.let { (position, offset) ->
+                scope.launch {
+                    state.scrollToItem(position, offset)
+                }
+                viewModel.savedPosition = null
+            }
+
+            CategoriesDialog(
+                title = stringResource(R.string.CharitiesFragment_CategoriesDialogTitle),
+                shown = viewModel.showFilter,
+                onDismiss = { viewModel.onCategoriesDialogDismiss() },
+                onItemClick = { index -> viewModel.setCategories(index) },
+                categoriesSelected = viewModel.selectedCategories,
+                onConfirmButton = { viewModel.onFilterChange() }
+            )
         }
+        else{
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.fillMaxSize()
+            ){
+                Text(text = stringResource(R.string.CharitiesFragment_NoCharities))
+            }
+        }
+
+        RankUpDialog(
+            shown = viewModel.showRankUpDialog,
+            setShowDialog = { value -> viewModel.showRankUpDialog = value },
+            shareLinkButtonClick = { Utils.shareLink(ctx) }
+        )
     }
 }
 
@@ -147,47 +189,23 @@ fun RankingScreen(
             viewModel.getLeaderboard()
         }
     ) {
-        LazyColumn {
-            itemsIndexed(viewModel.leaderboard) { index, item ->
-                LeaderBoardItem(
-                    item = item,
-                    index = index + 1
-                )
+        Column {
+            Text(
+                text = stringResource(R.string.CharitiesScreen_rank, viewModel.donorRank.toString()),
+                style = MaterialTheme.typography.h5,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                textAlign = TextAlign.End
+            )
+            LazyColumn {
+                itemsIndexed(viewModel.leaderboard) { index, item ->
+                    LeaderBoardItem(
+                        item = item,
+                        index = index + 1
+                    )
+                }
             }
         }
-    }
-}
-
-@Composable
-fun FilterScreen(
-    viewModel: CharitiesViewModel
-) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-    ) {
-        Spacer(modifier = Modifier.fillMaxHeight(0.05f))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = stringResource(R.string.charities_filter_title),
-                style = MaterialTheme.typography.h5,
-            )
-            ClickableIcon(
-                icon = ImageVector.vectorResource(id = R.drawable.ic_close_black),
-                contentDescription = stringResource(id = R.string.back_icon_description),
-                onIconClicked = {
-                    viewModel.onFilterChange()
-                },
-                size = 24.dp
-            )
-        }
-        CharitiesSelector(
-            categories = stringArrayResource(id = R.array.Categories),
-            categoriesSelected = viewModel.selectedCategories,
-            modifier = Modifier.padding(top = 32.dp)
-        )
     }
 }

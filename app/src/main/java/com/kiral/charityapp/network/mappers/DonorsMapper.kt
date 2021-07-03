@@ -12,7 +12,7 @@ class DonorsMapper: Mapper<DonorDto, Donor> {
             email = model.email,
             donated = model.sum,
             badges = model.badges.mapNotNull { id ->
-                BADGES.get(id)?.let{
+                BADGES[id]?.let{
                     Badge(
                         id = id,
                         stringId = it.stringId,

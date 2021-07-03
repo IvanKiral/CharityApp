@@ -35,7 +35,7 @@ fun InformationBox(
             .border(width = 1.dp, color = borderColor)
             .clickable(onClick = onClick)
     ) {
-        Row() {
+        Row {
             Text(
                 text = text,
                 style = MaterialTheme.typography.body1.copy(fontSize = 13.sp)

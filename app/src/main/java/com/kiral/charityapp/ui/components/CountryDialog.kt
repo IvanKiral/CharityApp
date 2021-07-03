@@ -27,8 +27,7 @@ fun CountryDialog(
     isShown: Boolean,
     countries: Map<String, String>,
     setDialog: (Boolean) -> Unit,
-    setCountryText: (String) -> Unit,
-    setCountry: (String) -> Unit,
+    setCountry: (String, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     if (isShown) {
@@ -55,8 +54,7 @@ fun CountryDialog(
                                 .height(48.dp)
                                 .fillMaxWidth()
                                 .clickable {
-                                    setCountry(it.key)
-                                    setCountryText(it.value)
+                                    setCountry(it.key, it.value)
                                     setDialog(false)
                                 },
                             contentAlignment = Alignment.Center

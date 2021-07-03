@@ -2,6 +2,7 @@ package com.kiral.charityapp.network.mappers
 
 import com.kiral.charityapp.domain.model.Profile
 import com.kiral.charityapp.network.dtos.ProfileDto
+import java.util.*
 
 class ProfileMapper: Mapper<ProfileDto, Profile> {
     override fun mapToDomainModel(model: ProfileDto): Profile {
@@ -11,6 +12,7 @@ class ProfileMapper: Mapper<ProfileDto, Profile> {
             email = model.email,
             donations = model.donations,
             credit = model.credit,
+            birthday = Date(),
             region = model.region,
             categories = model.categories ,
             regularDonationActive = model.repeatActive,
@@ -28,6 +30,7 @@ class ProfileMapper: Mapper<ProfileDto, Profile> {
             donations = domainModel.donations,
             region = domainModel.region,
             credit = domainModel.credit,
+            birthday = domainModel.birthday,
             categories = domainModel.categories,
             repeatActive = domainModel.regularDonationActive,
             repeatFrequency = domainModel.regularDonationFrequency,
@@ -35,5 +38,4 @@ class ProfileMapper: Mapper<ProfileDto, Profile> {
             badges = domainModel.badges
         )
     }
-
 }

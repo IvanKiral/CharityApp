@@ -44,7 +44,7 @@ android {
         def kotlin_compiler_version = "1.4.32"
         kotlinCompilerVersion kotlin_compiler_version
 
-        def kotlin_compiler_extension_version = "1.0.0-beta04"
+        def kotlin_compiler_extension_version = "1.0.0-beta06"
         kotlinCompilerExtensionVersion kotlin_compiler_extension_version
     }
 }
@@ -67,7 +67,7 @@ dependencies {
     def androidx_ui = "1.0.0-alpha07"
     implementation "androidx.ui:ui-tooling:$androidx_ui"
 
-    def compose = "1.0.0-beta04"
+    def compose = "1.0.0-beta06"
     implementation "androidx.compose.ui:ui:$compose"
     implementation "androidx.compose.foundation:foundation:$compose"
     implementation "androidx.compose.runtime:runtime-livedata:$compose"
@@ -99,11 +99,13 @@ dependencies {
     def hilt_viewmodels = "1.0.0-alpha03"
     implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hilt_viewmodels"
 
-    def constraint_compose = "1.0.0-alpha05"
+    def constraint_compose = "1.0.0-alpha06"
     implementation "androidx.constraintlayout:constraintlayout-compose:$constraint_compose"
 
-    def data_store = "1.0.0-alpha08"
+    def data_store = "1.0.0-beta01"
     implementation "androidx.datastore:datastore-preferences:$data_store"
 
     implementation 'com.auth0.android:auth0:2.+'
+
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.0'
 }
